@@ -1,0 +1,147 @@
+{
+  "_note": "PLACEHOLDER CONTENT. Wording by the student team, not the text of VERBUND's competency model; only the grouping follows the structure shown in the team's jour fixe deck. Final profiles, levels and questions follow the interview data.",
+  "levels": [
+    { "value": 1, "name": "Foundation", "short": "Knows the basics and the rules" },
+    { "value": 2, "name": "Practitioner", "short": "Applies it independently in the own job" },
+    { "value": 3, "name": "Advanced", "short": "Shapes it for others and for the unit" }
+  ],
+  "groups": [
+    { "id": "base", "name": "Base competencies" },
+    { "id": "future", "name": "Future competencies" },
+    { "id": "lead", "name": "Leadership competencies" }
+  ],
+  "competencies": [
+    {
+      "id": "safe-use",
+      "group": "base",
+      "name": "Safe and compliant use",
+      "description": "Uses approved AI tools within data protection, confidentiality and legal rules.",
+      "question": "Which AI tools do you use in your work, and how do you decide what you may enter?",
+      "levels": [
+        "Knows the approved tools and the rules for data and confidentiality.",
+        "Applies the rules in daily work without guidance and spots unclear cases.",
+        "Advises colleagues on unclear cases and helps to improve the rules."
+      ]
+    },
+    {
+      "id": "check-results",
+      "group": "base",
+      "name": "Critical review of results",
+      "description": "Checks AI output for errors and bias and stays accountable for the result.",
+      "question": "Tell me about a case where an AI result was wrong or incomplete. How did you notice?",
+      "levels": [
+        "Knows that AI output can be wrong and checks facts before using it.",
+        "Verifies output systematically with sources, plausibility checks or a second person.",
+        "Defines quality checks for the team and trains others in them."
+      ]
+    },
+    {
+      "id": "spot-potential",
+      "group": "future",
+      "name": "Identifying use cases",
+      "description": "Recognises tasks in the own area where AI saves time or improves quality.",
+      "question": "Where in your work would AI help most? What would it take to try it?",
+      "levels": [
+        "Can name tasks in the own job that AI could support.",
+        "Describes a use case with benefit, data needed and risks.",
+        "Prioritises use cases for the unit and brings them into the decision process."
+      ]
+    },
+    {
+      "id": "build-scale",
+      "group": "future",
+      "name": "Building and scaling solutions",
+      "description": "Turns a use case into a working solution and makes it reusable.",
+      "question": "Have you built or configured an AI solution yourself, for example a prompt template, an agent or an automation?",
+      "levels": [
+        "Uses templates and solutions that others have built.",
+        "Builds simple solutions for the own work and shares them.",
+        "Develops solutions for several teams and takes care of operation and quality."
+      ]
+    },
+    {
+      "id": "steer-use",
+      "group": "lead",
+      "name": "Steering AI use in the team",
+      "description": "Sets goals and rules for AI use in the team and knows the AI levels of its members.",
+      "question": "How do you decide where your team uses AI, and how do you follow what comes out of it?",
+      "levels": [
+        "Knows where the team already uses AI.",
+        "Sets goals and priorities for AI use and reviews results regularly.",
+        "Aligns AI use with the unit's strategy and with data, process and project needs."
+      ]
+    },
+    {
+      "id": "guide-change",
+      "group": "lead",
+      "name": "Guiding the change",
+      "description": "Leads by example, takes up concerns and gives the team time to learn.",
+      "question": "What do you do so that all team members, also the hesitant ones, get started with AI?",
+      "levels": [
+        "Uses AI visibly in the own work and talks about it.",
+        "Plans learning time, addresses concerns and uses role models in the team.",
+        "Builds a learning culture across teams and develops other managers."
+      ]
+    }
+  ],
+  "families": [
+    {
+      "id": "A",
+      "name": "Software, IT & Data",
+      "summary": "Builds and runs the digital systems. Highest AI exposure and the role of multiplier.",
+      "example": "e.g. coding assistants, automated testing, data pipelines with AI checks",
+      "profile": {
+        "safe-use": { "baseline": 2, "target": 3 },
+        "check-results": { "baseline": 2, "target": 3 },
+        "spot-potential": { "baseline": 2, "target": 3 },
+        "build-scale": { "baseline": 2, "target": 3 }
+      }
+    },
+    {
+      "id": "B",
+      "name": "Commercial & Corporate Office",
+      "summary": "Finance, procurement, HR, legal and administration. Text- and data-heavy work.",
+      "example": "e.g. report drafts, contract summaries, analysis of supplier data",
+      "profile": {
+        "safe-use": { "baseline": 1, "target": 2 },
+        "check-results": { "baseline": 1, "target": 3 },
+        "spot-potential": { "baseline": 1, "target": 2 },
+        "build-scale": { "baseline": 0, "target": 1 }
+      }
+    },
+    {
+      "id": "D",
+      "name": "Engineering & Technicians",
+      "summary": "Plans, builds and maintains the plants. AI supports, physical work stays.",
+      "example": "e.g. AI-supported CAD, simulation, maintenance and process analysis",
+      "profile": {
+        "safe-use": { "baseline": 1, "target": 2 },
+        "check-results": { "baseline": 1, "target": 2 },
+        "spot-potential": { "baseline": 1, "target": 2 },
+        "build-scale": { "baseline": 0, "target": 1 }
+      }
+    },
+    {
+      "id": "M",
+      "name": "Managers & Executives",
+      "summary": "Separate group across all families: they lead the change and assess their teams.",
+      "example": "e.g. team goals for AI use, competency conversations, learning time",
+      "profile": {
+        "safe-use": { "baseline": 1, "target": 2 },
+        "check-results": { "baseline": 2, "target": 3 },
+        "spot-potential": { "baseline": 1, "target": 2 },
+        "build-scale": { "baseline": 0, "target": 1 },
+        "steer-use": { "baseline": 1, "target": 3 },
+        "guide-change": { "baseline": 1, "target": 3 }
+      }
+    }
+  ],
+  "measures": {
+    "safe-use": ["Basic training on approved tools and data rules", "Short refresher with cases from the own unit"],
+    "check-results": ["Workshop on checking AI output with real tasks", "Four-eyes check for critical results"],
+    "spot-potential": ["Use-case workshop in the team", "Exchange with an AI champion from a similar unit"],
+    "build-scale": ["Hands-on session on prompt templates and agents", "Learning by doing on a real use case with a mentor"],
+    "steer-use": ["Leadership module on steering AI use", "Peer exchange between managers on team goals"],
+    "guide-change": ["Leadership programme on leading the AI change", "Fixed learning time in the team calendar"]
+  }
+}
