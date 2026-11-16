@@ -44,6 +44,7 @@ export function KpiTile({
   sub,
   delta,
   spark,
+  meter,
   dots,
   href,
 }: {
@@ -55,6 +56,8 @@ export function KpiTile({
   /** Change against four weeks ago, already worded, e.g. "+12". */
   delta?: string;
   spark?: number[];
+  /** Share from 0 to 100, drawn as a bar against the whole. */
+  meter?: number;
   dots?: { done: number; total: number };
   href: string;
 }) {
@@ -73,6 +76,11 @@ export function KpiTile({
       </span>
       <span className="tile-sub">{sub}</span>
       {spark && spark.length > 1 && <Sparkline values={spark} label={`Trend over ${spark.length} weeks, from ${Math.round(spark[0])} to ${Math.round(spark[spark.length - 1])}`} />}
+      {meter !== undefined && (
+        <span className="tile-meter" role="img" aria-label={`${meter} of 100 percent`}>
+          <i style={{ width: `${Math.max(0, Math.min(100, meter))}%` }} />
+        </span>
+      )}
       {dots && <Dots done={dots.done} total={dots.total} />}
     </a>
   );

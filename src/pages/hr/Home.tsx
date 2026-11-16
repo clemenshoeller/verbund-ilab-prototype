@@ -35,7 +35,7 @@ export function HrHome() {
           unit="%"
           sub={`${k.readyToday} of ${k.completed} assessed`}
           delta={change(fit, pct(before.readyToday, before.completed), " pts")}
-          spark={history.map((h) => pct(h.readyToday, h.completed))}
+          meter={fit}
           href="#/hr/gaps/baseline"
         />
         <KpiTile
@@ -45,7 +45,7 @@ export function HrHome() {
           unit="%"
           sub="of all agreed levels"
           delta={change(target, Math.round((before.atTargetShare ?? 0) * 100), " pts")}
-          spark={history.map((h) => Math.round((h.atTargetShare ?? 0) * 100))}
+          meter={target}
           href="#/hr/gaps/target"
         />
         <KpiTile
