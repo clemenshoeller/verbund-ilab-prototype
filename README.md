@@ -2,7 +2,7 @@
 
 Clickable tool concept for managers, built in the WU Industry Lab project "Closing the AI Talent Gap in the Energy Industry" with VERBUND (deliverable D5).
 
-**Status: fifth version (16.11.2026): built as an app with dashboards, previews and click tests.** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
+**Status: sixth version (16.11.2026): an app with dashboards, previews and click tests, trimmed so each screen shows only what it is for.** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
 
 ## What it demonstrates
 
@@ -20,7 +20,7 @@ One competency conversation per person and year, as a part of the yearly apprais
 
 | Page | What it does |
 |---|---|
-| Dashboard | A sentence on where the team stands, four figures that lead to their lists, next steps, pipeline, recent activity, the team at a glance |
+| Dashboard | A sentence on where the team stands, three key figures, the next three steps, the team at a glance |
 | Pipeline | Board with four stages from "not started" to "measures agreed" |
 | People | List with search, filters and sorting |
 | Record of a person | Overview in words and as a level path; the guided conversation; activity |
@@ -30,7 +30,7 @@ One competency conversation per person and year, as a part of the yearly apprais
 
 | Page | What it does |
 |---|---|
-| Dashboard | Three questions with one figure each: fit for today, on the way to 2030, is it moving; what needs attention; fit by job family; conversations by team; largest gaps; measures in use |
+| Dashboard | Three key figures with change over four weeks and a trend line (fit for today, at the 2030 target, conversations done), the three largest gaps, teams that lag behind |
 | Gap analysis | Heatmap for today's level or the 2030 target, prioritised list of gaps; every cell and row opens a preview of that combination |
 | Teams, Job families, Competencies, Measures | Lists with records |
 | Roadmap, Governance | First drafts, marked as draft |
@@ -102,7 +102,8 @@ src/
   pages/hr/           HR: Home, GapAnalysis, Teams, Competencies, Plans (measures, roadmap, governance)
   pages/              shared: Start, Profiles, About
   ui.tsx              confirmations (toasts) and the preview panel
-  components/         search, View-as menu, preview drawer, icons, error boundary, cards, tabs,
+  components/         search, View-as menu, preview drawer, KPI tile with trend line, icons,
+                      error boundary, cards, tabs,
                       level path (Steps), competency line, meters, heatmap
   lib/activity.ts     recent activity of a team
   app.test.tsx        click tests of the whole app
@@ -157,7 +158,7 @@ Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-
 
 ## Tests
 
-`npm test` runs 42 tests. 32 unit tests: gap logic and status in words, aggregated figures (share at target, missing levels, prioritisation, minimum group size), stages and next steps, and consistency checks of the content files. 10 click tests of the whole app (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading, every navigation link in every role works, the View-as menu, the preview panel for persons, pipeline cards and heatmap cells, and the whole journey from self-check through the conversation to the changed HR totals, including reload and reset. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
+`npm test` runs 45 tests. 34 unit tests: gap logic and status in words, aggregated figures (share at target, missing levels, prioritisation, minimum group size), stages and next steps, and consistency checks of the content files. 11 click tests of the whole app (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading, every navigation link in every role works, the View-as menu, the preview panel for persons, pipeline cards and heatmap cells, and the whole journey from self-check through the conversation to the changed HR totals, including reload and reset. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
 
 Manual test: as employee do the self-check; as manager open that person's conversation, agree all levels, choose a focus and a measure, complete it; check that the employee's profile and the HR figures changed; reset the demo data.
 

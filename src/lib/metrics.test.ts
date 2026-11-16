@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import contentJson from "../data/content.json";
 import orgJson from "../data/org.json";
 import type { Assessment, Assessments, Content, Employee, Org } from "../types";
-import { MIN_GROUP, competencyStats, familyGrid, kpis, measureReach, priorities, ratedPairs, teamCoverage } from "./metrics";
+import { MIN_GROUP, competencyStats, familyGrid, kpiHistory, kpis, measureReach, priorities, ratedPairs, teamCoverage } from "./metrics";
 
 const content = contentJson as unknown as Content;
 const org = orgJson as unknown as Org;
@@ -121,5 +121,20 @@ describe("competencyStats", () => {
     expect(safe).toMatchObject({ rated: 3, belowToday: 1, belowTarget: 2, missingLevels: 3, distribution: [1, 1, 1, 0] });
     const lead = competencyStats(content, employees, assessments).find((s) => s.competency.id === "steer-use")!;
     expect(lead.rated).toBe(0);
+  });
+});
+
+describe("kpiHistory", () => {
+  it("ends at today's figures and never loses a completed conversation", () => {
+    const history = kpiHistory(content, org.employees, org.assessments);
+    const now = kpis(content, org.employees, org.assessments);
+    expect(history).toHaveLength(8);
+    expect(history[7].completed).toBe(now.completed);
+    expect(history[7].readyToday).toBe(now.readyToday);
+    for (let i = 1; i < history.length; i++) expect(history[i].completed).toBeGreaterThanOrEqual(history[i - 1].completed);
+    expect(history[0].completed).toBeLessThan(now.completed);
+  });
+  it("is empty without completed conversations", () => {
+    expect(kpiHistory(content, org.employees, {})).toEqual([]);
   });
 });

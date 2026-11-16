@@ -8,7 +8,6 @@ import { measureUptake } from "../../lib/workflow";
 export function HrMeasures({ typeId }: { typeId?: string }) {
   const { content, org, assessments, assignments } = useData();
   const type = content.measureTypes.find((t) => t.id === typeId);
-  const name = (id: string) => content.competencies.find((c) => c.id === id)?.name ?? id;
   const typeName = (id: string) => content.measureTypes.find((t) => t.id === id)?.name ?? id;
   const perPerson = (id: string) => content.measureTypes.find((t) => t.id === id)?.perPerson ?? true;
   const rows = content.measures
@@ -23,7 +22,7 @@ export function HrMeasures({ typeId }: { typeId?: string }) {
             Measures <DraftTag />
           </>
         }
-        sub="Catalogue of measure types and how far each is in use. General level, no training design and no individual learning paths."
+        sub="Types of measures and how far each is in use."
       />
 
       <Card
@@ -48,13 +47,11 @@ export function HrMeasures({ typeId }: { typeId?: string }) {
               <tr>
                 <th>Measure</th>
                 <th>Type</th>
-                <th>Builds</th>
-                <th>Agreed, of employees with a fitting gap</th>
-                <th className="num">Done</th>
+                <th>Agreed, of employees it would fit</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map(({ m, reach, assigned, done }) => (
+              {rows.map(({ m, reach, assigned }) => (
                 <tr key={m.id}>
                   <td>
                     <strong>{m.title}</strong>
@@ -63,15 +60,6 @@ export function HrMeasures({ typeId }: { typeId?: string }) {
                   <td>
                     <span className="kind">{typeName(m.type)}</span>
                   </td>
-                  <td>
-                    <span className="tags">
-                      {m.competencies.map((id) => (
-                        <a key={id} className="chip" href={`#/hr/competencies/${id}`}>
-                          {name(id)}
-                        </a>
-                      ))}
-                    </span>
-                  </td>
                   <td className="meter-cell">
                     {perPerson(m.type) ? (
                       <Meter name="" value={Math.min(assigned, reach)} of={reach} />
@@ -79,7 +67,6 @@ export function HrMeasures({ typeId }: { typeId?: string }) {
                       <span className="sub">For the organisation · {reach} employees with a fitting gap</span>
                     )}
                   </td>
-                  <td className="num">{perPerson(m.type) ? done : "–"}</td>
                 </tr>
               ))}
             </tbody>

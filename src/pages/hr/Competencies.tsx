@@ -21,11 +21,8 @@ export function CompetencyList() {
               <tr>
                 <th>Competency</th>
                 <th>Group</th>
-                <th className="num">Job families</th>
-                <th className="num">Rated</th>
-                <th className="num">Below today’s level</th>
+                <th className="num">Below today’s expectation</th>
                 <th className="num">Below 2030 target</th>
-                <th className="num">Measures</th>
               </tr>
             </thead>
             <tbody>
@@ -42,11 +39,8 @@ export function CompetencyList() {
                     <span className="sub">{s.competency.description}</span>
                   </td>
                   <td>{groupName(s.competency.group)}</td>
-                  <td className="num">{content.families.filter((f) => (f.profile[s.competency.id]?.target ?? 0) > 0).length}</td>
-                  <td className="num">{s.rated}</td>
                   <td className="num">{s.rated ? percent(s.belowToday / s.rated) : "–"}</td>
                   <td className="num">{s.rated ? percent(s.belowTarget / s.rated) : "–"}</td>
-                  <td className="num">{content.measures.filter((m) => m.competencies.includes(s.competency.id)).length}</td>
                 </tr>
               ))}
             </tbody>
@@ -65,7 +59,6 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
   const { competency } = stat;
   const group = content.groups.find((g) => g.id === competency.group)!;
   const grid = familyGrid(content, org.employees, assessments, "target");
-  const max = Math.max(1, ...stat.distribution);
   const measures = content.measures.filter((m) => m.competencies.includes(competency.id));
   const typeName = (id: string) => content.measureTypes.find((t) => t.id === id)?.name ?? id;
 
@@ -79,51 +72,31 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
           <strong>{stat.rated}</strong>
         </span>
         <span>
-          <em>Below today’s level</em>
+          <em>Below today’s expectation</em>
           <strong>{stat.rated ? percent(stat.belowToday / stat.rated) : "–"}</strong>
         </span>
         <span>
           <em>Below 2030 target</em>
           <strong>{stat.rated ? percent(stat.belowTarget / stat.rated) : "–"}</strong>
         </span>
-        <span>
-          <em>Levels missing to 2030</em>
-          <strong>{stat.missingLevels}</strong>
-        </span>
       </div>
 
-      <div className="grid-1-1">
-        <Card title="Definition">
-          <ol className="level-list">
-            {content.levels.map((level) => (
-              <li key={level.value}>
-                <span className="lvl">{level.value}</span>
-                <span>
-                  <strong>{level.name}</strong> {competency.levels[level.value - 1]}
-                </span>
-              </li>
-            ))}
-          </ol>
-          <blockquote className="ask">
-            <span className="ask-label">Question in the conversation</span>
-            {competency.question}
-          </blockquote>
-        </Card>
-
-        <Card title="Agreed levels today" aside={`${stat.rated} rated employees`}>
-          <div className="bars">
-            {stat.distribution.map((count, level) => (
-              <div key={level} className="bar-row" title={`Level ${level}: ${count} employees`}>
-                <span className="bar-name">{level === 0 ? "0 Not yet" : `${level} ${content.levels[level - 1].name}`}</span>
-                <span className="bar-track">
-                  <span className="bar-fill" style={{ width: `${(count / max) * 100}%` }} />
-                </span>
-                <span className="bar-figure">{count}</span>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
+      <Card title="Definition">
+        <ol className="level-list">
+          {content.levels.map((level) => (
+            <li key={level.value}>
+              <span className="lvl">{level.value}</span>
+              <span>
+                <strong>{level.name}</strong> {competency.levels[level.value - 1]}
+              </span>
+            </li>
+          ))}
+        </ol>
+        <blockquote className="ask">
+          <span className="ask-label">Question in the conversation</span>
+          {competency.question}
+        </blockquote>
+      </Card>
 
       <Card title="Required level by job family" flush>
         <div className="table-wrap">

@@ -1,4 +1,4 @@
-import { LevelBar } from "../components/Level";
+import { Steps, StepsLegend } from "../components/Steps";
 import { Card, PageHead } from "../components/Ui";
 import { useData } from "../data";
 import { profileCompetencies } from "../lib/gap";
@@ -15,7 +15,7 @@ export function Profiles({ familyId, base }: { familyId?: string; base: string }
 
   return (
     <>
-      <PageHead title={hr ? "Job families" : "Target profiles"} sub="The level each job family needs today and in 2030, on a scale of three levels." />
+      <PageHead title={hr ? "Job families" : "Target profiles"} sub="What each job family needs today and in 2030. Open a line for the detail." />
 
       <div className="tabs" role="tablist" aria-label="Job family">
         {content.families.map((f) => (
@@ -25,67 +25,56 @@ export function Profiles({ familyId, base }: { familyId?: string; base: string }
         ))}
       </div>
 
-      <Card title={family.name} aside={hr ? `${headcount} employees` : undefined}>
-        <p>{family.summary}</p>
-        <p className="muted">{family.example}</p>
-      </Card>
+      <p className="lead">
+        {family.summary}
+        {hr && ` ${headcount} employees.`}
+      </p>
 
       {content.groups.map((group) => {
         const inGroup = competencies.filter((c) => c.group === group.id);
         if (inGroup.length === 0) return null;
         return (
           <Card key={group.id} title={group.name} flush>
-            <div className="table-wrap">
-              <table className="table profile">
-                <thead>
-                  <tr>
-                    <th>Competency</th>
-                    <th>Today</th>
-                    <th>Target 2030</th>
-                    <th>What the 2030 level means</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {inGroup.map((c) => {
-                    const entry = family.profile[c.id];
-                    return (
-                      <tr key={c.id}>
-                        <td>
-                          {hr ? (
-                            <a href={`#/hr/competencies/${c.id}`}>
-                              <strong>{c.name}</strong>
-                            </a>
-                          ) : (
-                            <strong>{c.name}</strong>
-                          )}
-                          <span className="sub">{c.description}</span>
-                        </td>
-                        <td>
-                          <LevelBar value={entry.baseline} />
-                          <span className="sub">{levelName(content, entry.baseline)}</span>
-                        </td>
-                        <td>
-                          <LevelBar value={entry.target} />
-                          <span className="sub">{levelName(content, entry.target)}</span>
-                        </td>
-                        <td>{c.levels[entry.target - 1]}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            {inGroup.map((c) => {
+              const entry = family.profile[c.id];
+              return (
+                <details key={c.id} className="comp">
+                  <summary>
+                    <span className="comp-main">
+                      <strong>{c.name}</strong>
+                      <span className="sub">
+                        Today: {levelName(content, entry.baseline)} · 2030: {levelName(content, entry.target)}
+                      </span>
+                    </span>
+                    <Steps value={entry.baseline} target={entry.target} levels={content.levels} compact />
+                    <span />
+                  </summary>
+                  <div className="comp-body">
+                    <p>{c.description}</p>
+                    <dl>
+                      <dt>2030: {levelName(content, entry.target)}</dt>
+                      <dd>{c.levels[entry.target - 1]}</dd>
+                      {c.examples[family.id] && (
+                        <>
+                          <dt>In this job</dt>
+                          <dd>{c.examples[family.id]}</dd>
+                        </>
+                      )}
+                    </dl>
+                    {hr && (
+                      <p style={{ marginTop: 10 }}>
+                        <a href={`#/hr/competencies/${c.id}`}>Open the competency</a>
+                      </p>
+                    )}
+                  </div>
+                </details>
+              );
+            })}
           </Card>
         );
       })}
 
-      <p className="legend">
-        {content.levels.map((level) => (
-          <span key={level.value}>
-            <LevelBar value={level.value} /> <strong>{level.name}</strong> {level.short}
-          </span>
-        ))}
-      </p>
+      <StepsLegend />
     </>
   );
 }

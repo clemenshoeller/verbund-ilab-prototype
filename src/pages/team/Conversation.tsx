@@ -119,7 +119,6 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
         {group.name} · {position} of {total}
       </p>
       <h2>{competency.name}</h2>
-      <p className="muted">{competency.why}</p>
 
       <div className="talk">
         <blockquote className="ask">
@@ -187,16 +186,17 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
       )}
       {differ && rating?.agreed == null && <p className="callout">Your views differ. Ask for one or two concrete examples, then choose the agreed level together.</p>}
 
-      <label className="note">
-        <span>Note (optional)</span>
+      <details className="more" open={Boolean(rating?.note)}>
+        <summary>Add a note</summary>
         <textarea
           rows={2}
           maxLength={300}
           value={rating?.note ?? ""}
+          aria-label="Note"
           placeholder="Example or evidence from the conversation"
           onChange={(event) => setRating(employee.id, competency.id, { note: event.target.value })}
         />
-      </label>
+      </details>
     </section>
   );
 }

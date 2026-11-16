@@ -1,9 +1,8 @@
 import { Kpi, KpiRow, Meter } from "../../components/Figures";
 import { Card, NotFound, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
-import { MIN_GROUP, competencyStats, kpis, percent } from "../../lib/metrics";
+import { MIN_GROUP, competencyStats, kpis } from "../../lib/metrics";
 import { useUi } from "../../ui";
-import { STAGES, stageOf } from "../../lib/workflow";
 
 export function TeamList() {
   const { content, org, assessments, assignments } = useData();
@@ -16,7 +15,7 @@ export function TeamList() {
 
   return (
     <>
-      <PageHead title="Teams" sub={`${org.teams.length} teams · figures from completed conversations, hidden below ${MIN_GROUP} rated employees`} />
+      <PageHead title="Teams" sub={`${org.teams.length} teams · click a row for the preview`} />
       <Card flush>
         <div className="table-wrap">
           <table className="table">
@@ -24,9 +23,7 @@ export function TeamList() {
               <tr>
                 <th>Team</th>
                 <th>Conversations</th>
-                <th className="num">At 2030 target</th>
-                <th className="num">Levels missing per person</th>
-                <th className="num">Below today’s level</th>
+                <th className="num">Fit for today</th>
                 <th className="num">With measures</th>
               </tr>
             </thead>
@@ -48,9 +45,7 @@ export function TeamList() {
                   <td className="meter-cell">
                     <Meter name="" value={k.completed} of={k.headcount} />
                   </td>
-                  <td className="num">{visible ? percent(k.atTargetShare) : `n<${MIN_GROUP}`}</td>
-                  <td className="num">{visible ? (k.missingLevels / k.completed).toFixed(1) : `n<${MIN_GROUP}`}</td>
-                  <td className="num">{visible ? k.belowTodayPeople : `n<${MIN_GROUP}`}</td>
+                  <td className="num">{visible ? `${k.readyToday} of ${k.completed}` : `n<${MIN_GROUP}`}</td>
                   <td className="num">{measures}</td>
                 </tr>
               ))}
@@ -71,10 +66,7 @@ export function TeamRecord({ teamId }: { teamId: string }) {
   const k = kpis(content, members, assessments);
   const visible = k.completed >= MIN_GROUP;
   const stats = competencyStats(content, members, assessments).filter((s) => s.rated > 0);
-  const perStage = STAGES.map((stage) => ({
-    ...stage,
-    count: members.filter((e) => stageOf(content, e, assessments[e.id], assignments[e.id]) === stage.id).length,
-  }));
+  const withMeasures = members.filter((e) => (assignments[e.id] ?? []).length > 0).length;
   const families = content.families
     .map((f) => ({ family: f, count: members.filter((e) => e.family === f.id).length }))
     .filter((f) => f.count > 0);
@@ -88,41 +80,22 @@ export function TeamRecord({ teamId }: { teamId: string }) {
       />
 
       <KpiRow>
-        <Kpi label="Conversations completed" value={`${k.completed} of ${k.headcount}`} sub={`${k.inProgress} in progress`} />
-        <Kpi label="Ratings at the 2030 target" value={visible ? percent(k.atTargetShare) : "–"} sub={visible ? "of all agreed ratings" : `fewer than ${MIN_GROUP} rated`} />
-        <Kpi label="Levels missing to 2030" value={visible ? k.missingLevels : "–"} sub={visible && k.largestGap ? `most in “${k.largestGap.name}”` : ""} />
-        <Kpi label="Below today’s level" value={visible ? k.belowTodayPeople : "–"} sub="employees, in at least one competency" />
+        <Kpi label="Conversations done" value={`${k.completed} of ${k.headcount}`} sub={`${k.inProgress} running`} />
+        <Kpi label="Fit for today" value={visible ? `${k.readyToday} of ${k.completed}` : "–"} sub={visible ? "meet today’s expectations" : `fewer than ${MIN_GROUP} rated`} />
+        <Kpi label="With measures" value={withMeasures} sub="have a development plan" />
       </KpiRow>
 
-      <div className="grid-2-1">
-        <Card title="Below the 2030 target, by competency" aside="rated employees below target">
-          {visible ? (
-            <div className="meters">
-              {stats.map((s) => (
-                <Meter key={s.competency.id} name={s.competency.name} value={s.belowTarget} of={s.rated} />
-              ))}
-            </div>
-          ) : (
-            <p className="empty">
-              Fewer than {MIN_GROUP} rated employees. Results are shown once more conversations are completed.
-            </p>
-          )}
-        </Card>
-
-        <Card title="Stage of the team">
-          <ol className="funnel">
-            {perStage.map((stage) => (
-              <li key={stage.id}>
-                <span className="funnel-count">{stage.count}</span>
-                <span>
-                  <strong>{stage.name}</strong>
-                  <span className="sub">{stage.hint}</span>
-                </span>
-              </li>
+      <Card title="Below the 2030 target, by competency" aside="rated employees below target">
+        {visible ? (
+          <div className="meters">
+            {stats.map((s) => (
+              <Meter key={s.competency.id} name={s.competency.name} value={s.belowTarget} of={s.rated} />
             ))}
-          </ol>
-        </Card>
-      </div>
+          </div>
+        ) : (
+          <p className="empty">Fewer than {MIN_GROUP} rated employees. Results are shown once more conversations are completed.</p>
+        )}
+      </Card>
       <p className="muted small">HR sees no single persons. The manager of the team sees the individual records in the manager view.</p>
     </>
   );

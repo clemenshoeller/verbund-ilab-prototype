@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Avatar, Card, PageHead, StageChip, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
-import { agreedCount, gapRows, totalGap } from "../../lib/gap";
+import { gapRows, totalGap } from "../../lib/gap";
 import { queryParam } from "../../lib/router";
 import { useUi } from "../../ui";
 import { STAGES, stageOf } from "../../lib/workflow";
 
-type SortKey = "name" | "stage" | "gap" | "measures";
+type SortKey = "name" | "stage" | "gap";
 
 export function People() {
   const { content, team, assessments, assignments } = useData();
@@ -41,9 +41,7 @@ export function People() {
         ? a.employee.name.localeCompare(b.employee.name)
         : sort === "gap"
           ? (b.gap ?? -1) - (a.gap ?? -1)
-          : sort === "measures"
-            ? b.measures - a.measures
-            : order.indexOf(a.stage) - order.indexOf(b.stage),
+          : order.indexOf(a.stage) - order.indexOf(b.stage),
     );
 
   const head = (key: SortKey, label: string, num?: boolean) => (
@@ -93,9 +91,7 @@ export function People() {
                 {head("name", "Name")}
                 <th>Job family</th>
                 {head("stage", "Stage")}
-                <th className="num">Agreed</th>
                 {head("gap", "Steps to 2030", true)}
-                {head("measures", "Measures", true)}
                 <th>Last change</th>
               </tr>
             </thead>
@@ -121,17 +117,13 @@ export function People() {
                   <td>
                     <StageChip stage={p.stage} />
                   </td>
-                  <td className="num">
-                    {agreedCount(p.rows)} / {p.rows.length}
-                  </td>
                   <td className="num">{p.gap ?? "–"}</td>
-                  <td className="num">{p.measures || "–"}</td>
                   <td>{formatDate(p.date)}</td>
                 </tr>
               ))}
               {list.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="empty">
+                  <td colSpan={5} className="empty">
                     No team member matches the filters.
                   </td>
                 </tr>

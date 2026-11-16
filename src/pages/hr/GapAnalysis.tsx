@@ -20,7 +20,7 @@ export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
 
   return (
     <>
-      <PageHead title="Gap analysis" sub="Agreed levels compared with the target profiles, short term and for 2030." />
+      <PageHead title="Gap analysis" sub="Agreed levels against the target profiles. Click a cell or a row for the detail." />
 
       <Card
         title={`Share of rated employees below ${horizon.what}`}
@@ -39,7 +39,7 @@ export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
         <ShareLegend />
       </Card>
 
-      <Card title="Prioritised gaps" aside={`${rows.length} combinations of job family and competency`} flush>
+      <Card title="Where to act first" aside={`Top ${Math.min(8, rows.length)} of ${rows.length}`} flush>
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -47,14 +47,12 @@ export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
                 <th className="num">#</th>
                 <th>Competency</th>
                 <th>Job family</th>
-                <th className="num">Rated</th>
-                <th className="num">Below today’s level</th>
+                <th className="num">Below today’s expectation</th>
                 <th className="num">Below 2030 target</th>
-                <th className="num">Levels missing to 2030</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, index) => (
+              {rows.slice(0, 8).map((row, index) => (
                 <tr
                   key={row.family.id + row.competency.id}
                   className="clickable"
@@ -67,18 +65,17 @@ export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
                     <strong>{row.competency.name}</strong>
                   </td>
                   <td>{row.family.name}</td>
-                  <td className="num">{row.assessed}</td>
-                  <td className="num">{row.belowToday > 0 ? <strong>{row.belowToday}</strong> : "–"}</td>
-                  <td className="num">{row.belowTarget}</td>
-                  <td className="num">{row.missingLevels}</td>
+                  <td className="num">{row.belowToday > 0 ? <strong>{row.belowToday} of {row.assessed}</strong> : "–"}</td>
+                  <td className="num">
+                    {row.belowTarget} of {row.assessed}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <p className="muted small card-note">
-          Order: first the number of employees below today’s level (urgency), then the levels missing to 2030 (size).
-          Strategic relevance is not weighted yet.
+          Ordered by urgency (below today’s expectation), then by the size of the gap to 2030.
         </p>
       </Card>
     </>

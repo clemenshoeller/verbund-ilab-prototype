@@ -221,3 +221,24 @@ export function competencyStats(content: Content, employees: Employee[], assessm
     };
   });
 }
+
+/**
+ * The key figures as they stood at the end of each of the last weeks, oldest first.
+ * Built from the dates of the completed conversations, so the trend is real for the data shown.
+ */
+export function kpiHistory(content: Content, employees: Employee[], assessments: Assessments, points = 8): Kpis[] {
+  const dates = employees.map((e) => assessments[e.id]).filter((a) => a?.status === "completed" && a.date).map((a) => a.date as string);
+  if (dates.length === 0) return [];
+  const end = new Date(dates.sort()[dates.length - 1] + "T00:00:00Z");
+  const history: Kpis[] = [];
+  for (let i = points - 1; i >= 0; i--) {
+    const cutoff = new Date(end.getTime() - i * 7 * 86400000).toISOString().slice(0, 10);
+    const until: Assessments = {};
+    for (const employee of employees) {
+      const a = assessments[employee.id];
+      if (a?.status === "completed" && a.date && a.date <= cutoff) until[employee.id] = a;
+    }
+    history.push(kpis(content, employees, until));
+  }
+  return history;
+}
