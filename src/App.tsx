@@ -80,15 +80,14 @@ function Shell() {
   const extra = inRole ? "" : route[0] === "about" ? "about" : "start";
   const open = nextActions(content, team.employees, assessments, assignments).length;
 
-  // The browser tab names the page that is open.
-  const address = route.join("/");
+  // The browser tab names the page that is open. Runs after every render, so it also follows data changes.
   useEffect(() => {
     // Only the words of the heading: no initials, sub-line or draft mark.
     const h1 = document.querySelector("main h1")?.cloneNode(true) as HTMLElement | undefined;
-    h1?.querySelectorAll(".avatar, .record-sub, .draft").forEach((node) => node.remove());
+    for (const node of h1?.querySelectorAll(".avatar, .record-sub, .draft") ?? []) node.remove();
     const heading = h1?.textContent?.trim();
     document.title = heading ? `${heading} · AI Competency Check` : "AI Competency Check";
-  }, [address]);
+  });
 
   const groups: { title: string; items: NavItem[] }[] =
     view === "me"

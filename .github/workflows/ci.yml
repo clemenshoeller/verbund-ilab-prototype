@@ -18,6 +18,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Lint (code and accessibility rules)
+        run: npm run lint
       - run: npm test
       - run: npm run build
       - run: npm audit --audit-level=high
@@ -48,3 +50,62 @@ jobs:
       - name: Check that the manifests are valid YAML
         run: |
           ruby -ryaml -e 'kinds = YAML.load_stream(File.read("deploy/openshift.yaml")).map { |d| d["kind"] }; puts kinds.inspect; exit(kinds == ["Deployment", "Service", "Route"])'
+
+  kubernetes:
+    # Rolls the manifests out on a real Kubernetes cluster (kind) under the "restricted"
+    # pod security standard and with a random user ID, as OpenShift would start the container.
+    # The Route is specific to OpenShift and cannot be tested here.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: docker build -t ai-competency-check:ci .
+      - name: Create a cluster
+        uses: helm/kind-action@v1
+        with:
+          cluster_name: ci
+      - name: Load the image into the cluster
+        run: kind load docker-image ai-competency-check:ci --name ci
+      - name: Prepare a namespace that enforces the restricted policy
+        run: |
+          kubectl create namespace demo
+          kubectl label namespace demo pod-security.kubernetes.io/enforce=restricted
+      - name: Apply Deployment and Service
+        run: |
+          ruby -ryaml -e '
+            docs = YAML.load_stream(File.read("deploy/openshift.yaml")).reject { |d| d["kind"] == "Route" }
+            deployment = docs.find { |d| d["kind"] == "Deployment" }
+            container = deployment["spec"]["template"]["spec"]["containers"][0]
+            container["image"] = "ai-competency-check:ci"
+            container["securityContext"]["runAsUser"] = 1001230000
+            File.write("/tmp/k8s.yaml", docs.map(&:to_yaml).join)
+          '
+          kubectl -n demo apply -f /tmp/k8s.yaml
+      - name: Wait until it is ready
+        run: |
+          kubectl -n demo rollout status deployment/ai-competency-check --timeout=180s || {
+            kubectl -n demo describe pods
+            kubectl -n demo logs deployment/ai-competency-check --tail=50 || true
+            exit 1
+          }
+      - name: Check user ID, health endpoint and page through the Service
+        run: |
+          uid=$(kubectl -n demo exec deployment/ai-competency-check -- id -u)
+          echo "container runs as user $uid"
+          [ "$uid" = "1001230000" ]
+          kubectl -n demo port-forward service/ai-competency-check 8081:8080 &
+          sleep 4
+          curl -fsS http://localhost:8081/healthz | grep -q ok
+          curl -fsS http://localhost:8081/ | grep -q '<div id="root">'
+          echo "served through the Service"
+
+  secrets:
+    # Searches the whole git history for keys, tokens and passwords.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -4,10 +4,10 @@ export function LevelBar({ value, target, max = 3 }: { value: number | null; tar
     value === null ? "not rated" : `level ${value} of ${max}` + (target !== undefined ? `, target ${target}` : "");
   return (
     <span className="levelbar" role="img" aria-label={label}>
-      {Array.from({ length: max }, (_, i) => {
-        const filled = value !== null && i < value;
-        const wanted = target !== undefined && i < target;
-        return <span key={i} className={"seg" + (filled ? " filled" : wanted ? " wanted" : "")} />;
+      {Array.from({ length: max }, (_, i) => i + 1).map((level) => {
+        const filled = value !== null && level <= value;
+        const wanted = target !== undefined && level <= target;
+        return <span key={level} className={"seg" + (filled ? " filled" : wanted ? " wanted" : "")} />;
       })}
     </span>
   );

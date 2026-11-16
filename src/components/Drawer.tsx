@@ -24,12 +24,12 @@ export function Drawer() {
   return (
     <div className="drawer-layer">
       <button type="button" className="drawer-shade" aria-label="Close preview" onClick={closeDrawer} />
-      <aside className="drawer" role="dialog" aria-modal="true" aria-label="Preview">
+      <div className="drawer" role="dialog" aria-modal="true" aria-label="Preview">
         <button ref={close} type="button" className="icon-btn drawer-close" aria-label="Close" onClick={closeDrawer}>
           <Icon name="close" />
         </button>
         <Content spec={drawer} />
-      </aside>
+      </div>
     </div>
   );
 }
@@ -89,7 +89,7 @@ function PersonPreview({ id }: { id: string }) {
 
   return (
     <>
-      <header className="drawer-head">
+      <div className="drawer-head">
         <Avatar name={employee.name} />
         <div>
           <h2>{employee.name}</h2>
@@ -97,7 +97,7 @@ function PersonPreview({ id }: { id: string }) {
             {employee.role} · {family.name}
           </p>
         </div>
-      </header>
+      </div>
       <p className="drawer-stage">
         <StageChip stage={stage} />
         {assessment?.date && <span className="sub">last change {formatDate(assessment.date)}</span>}
@@ -153,7 +153,7 @@ function PersonPreview({ id }: { id: string }) {
         </Section>
       )}
 
-      <footer className="drawer-foot">
+      <div className="drawer-foot">
         {action && (
           <a className="btn" href={action.href}>
             {action.label}
@@ -162,7 +162,7 @@ function PersonPreview({ id }: { id: string }) {
         <a className={"btn" + (action ? " ghost" : "")} href={base}>
           Open the full record
         </a>
-      </footer>
+      </div>
     </>
   );
 }
@@ -179,7 +179,7 @@ function TeamPreview({ id }: { id: string }) {
 
   return (
     <>
-      <header className="drawer-head">
+      <div className="drawer-head">
         <span className="avatar">
           <Icon name="team" />
         </span>
@@ -189,7 +189,7 @@ function TeamPreview({ id }: { id: string }) {
             {team.manager} · {members.length} employees
           </p>
         </div>
-      </header>
+      </div>
       <div className="facts stacked">
         <Fact label="Conversations done" value={`${k.completed} of ${k.headcount}`} />
         <Fact label="Fit for today" value={visible ? `${k.readyToday} of ${k.completed}` : `n<${MIN_GROUP}`} />
@@ -206,11 +206,11 @@ function TeamPreview({ id }: { id: string }) {
           <p className="muted">Fewer than {MIN_GROUP} rated employees. Results appear once more conversations are done.</p>
         )}
       </Section>
-      <footer className="drawer-foot">
+      <div className="drawer-foot">
         <a className="btn" href={`#/hr/teams/${team.id}`}>
           Open the team
         </a>
-      </footer>
+      </div>
     </>
   );
 }
@@ -225,7 +225,7 @@ function CompetencyPreview({ id }: { id: string }) {
 
   return (
     <>
-      <header className="drawer-head">
+      <div className="drawer-head">
         <span className="avatar">
           <Icon name="layers" />
         </span>
@@ -233,7 +233,7 @@ function CompetencyPreview({ id }: { id: string }) {
           <h2>{competency.name}</h2>
           <p className="sub">{content.groups.find((g) => g.id === competency.group)?.name}</p>
         </div>
-      </header>
+      </div>
       <p className="drawer-lead">{competency.why}</p>
       <div className="facts stacked">
         <Fact label="Rated" value={stat.rated} />
@@ -266,11 +266,11 @@ function CompetencyPreview({ id }: { id: string }) {
           ))}
         </ul>
       </Section>
-      <footer className="drawer-foot">
+      <div className="drawer-foot">
         <a className="btn" href={`#/hr/competencies/${id}`}>
           Open the competency
         </a>
-      </footer>
+      </div>
     </>
   );
 }
@@ -289,7 +289,7 @@ function CellPreview({ familyId, competencyId }: { familyId: string; competencyI
 
   return (
     <>
-      <header className="drawer-head">
+      <div className="drawer-head">
         <span className="avatar">
           <Icon name="chart" />
         </span>
@@ -297,7 +297,7 @@ function CellPreview({ familyId, competencyId }: { familyId: string; competencyI
           <h2>{competency.name}</h2>
           <p className="sub">in {family.name}</p>
         </div>
-      </header>
+      </div>
       {!target || !today || target.hidden ? (
         <p className="drawer-lead">Fewer than {MIN_GROUP} rated employees. Results are not shown for groups this small.</p>
       ) : (
@@ -332,14 +332,14 @@ function CellPreview({ familyId, competencyId }: { familyId: string; competencyI
           ))}
         </ul>
       </Section>
-      <footer className="drawer-foot">
+      <div className="drawer-foot">
         <a className="btn" href={`#/hr/competencies/${competencyId}`}>
           Open the competency
         </a>
         <a className="btn ghost" href={`#/hr/profiles/${familyId}`}>
           Open the job family
         </a>
-      </footer>
+      </div>
     </>
   );
 }

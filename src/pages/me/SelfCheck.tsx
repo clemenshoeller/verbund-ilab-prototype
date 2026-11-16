@@ -55,14 +55,23 @@ export function SelfCheck({ step }: { step?: string }) {
     <>
       <PageHead crumbs={[{ label: "My profile", href: "#/me" }, { label: "Self-check" }]} title={competency.name} sub={competency.why} />
 
-      <div className="progress" role="img" aria-label={`Question ${index} of ${rows.length}`}>
+      <nav className="progress" aria-label="Questions of the self-check">
         {rows.map((r, i) => (
-          <a key={r.competency.id} href={`#/me/check/${i + 1}`} className={i + 1 === index ? "on" : assessment?.ratings[r.competency.id]?.self != null ? "done" : ""} title={r.competency.name} />
+          <a
+            key={r.competency.id}
+            href={`#/me/check/${i + 1}`}
+            className={i + 1 === index ? "on" : assessment?.ratings[r.competency.id]?.self != null ? "done" : ""}
+            aria-current={i + 1 === index ? "step" : undefined}
+          >
+            <span className="sr-only">
+              Question {i + 1}: {r.competency.name}
+            </span>
+          </a>
         ))}
         <span>
           {index} of {rows.length}
         </span>
-      </div>
+      </nav>
 
       <section className="card question">
         {competency.examples[family.id] && (
@@ -72,24 +81,25 @@ export function SelfCheck({ step }: { step?: string }) {
           </p>
         )}
         <h2>Which description fits you best today?</h2>
-        <div className="options" role="radiogroup" aria-label={competency.name}>
+        <fieldset className="options">
+          <legend className="sr-only">{competency.name}: which description fits you best today?</legend>
           {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              role="radio"
-              aria-checked={self === option.value}
-              className={"option" + (self === option.value ? " on" : "")}
-              onClick={() => setSelf(employee.id, competency.id, { self: option.value })}
-            >
+            <label key={option.value} className={"option" + (self === option.value ? " on" : "")}>
+              <input
+                type="radio"
+                className="sr-only"
+                name={`self-${competency.id}`}
+                checked={self === option.value}
+                onChange={() => setSelf(employee.id, competency.id, { self: option.value })}
+              />
               <span className="option-mark">{option.value}</span>
-              <span>
+              <span className="option-text">
                 <strong>{option.name}</strong>
                 <span className="sub">{option.text}</span>
               </span>
-            </button>
+            </label>
           ))}
-        </div>
+        </fieldset>
         <label className="note">
           <span>An example from your work (optional). It makes the conversation easier.</span>
           <textarea

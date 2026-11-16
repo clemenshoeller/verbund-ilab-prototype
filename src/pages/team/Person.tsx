@@ -185,8 +185,8 @@ function Activity({ employee }: { employee: Employee }) {
         <p className="empty">Nothing recorded yet.</p>
       ) : (
         <ol className="timeline">
-          {events.map((event, i) => (
-            <li key={i}>
+          {events.map((event) => (
+            <li key={`${event.date} ${event.text}`}>
               <span className="when">{formatDate(event.date)}</span>
               <span>
                 <strong>{event.text}</strong>

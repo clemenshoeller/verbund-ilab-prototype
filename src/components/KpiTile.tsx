@@ -25,8 +25,8 @@ function Sparkline({ values, label }: { values: number[]; label: string }) {
 function Dots({ done, total }: { done: number; total: number }) {
   return (
     <span className="dots" role="img" aria-label={`${done} of ${total}`}>
-      {Array.from({ length: total }, (_, i) => (
-        <i key={i} className={i < done ? "on" : ""} />
+      {Array.from({ length: total }, (_, i) => i + 1).map((n) => (
+        <i key={n} className={n <= done ? "on" : ""} />
       ))}
     </span>
   );

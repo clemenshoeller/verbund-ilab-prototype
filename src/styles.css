@@ -55,6 +55,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 td.empty { text-align: center; }
 .state { padding: 48px 16px; text-align: center; color: var(--muted); }
 .icon { flex: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 /* ---------- Frame: sidebar, top bar, content ---------- */
 .app { display: grid; grid-template-columns: var(--side) minmax(0, 1fr); min-height: 100vh; }
@@ -340,8 +341,10 @@ a.row:hover .go { transform: translateX(3px); background: var(--blue-dark); }
 .ask-label { display: block; margin-bottom: 2px; font: 700 0.68rem var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
 .talk { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
 .options { display: grid; gap: 10px; }
-.option { display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px 18px; border: 1.5px solid var(--line); border-radius: var(--radius); background: var(--white); text-align: left; cursor: pointer; transition: background 0.15s, border-color 0.15s, transform 0.08s; }
-.option > span:nth-child(2) { flex: 1; }
+.option { position: relative; display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px 18px; border: 1.5px solid var(--line); border-radius: var(--radius); background: var(--white); text-align: left; cursor: pointer; transition: background 0.15s, border-color 0.15s, transform 0.08s; }
+.option-text { flex: 1; }
+.option:has(input:focus-visible) { outline: 3px solid var(--blue-60); outline-offset: 2px; }
+fieldset.options { margin: 0; padding: 0; border: 0; min-width: 0; }
 .option:hover:not(:disabled) { border-color: var(--blue); }
 .option:active:not(:disabled) { transform: scale(0.99); }
 .option.on { border-color: var(--blue); background: var(--blue-05); }

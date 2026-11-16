@@ -201,9 +201,9 @@ describe("the journey of one person", () => {
     click(within(main()).getAllByRole("radio")[2]);
     cleanup();
     await start("/me/check/1");
-    expect((within(main()).getAllByRole("radio")[2] as HTMLElement).getAttribute("aria-checked")).toBe("true");
+    expect((within(main()).getAllByRole("radio")[2] as HTMLInputElement).checked).toBe(true);
     click(screen.getByRole("button", { name: /View as/ }));
     click(screen.getByRole("menuitem", { name: /Reset demo data/ }));
-    expect((within(main()).getAllByRole("radio")[2] as HTMLElement).getAttribute("aria-checked")).toBe("false");
+    expect((within(main()).getAllByRole("radio")[2] as HTMLInputElement).checked).toBe(false);
   });
 });

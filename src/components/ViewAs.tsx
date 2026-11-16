@@ -28,11 +28,15 @@ export function ViewAs({ view }: { view: View }) {
     if (!open) return;
     const onDown = (event: MouseEvent) => !box.current?.contains(event.target as Node) && setOpen(false);
     const onKey = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
+    // Choosing an entry changes the address; that closes the menu.
+    const onHash = () => setOpen(false);
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
+    window.addEventListener("hashchange", onHash);
     return () => {
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("keydown", onKey);
+      window.removeEventListener("hashchange", onHash);
     };
   }, [open]);
 
@@ -50,7 +54,7 @@ export function ViewAs({ view }: { view: View }) {
         <div className="menu" role="menu" aria-label="View as">
           <p className="menu-title">View as</p>
           {roles.map((role) => (
-            <a key={role.id} role="menuitemradio" aria-checked={role.id === view} className={"menu-item" + (role.id === view ? " on" : "")} href={`#/${role.id}`} onClick={() => setOpen(false)}>
+            <a key={role.id} role="menuitemradio" aria-checked={role.id === view} className={"menu-item" + (role.id === view ? " on" : "")} href={`#/${role.id}`}>
               <Avatar name={role.name} small />
               <span>
                 <strong>{role.role}</strong>
@@ -62,10 +66,10 @@ export function ViewAs({ view }: { view: View }) {
             </a>
           ))}
           <hr />
-          <a role="menuitem" className="menu-item plain" href="#/" onClick={() => setOpen(false)}>
+          <a role="menuitem" className="menu-item plain" href="#/">
             <Icon name="info" /> Start page
           </a>
-          <a role="menuitem" className="menu-item plain" href="#/about" onClick={() => setOpen(false)}>
+          <a role="menuitem" className="menu-item plain" href="#/about">
             <Icon name="database" /> Data model and status
           </a>
           <button

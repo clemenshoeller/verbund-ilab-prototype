@@ -240,7 +240,7 @@ function Focus({ employee, rows, first }: { employee: Employee; rows: GapRow[]; 
               return (
                 <button key={row.competency.id} type="button" className={"option" + (on ? " on" : "")} aria-pressed={on} disabled={!on && focus.length >= MAX_FOCUS} onClick={() => toggle(row.competency.id)}>
                   <span className="option-mark">{on ? "✓" : "+"}</span>
-                  <span>
+                  <span className="option-text">
                     <strong>{row.competency.name}</strong>
                     <span className="sub">{standingText(row)}</span>
                   </span>

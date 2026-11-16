@@ -46,7 +46,7 @@ export function Search({ view }: { view: "team" | "hr" }) {
   const hits = term ? index.filter((h) => `${h.label} ${h.kind}`.toLowerCase().includes(term)).slice(0, 7) : [];
 
   return (
-    <div className="search" onBlur={() => setTimeout(() => setOpen(false), 120)}>
+    <div className="search">
       <Icon name="search" />
       <input
         ref={input}
@@ -59,6 +59,7 @@ export function Search({ view }: { view: "team" | "hr" }) {
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 120)}
         onKeyDown={(event) => {
           if (event.key === "Enter" && hits[0]) {
             window.location.hash = hits[0].href.slice(1);
