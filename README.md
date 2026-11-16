@@ -1,43 +1,40 @@
 # AI Competency Check – prototype
 
-Clickable tool concept for managers, built in the WU Industry Lab project "Closing the AI Talent Gap in the Energy Industry" with VERBUND (deliverable D5).
+Clickable prototype from the WU Industry Lab project "Closing the AI Talent Gap in the Energy Industry" with VERBUND (deliverable D5).
 
-**Status: sixth version (16.11.2026): an app with dashboards, previews and click tests, trimmed so each screen shows only what it is for.** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
+It shows one idea: **one competency conversation per person and year, as part of the yearly appraisal talk, and what the company learns from all of them.** An employee prepares with a self-check, manager and employee agree on a level per AI competency against the target profile of the job family, choose at most two focus areas and a measure, and HR sees the totals without seeing a single person.
+
+> A prototype with invented data and placeholder content. Not approved for productive use (see [From prototype to productive use](#from-prototype-to-productive-use)).
+
+## Contents
+
+- [What it demonstrates](#what-it-demonstrates)
+- [Run it](#run-it)
+- [Functional, mocked, out of scope](#functional-mocked-out-of-scope)
+- [Architecture](#architecture)
+- [Configuration and secrets](#configuration-and-secrets)
+- [Data and security](#data-and-security)
+- [External services and AI](#external-services-and-ai)
+- [Dependencies and licences](#dependencies-and-licences)
+- [Tests](#tests)
+- [Assumptions](#assumptions)
+- [Known limitations](#known-limitations)
+- [From prototype to productive use](#from-prototype-to-productive-use)
+- [Handover checklist](#handover-checklist)
 
 ## What it demonstrates
 
-One competency conversation per person and year, as a part of the yearly appraisal talk, and what the company learns from all of them. Three roles, chosen in the "View as" menu at the top right (provisional, there is no login). Each role starts on a dashboard whose figures, lists and charts all lead on: a click opens a preview panel from the right, and from there the full record. Actions are confirmed with a short message. "How it works" walks through one person's journey and gives the reasons for the design.
+Three roles, chosen in the "View as" menu at the top right. The switch is provisional; there is no login.
 
-**Employee**
+| Role | Pages | What they are for |
+|---|---|---|
+| Employee | My profile, Self-check, My data | Prepare the talk in five minutes; see the agreed levels and the plan; see what is stored and who sees it |
+| Manager | Dashboard, Pipeline, People, record of a person with the guided conversation, Target profiles | Know what to do next; hold the conversation step by step; keep the development plan |
+| HR | Dashboard, Gap analysis, Teams, Job families, Competencies, Measures, Roadmap, Governance | See where the organisation stands today and against 2030, where to act first, how the model is kept current |
 
-| Page | What it does |
-|---|---|
-| My profile | The next step in one box; the target profile, later the agreed levels, focus and measures |
-| Self-check | One competency per screen: pick the description that fits, add an example from the own work |
-| My data | What is stored, who sees it, what it is used for |
+The start page walks through one person's journey and gives the reasons for the design, with sources. "Data model and status" lists the records behind the screens.
 
-**Manager**, works on the own team:
-
-| Page | What it does |
-|---|---|
-| Dashboard | A sentence on where the team stands, three key figures, the next three steps, the team at a glance |
-| Pipeline | Board with four stages from "not started" to "measures agreed" |
-| People | List with search, filters and sorting |
-| Record of a person | Overview in words and as a level path; the guided conversation; activity |
-| Conversation | Start, one competency per step with question, job example and a grid for employee, manager and agreed level; then two focus areas at most with a measure; then a summary |
-
-**HR**, sees totals only, never single persons:
-
-| Page | What it does |
-|---|---|
-| Dashboard | Three key figures with change over four weeks and a trend line (fit for today, at the 2030 target, conversations done), the three largest gaps, teams that lag behind |
-| Gap analysis | Heatmap for today's level or the 2030 target, prioritised list of gaps; every cell and row opens a preview of that combination |
-| Teams, Job families, Competencies, Measures | Lists with records |
-| Roadmap, Governance | First drafts, marked as draft |
-
-## Design principles
-
-Each page opens with a sentence that states the result. Levels are described in behaviour with an example per job family. Detail opens on demand, one level deep. The check serves development only. The conversation ends in at most two focus areas and a measure. HR sees groups from five rated employees up. The sources behind these choices are on the start page and in the project's design research notes.
+Design principles: every page opens with a sentence that states the result; levels are described in behaviour with an example per job family; detail opens on demand; the check serves development only; HR sees groups from five rated employees up.
 
 ## Run it
 
@@ -45,135 +42,195 @@ Requires Node.js 22.12 or newer.
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173
-npm test           # unit tests
+npm run dev        # http://localhost:5173 (next free port if taken)
+npm test           # 45 tests
 npm run build      # production build in dist/
 ```
 
-With Docker (port 8080, runs without root, suitable for OpenShift):
+With Docker. The container listens on port 8080 and runs without root:
 
 ```bash
 docker build -t ai-competency-check .
 docker run --rm -p 8080:8080 ai-competency-check
 ```
 
-## Change the content (no coding needed)
+Then open http://localhost:8080. `GET /healthz` answers `ok`.
 
-All texts and numbers the user sees come from two files:
+On OpenShift: `deploy/openshift.yaml` holds a Deployment, a Service and a Route. Push the image to a registry the cluster can reach, replace the image placeholder and apply the file. The manifests were checked for valid syntax only; they were not applied to a cluster.
+
+### Change the content without coding
 
 | File | Contains |
 |---|---|
-| `src/data/content.json` | Levels, competencies, questions, job families, target profiles, measures, roadmap, governance |
-| `src/data/org.json` | Sample organisation: 9 teams, 85 employees, their ratings and agreed measures |
+| `src/data/content.json` | Levels, competencies, questions, examples, job families, target profiles, measures, roadmap, governance |
+| `src/data/org.json` | Sample organisation: 9 teams, 85 invented employees, their ratings and agreed measures |
 
 Edit `content.json`, save, and the running app updates. `org.json` is generated: change `scripts/generate-sample-org.mjs` and run `npm run sample-data` (same seed, same file). `npm test` checks that profiles and measures only point to existing competencies and levels.
 
-## Functional and mocked
+## Functional, mocked, out of scope
 
 | Part | State |
 |---|---|
-| Navigation, lists, filters, search, records, pipeline, conversation, gap calculation | Functional |
-| Agreeing measures for a person and setting their status | Functional, stored in the browser only |
-| Key figures, heatmaps, prioritised gaps, reach of measures | Functional, calculated live from the ratings (`src/lib/metrics.ts`) |
-| Self-check of the employee, focus areas, development plan | Functional, stored in the browser only |
-| Switch between employee, manager and HR | **Provisional**: switched by hand; a real tool would derive it from the login |
-| Roadmap and governance pages | **Draft** texts from `content.json`, a first proposal of the student team |
-| Ratings entered in the conversation | Functional, stored in the browser only (`localStorage`); "Reset demo data" deletes them |
-| Backend and database | **Mocked**: `src/api/dataSource.ts` returns the JSON files |
-| Login and roles | **Not built**: one fixed demo manager; nothing prevents opening the other view |
-| Competency model, profiles, levels, questions, measures | **Placeholder** worded by the student team. The grouping (base, future, leadership; six competencies) follows the structure the team presented in its jour fixe deck of 17.11.2026 |
-| Employees, units and ratings | **Synthetic**, generated with a fixed seed; all persons are invented |
-| VERBUND systems, accounts or data | **None used** |
+| Navigation, search, lists with filters and sorting, records, preview panel, pipeline | Functional |
+| Self-check, guided conversation, focus areas, measures with status | Functional; saved in the browser only (`localStorage`), deleted by "Reset demo data" |
+| Key figures, trend, heatmap, prioritised gaps, use of measures | Functional; calculated from the ratings (`src/lib/metrics.ts`) |
+| Switch between employee, manager and HR | **Provisional**: chosen by hand |
+| Backend and database | **Mocked**: `src/api/dataSource.ts` returns two JSON files |
+| Competencies, levels, questions, examples, target profiles, measures | **Placeholder** worded by the student team; the grouping follows the team's jour fixe deck of 17.11.2026 |
+| Roadmap and governance | **Draft** texts, a first proposal of the student team |
+| Employees, teams, ratings | **Synthetic**, generated with a fixed seed; all persons are invented |
+| Login, roles, access control | **Out of scope** |
+| Saving on a server, several users, correction of own data | **Out of scope** |
+| Connection to HR systems, learning systems or any VERBUND system | **Out of scope** |
+| German user interface, accessibility audit | **Out of scope** |
 
 ## Architecture
 
+A static single-page app: React 19, TypeScript, Vite. In the container, nginx serves the built files. There is no server-side code.
+
 ```
 src/
-  api/dataSource.ts   the only place data is read (mock now, backend later)
-  data/               content.json, org.json
-  data.tsx            context that hands content, organisation and state to the pages
-  lib/gap.ts          gaps of one person (tested)
-  lib/metrics.ts      aggregated figures for both roles (tested)
-  lib/workflow.ts     stages, next steps, use of measures (tested)
-  lib/store.ts        ratings and agreed measures in the browser
-  lib/router.ts       hash routing, needs no server rules
-  pages/me/           employee: Me (profile, data), SelfCheck
-  pages/team/         manager: Home, Pipeline, People, Person, Conversation
-  pages/hr/           HR: Home, GapAnalysis, Teams, Competencies, Plans (measures, roadmap, governance)
-  pages/              shared: Start, Profiles, About
-  ui.tsx              confirmations (toasts) and the preview panel
-  components/         search, View-as menu, preview drawer, KPI tile with trend line, icons,
-                      error boundary, cards, tabs,
-                      level path (Steps), competency line, meters, heatmap
-  lib/activity.ts     recent activity of a team
-  app.test.tsx        click tests of the whole app
-scripts/
-  generate-sample-org.mjs   builds data/org.json
+  api/dataSource.ts    the only place data is read (mock now, backend later)
+  data/                content.json, org.json
+  types.ts             the data model
+  data.tsx, ui.tsx     shared state: content and ratings; confirmations and preview panel
+  lib/gap.ts           gaps and status of one person
+  lib/metrics.ts       totals, trend, heatmap, priorities
+  lib/workflow.ts      stages, next steps, use of measures
+  lib/store.ts         ratings and measures in the browser
+  lib/router.ts        hash routing, needs no server rules
+  pages/me/            employee: Me, SelfCheck
+  pages/team/          manager: Home, Pipeline, People, Person, Conversation
+  pages/hr/            HR: Home, GapAnalysis, Teams, Competencies, Plans
+  pages/               Start, Profiles, About
+  components/          search, View-as menu, preview drawer, KPI tile, level path, icons, ...
+  styles.css           one stylesheet with the design tokens at the top
+  app.test.tsx         click tests of the whole app
+scripts/generate-sample-org.mjs   builds data/org.json
+deploy/nginx.conf, deploy/openshift.yaml
+Dockerfile, .github/workflows/ci.yml
 ```
 
-Static single-page app: React 19, TypeScript, Vite. The container serves the built files with nginx.
+Data model (details in `src/types.ts` and on the page "Data model and status"): Competency, Job family with its target profile, Team, Employee, Assessment with Ratings (self, manager, agreed, note) and focus areas, Measure, Assignment of a measure to a person.
 
 ### Deviation from the preferred stack
 
-The guidelines prefer a .NET backend and PostgreSQL or SQL Server. This version has neither, because nothing is stored on a server yet. The frontend framework (React) is on the preferred list. A backend only has to serve the shapes in `src/types.ts` at `GET /content` and `GET /org`; set `VITE_DATA_SOURCE=api` and `VITE_API_BASE_URL`, and the pages stay unchanged. Saving ratings through the backend is not built.
+| Area | Preferred | Here | Reason and way back |
+|---|---|---|---|
+| Frontend | Blazor, Angular, React or Vue | React | On the list |
+| Backend | .NET | None | Nothing is stored on a server; a clickable concept was asked for. A .NET API only has to serve the shapes in `src/types.ts` at `GET /content` and `GET /org`; set `VITE_DATA_SOURCE=api` and `VITE_API_BASE_URL` and the pages stay unchanged. Writing ratings back is not built |
+| Database | PostgreSQL or Microsoft SQL Server | None; browser storage for the demo | The records map one to one to tables (one per record type above). Nothing has to be migrated, because the prototype holds only invented data |
+| Deployment | OpenShift, at least Docker | Docker image for a non-root nginx, example OpenShift manifests | Image built and started as an arbitrary non-root user in CI; manifests not applied to a cluster |
 
 ## Configuration and secrets
 
-There are no secrets. Settings are read from environment variables at build time; see `.env.example` (fictitious values). `.env` files are ignored by git.
+There are no secrets in this project. Two settings exist, read at build time from environment variables; `.env.example` shows them with fictitious values, `.env` files are ignored by git.
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `VITE_DATA_SOURCE` | `mock` | `mock` reads the JSON files, `api` calls a backend |
+| `VITE_API_BASE_URL` | empty | Base address of that backend |
+
+Because Vite reads them at build time, changing them means building the image again. With a backend on another address, `connect-src` in `deploy/nginx.conf` has to allow it.
 
 ## Data and security
 
-- No real VERBUND data, credentials or interfaces. No personal data of real persons.
-- No network requests in mock mode; ratings never leave the browser.
-- Free-text notes are rendered as text (escaped by React) and limited to 300 characters.
-- The HR role shows aggregates only, and its search finds no persons. Groups with fewer than five rated employees are hidden (`MIN_GROUP` in `src/lib/metrics.ts`). This is a rule in the display, not access control.
-- The container runs as a non-root user.
+- No real VERBUND data, accounts, systems or interfaces. No personal data of real persons.
+- In mock mode the app makes no network requests after loading; ratings never leave the browser.
+- Free text is limited to 300 characters and shown as text (React escapes it). The code uses no `innerHTML`, no `eval` and writes nothing to the console.
+- A page that fails shows a plain message without technical detail.
+- The container runs without root and sends a Content-Security-Policy, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` and `Permissions-Policy`; the nginx version is not shown.
+- The git history was searched for keys, tokens and passwords: none.
+- `npm audit` reports no known vulnerabilities (checked on every push).
+- "HR sees no persons" and "groups under five are hidden" are rules of the display. Without a login they are not access control.
 
-## External services
+## External services and AI
 
-| Service | Used for | Data |
-|---|---|---|
-| GitHub (private repository, GitHub Actions) | Source code, automated tests and container build | Source code and synthetic data |
+| Service | Used for | What goes there | Assessment |
+|---|---|---|---|
+| GitHub (private repository, GitHub Actions) | Source code, automated tests, container build | Source code and invented data | Access limited to the account owner. The repository can be exported at any time (`git clone`, ZIP) and deleted. Where GitHub processes and stores data, and its subprocessors, were not checked against the current terms |
+| Claude Code (Anthropic) | Writing code, placeholder content and documentation | Instructions of the student team, the team's own project notes, colours and fonts of public VERBUND material | Externally hosted AI service. No VERBUND credentials, systems or data sets were entered. Whether the team's notes from talks with VERBUND may be processed there is to be confirmed with VERBUND. Use of inputs for training and data location were not checked against the current terms |
 
-No hosting, analytics or fonts from third parties.
+No hosting, analytics, fonts or other content from third parties is loaded by the app.
 
-## Use of AI
+The repository currently lies in one student's personal GitHub account. For the handover it has to be transferred to an account VERBUND or WU controls, or handed over as an archive.
 
-Code and placeholder content were written with Claude Code (Anthropic) on instructions of the student team. Inputs were the team's own project notes and the colours and fonts of VERBUND's company presentation; no VERBUND credentials, systems or data sets. Review so far: type check, unit tests, dependency audit and a manual click-through of all pages. A line-by-line code review by a developer has not taken place.
+**Use of AI.** All code, the placeholder content and this documentation were written with Claude Code on instructions of the student team. Reviewed by: type check, 45 automated tests, dependency audit, a search of the history for secrets, and click-throughs in the browser at desktop and phone width. A line-by-line review by a developer has not taken place.
 
-## Dependencies
+## Dependencies and licences
 
 | Package | Version | Licence | Use |
 |---|---|---|---|
-| react, react-dom | 19.3.1 | MIT | runtime |
+| react, react-dom (with scheduler) | 19.3.1 | MIT | runtime |
 | vite | 8.3.8 | MIT | build |
 | @vitejs/plugin-react | 6.3.0 | MIT | build |
 | typescript | 7.0.2 | Apache-2.0 | type check |
 | vitest | 5.1.0 | MIT | tests |
-| @types/react, @types/react-dom | 19.3.0 | MIT | type check |
 | jsdom | 31.0.1 | MIT | click tests |
 | @testing-library/react, @testing-library/dom | 16.3.3, 10.4.2 | MIT | click tests |
+| @types/react, @types/react-dom | 19.3.0 | MIT | type check |
 
-Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-alpine` (runtime). Exact versions of all packages are locked in `package-lock.json`.
+Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-alpine` (runtime). Exact versions of all packages are locked in `package-lock.json`. Only React reaches the browser; its licence allows any further use.
 
 ## Tests
 
-`npm test` runs 45 tests. 34 unit tests: gap logic and status in words, aggregated figures (share at target, missing levels, prioritisation, minimum group size), stages and next steps, and consistency checks of the content files. 11 click tests of the whole app (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading, every navigation link in every role works, the View-as menu, the preview panel for persons, pipeline cards and heatmap cells, and the whole journey from self-check through the conversation to the changed HR totals, including reload and reset. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
+`npm test` runs 45 tests.
+
+- **34 unit tests**: gaps and status in words, totals and trend, heatmap, prioritisation, minimum group size, stages and next steps, consistency of the content files.
+- **11 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as menu; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from self-check through the conversation to the changed HR totals; reload and reset.
+
+The CI workflow (`.github/workflows/ci.yml`) runs on every push: tests, build, `npm audit`, the container build, a start as an arbitrary non-root user, the health endpoint, the security headers, and the syntax of the OpenShift manifests.
 
 Manual test: as employee do the self-check; as manager open that person's conversation, agree all levels, choose a focus and a measure, complete it; check that the employee's profile and the HR figures changed; reset the demo data.
 
+## Assumptions
+
+- The check is part of the existing yearly appraisal talk and takes about twenty minutes.
+- Six AI competencies in three groups, three described levels plus "not yet", one target profile per job family for today and for 2030.
+- Three focus job families and managers as a separate group, as agreed in the project.
+- Levels are agreed by two people; no AI rates anyone.
+- The data serves development only and is not used for pay or appraisal.
+- A person works on at most two focus areas at a time.
+- Totals are shown from five rated employees up.
+
 ## Known limitations
 
-- No backend, no database, no login; data does not sync between devices or users.
-- Content is not validated against VERBUND's competency model or the interview results. Roadmap, governance and measures are drafts.
-- The sample ratings are random around today's level, so most employees are below the 2030 target; the figures show how the views work, not a finding.
-- Gaps are prioritised by urgency and size only; strategic relevance is not weighted.
-- Click tests run in a simulated browser (jsdom); there are no tests in real browsers, no visual regression tests and no accessibility audit. English only.
+- No backend, no login; data stays in one browser and does not sync between users.
+- Content is not validated against VERBUND's competency model or the project's interview results.
+- The sample ratings are random around today's level, so the figures show how the screens work and are no finding.
+- Gaps are ordered by urgency and size; strategic relevance is not weighted.
+- Click tests run in a simulated browser; there are no tests in real browsers and no visual regression tests.
 - Cards in the pipeline cannot be dragged; they move when the state of the person changes.
-- The look follows VERBUND's company presentation (blue, Georgia, Arial). No official logo or brand assets are included.
+- The look follows VERBUND's public material (company presentation, verbund.com, the V-Go app). VERBUND's fonts are licensed and replaced by the fallbacks its website names; no logo or other brand asset is included.
 
-## Next steps
+## From prototype to productive use
 
-1. Replace the placeholder content with the target profiles and the assessment process from the interviews.
-2. Clarify with VERBUND: backend expected or not, which internal content may be used, form of the handover.
-3. If wanted: .NET API with PostgreSQL behind `dataSource.ts`, saving of ratings, login.
+Following the guidelines makes the prototype easier to assess; it does not approve it. A productive tool would need VERBUND's Technology-Demand process and, in substance:
+
+1. A backend with a database, login through the company directory, and roles enforced on the server.
+2. A works agreement on recording competencies (purpose, access, retention), a data-protection assessment and information classification.
+3. The real competency model, target profiles and measures, and a decision whether the tool stands alone or the logic moves into the existing HR system.
+4. Architecture and security review, vulnerability assessment, an operating and support model.
+5. A German user interface and an accessibility check.
+
+## Handover checklist
+
+Status against the minimum checklist of the technical guidelines.
+
+| # | Item | Status | Where |
+|---|---|---|---|
+| 1 | No real VERBUND data or production credentials | Yes | Data and security |
+| 2 | No secrets hardcoded | Yes; history searched | Configuration and secrets |
+| 3 | Source code complete and accessible | Yes; repository still in a personal account | External services and AI |
+| 4 | Can be installed and started from the documentation | Yes | Run it |
+| 5 | Containerised, preferably OpenShift, at least Docker | Docker: yes, checked in CI. OpenShift: example manifests, not applied to a cluster | Run it |
+| 6 | Configuration through environment variables or separate files | Yes; read at build time | Configuration and secrets |
+| 7 | External dependencies and licences documented | Yes | Dependencies and licences |
+| 8 | External cloud, SaaS and AI services listed | Yes; terms of the two services not checked in detail | External services and AI |
+| 9 | AI-generated results and code reviewed | By tests and click-throughs; no line-by-line review by a developer | External services and AI |
+| 10 | Mocked data, interfaces and functions identified | Yes | Functional, mocked, out of scope |
+| 11 | Architecture and main components documented | Yes | Architecture |
+| 12 | Tests or documented test procedures | Yes | Tests |
+| 13 | Known limitations and security considerations | Yes | Known limitations; Data and security |
+| 14 | Clearly distinguished from a production-ready solution | Yes; also stated in the app | From prototype to productive use |
+| 15 | Recommendations for further development | Yes | From prototype to productive use |

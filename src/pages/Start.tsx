@@ -50,7 +50,7 @@ export function Start() {
       href: `#/team/people/${employee.id}/conversation`,
       link: "Open the conversation",
     },
-    { who: "HR and the digital unit", role: "HR", text: "The agreed levels add up: who is fit for today, where the gaps to 2030 are, which measures are used.", href: "#/hr", link: "View as HR" },
+    { who: org.hrUser.name, role: "HR", text: "The agreed levels add up: who is fit for today, where the gaps to 2030 are, which measures are used.", href: "#/hr", link: "View as HR" },
   ];
 
   return (

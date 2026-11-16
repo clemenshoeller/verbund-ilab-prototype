@@ -1,0 +1,82 @@
+# Example manifests for OpenShift: Deployment, Service and Route.
+# NOT APPLIED TO A CLUSTER by the student team. The image name is a placeholder:
+# build the image from the Dockerfile, push it to a registry the cluster can reach,
+# and replace "REGISTRY/PROJECT/ai-competency-check:TAG".
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-competency-check
+  labels:
+    app: ai-competency-check
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-competency-check
+  template:
+    metadata:
+      labels:
+        app: ai-competency-check
+    spec:
+      containers:
+        - name: web
+          image: REGISTRY/PROJECT/ai-competency-check:TAG
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-competency-check
+  labels:
+    app: ai-competency-check
+spec:
+  selector:
+    app: ai-competency-check
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ai-competency-check
+  labels:
+    app: ai-competency-check
+spec:
+  to:
+    kind: Service
+    name: ai-competency-check
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

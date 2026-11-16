@@ -1,4 +1,4 @@
-import type { Assessment, AssessmentStatus, Competency, Content, Family } from "../types";
+import type { Assessment, Competency, Content, Family } from "../types";
 
 export interface GapRow {
   competency: Competency;
@@ -38,10 +38,6 @@ export function totalGap(rows: GapRow[]): number | null {
 
 export function agreedCount(rows: GapRow[]): number {
   return rows.filter((r) => r.agreed !== null).length;
-}
-
-export function statusOf(assessment?: Assessment): AssessmentStatus {
-  return assessment?.status ?? "open";
 }
 
 /** How one competency stands, in the words shown to users. */

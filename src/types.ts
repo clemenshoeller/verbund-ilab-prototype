@@ -130,6 +130,8 @@ export interface Org {
   currentTeamId: string;
   /** Demo employee shown in the employee role. */
   currentEmployeeId: string;
+  /** Demo person shown in the HR role. */
+  hrUser: { name: string; role: string };
   teams: TeamInfo[];
   employees: Employee[];
   assessments: Record<string, Assessment>;

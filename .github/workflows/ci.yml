@@ -32,8 +32,18 @@ jobs:
         run: |
           docker run -d --name app --user 1001230000:0 -p 8080:8080 ai-competency-check
           for i in 1 2 3 4 5 6 7 8 9 10; do
-            if curl -fsS http://localhost:8080/ | grep -q '<div id="root">'; then echo "page served"; exit 0; fi
+            if curl -fsS http://localhost:8080/ | grep -q '<div id="root">'; then echo "page served"; break; fi
+            if [ "$i" = "10" ]; then docker logs app; exit 1; fi
             sleep 2
           done
-          docker logs app
-          exit 1
+      - name: Check health endpoint and security headers
+        run: |
+          curl -fsS http://localhost:8080/healthz | grep -q ok
+          headers=$(curl -fsSI http://localhost:8080/)
+          echo "$headers"
+          for h in "Content-Security-Policy" "X-Content-Type-Options: nosniff" "X-Frame-Options: DENY" "Referrer-Policy: no-referrer"; do
+            echo "$headers" | grep -qi "$h" || { echo "missing header: $h"; exit 1; }
+          done
+          if echo "$headers" | grep -qi "^server: nginx/"; then echo "server version is exposed"; exit 1; fi
+      - name: Check that the manifests are valid YAML
+        run: ruby -ryaml -e 'kinds = YAML.load_stream(File.read("deploy/openshift.yaml")).map { |d| d["kind"] }; puts kinds.inspect; exit(kinds == ["Deployment", "Service", "Route"] ? 0 : 1)'

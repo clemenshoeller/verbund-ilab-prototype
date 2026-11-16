@@ -159,7 +159,7 @@ describe("the journey of one person", () => {
     expect(main().querySelector("h1")!.textContent).toBe("That is your self-check");
     click(within(main()).getByRole("button", { name: "Done" }));
     await open("/me");
-    expect(main().textContent).toContain("Your self-check is with Demo Manager.");
+    expect(main().textContent).toContain("Your self-check is with Elisabeth Brunner.");
 
     // Manager: sees the self-check, agrees every level.
     await open("/team/people/e6/conversation");
@@ -191,7 +191,7 @@ describe("the journey of one person", () => {
 
     // The employee sees the agreed levels, HR sees one more person.
     await open("/me");
-    expect(main().textContent).toContain("Your levels are agreed with Demo Manager.");
+    expect(main().textContent).toContain("Your levels are agreed with Elisabeth Brunner.");
     await open("/hr");
     expect(main().querySelector("h1")!.textContent).toContain("34 of 64");
   });

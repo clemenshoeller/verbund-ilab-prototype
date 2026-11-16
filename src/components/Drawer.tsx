@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { useData } from "../data";
 import { gapRows, standingText, summarise } from "../lib/gap";
 import { MIN_GROUP, competencyStats, familyGrid, kpis, measureReach, percent } from "../lib/metrics";
@@ -12,12 +12,20 @@ import { Avatar, StageChip, formatDate } from "./Ui";
 /** Preview of a record that slides in from the right; the full record is one click away. */
 export function Drawer() {
   const { drawer, closeDrawer } = useUi();
+  const close = useRef<HTMLButtonElement>(null);
+  const isOpen = drawer !== null;
+  useEffect(() => {
+    if (!isOpen) return;
+    const before = document.activeElement as HTMLElement | null;
+    close.current?.focus();
+    return () => before?.focus?.();
+  }, [isOpen]);
   if (!drawer) return null;
   return (
     <div className="drawer-layer">
       <button type="button" className="drawer-shade" aria-label="Close preview" onClick={closeDrawer} />
       <aside className="drawer" role="dialog" aria-modal="true" aria-label="Preview">
-        <button type="button" className="icon-btn drawer-close" aria-label="Close" onClick={closeDrawer}>
+        <button ref={close} type="button" className="icon-btn drawer-close" aria-label="Close" onClick={closeDrawer}>
           <Icon name="close" />
         </button>
         <Content spec={drawer} />

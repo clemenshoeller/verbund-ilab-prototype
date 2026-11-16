@@ -54,8 +54,9 @@ export function Avatar({ name, small }: { name: string; small?: boolean }) {
     .map((part) => part[0])
     .join("")
     .slice(0, 2);
+  const tint = [...name].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % 4;
   return (
-    <span className={"avatar" + (small ? " small" : "")} aria-hidden="true">
+    <span className={`avatar t${tint}` + (small ? " small" : "")} aria-hidden="true">
       {initials}
     </span>
   );

@@ -1,5 +1,3 @@
-import type { Level } from "../types";
-
 /** Three segments: filled up to `value`, an outline marks the `target` if given. */
 export function LevelBar({ value, target, max = 3 }: { value: number | null; target?: number; max?: number }) {
   const label =
@@ -12,41 +10,5 @@ export function LevelBar({ value, target, max = 3 }: { value: number | null; tar
         return <span key={i} className={"seg" + (filled ? " filled" : wanted ? " wanted" : "")} />;
       })}
     </span>
-  );
-}
-
-export function LevelPicker({
-  label,
-  value,
-  levels,
-  onChange,
-  strong,
-}: {
-  label: string;
-  value: number | null;
-  levels: Level[];
-  onChange: (value: number) => void;
-  strong?: boolean;
-}) {
-  const options = [{ value: 0, name: "Not yet" }, ...levels];
-  return (
-    <div className={"picker" + (strong ? " strong" : "")} role="group" aria-label={label}>
-      <span className="picker-label">{label}</span>
-      <span className="picker-options">
-        {options.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            className={"pick" + (value === option.value ? " on" : "")}
-            aria-pressed={value === option.value}
-            title={option.name}
-            onClick={() => onChange(option.value)}
-          >
-            <span className="pick-num">{option.value}</span>
-            <span className="pick-name">{option.name}</span>
-          </button>
-        ))}
-      </span>
-    </div>
   );
 }

@@ -20,7 +20,7 @@ export function ViewAs({ view }: { view: View }) {
   const roles: { id: View; role: string; name: string; hint: string }[] = [
     { id: "me", role: "Employee", name: me.name, hint: "The own profile and self-check" },
     { id: "team", role: "Manager", name: team.info.manager, hint: `The team ${team.info.name}` },
-    { id: "hr", role: "HR", name: "Demo HR", hint: "The whole organisation, as totals" },
+    { id: "hr", role: "HR", name: org.hrUser.name, hint: "The whole organisation, as totals" },
   ];
   const current = roles.find((r) => r.id === view)!;
 
