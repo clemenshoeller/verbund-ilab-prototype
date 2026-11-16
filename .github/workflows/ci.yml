@@ -47,6 +47,12 @@ jobs:
             echo "$headers" | grep -qi "$h" || { echo "missing header: $h"; exit 1; }
           done
           if echo "$headers" | grep -qi "^server: nginx/"; then echo "server version is exposed"; exit 1; fi
+          echo "$headers" | grep -qi "^cache-control: no-cache" || { echo "the page must not be cached"; exit 1; }
+          asset=$(curl -fsS http://localhost:8080/ | grep -o '/\?assets/[^"]*\.js' | head -1)
+          curl -fsSI "http://localhost:8080/${asset#/}" | grep -qi "^cache-control: public, max-age=31536000, immutable" || { echo "assets should be cached"; exit 1; }
+          curl -fsSI "http://localhost:8080/${asset#/}" | grep -qi "^x-content-type-options: nosniff" || { echo "assets lack the security headers"; exit 1; }
+      - name: Build once more with settings passed as build arguments
+        run: docker build --build-arg VITE_DATA_SOURCE=api --build-arg VITE_API_BASE_URL=https://example.invalid/api -t ai-competency-check:api .
       - name: Check that the manifests are valid YAML
         run: |
           ruby -ryaml -e 'kinds = YAML.load_stream(File.read("deploy/openshift.yaml")).map { |d| d["kind"] }; puts kinds.inspect; exit(kinds == ["Deployment", "Service", "Route"])'

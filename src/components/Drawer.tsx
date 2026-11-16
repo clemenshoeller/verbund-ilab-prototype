@@ -1,10 +1,11 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { useData } from "../data";
-import { gapRows, standingText, summarise } from "../lib/gap";
-import { MIN_GROUP, competencyStats, familyGrid, kpis, measureReach, percent } from "../lib/metrics";
+import { activeFocus, gapRows, standingText, summarise } from "../lib/gap";
+import { MIN_GROUP, competencyStats, familyGrid, kpis, measureReach, percent, tooFew } from "../lib/metrics";
 import { measureUptake, selfCheckDone, stageOf } from "../lib/workflow";
 import { useUi, type DrawerSpec } from "../ui";
 import { Meter } from "./Figures";
+import { CompetencyMeters } from "./HiddenStats";
 import { Icon } from "./Icon";
 import { Steps } from "./Steps";
 import { Avatar, StageChip, formatDate } from "./Ui";
@@ -17,8 +18,14 @@ export function Drawer() {
   useEffect(() => {
     if (!isOpen) return;
     const before = document.activeElement as HTMLElement | null;
+    // While the preview is open, the page behind it cannot be reached by keyboard or screen reader.
+    const behind = [...document.querySelectorAll<HTMLElement>(".app > .side, .app > .main")];
+    for (const element of behind) element.inert = true;
     close.current?.focus();
-    return () => before?.focus?.();
+    return () => {
+      for (const element of behind) element.inert = false;
+      before?.focus?.();
+    };
   }, [isOpen]);
   if (!drawer) return null;
   return (
@@ -45,6 +52,11 @@ function Content({ spec }: { spec: DrawerSpec }) {
     case "cell":
       return <CellPreview familyId={spec.familyId} competencyId={spec.competencyId} />;
   }
+}
+
+/** How far a measure is in use; not shown when it would fit fewer than five people. */
+function uptakeText(assigned: number, reach: number): string {
+  return tooFew(reach) ? `would fit fewer than ${MIN_GROUP} employees` : `agreed for ${assigned} of ${reach} it would fit`;
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -74,6 +86,7 @@ function PersonPreview({ id }: { id: string }) {
   const assigned = assignments[employee.id] ?? [];
   const rows = gapRows(content, family, assessment);
   const stage = stageOf(content, employee, assessment, assigned);
+  const focus = activeFocus(rows, assessment?.focus);
   const first = employee.name.split(" ")[0];
   const base = `#/team/people/${employee.id}`;
   const resume = rows.find((r) => r.agreed === null)?.competency.id ?? "summary";
@@ -128,11 +141,11 @@ function PersonPreview({ id }: { id: string }) {
 
       {completed && (
         <Section title="Development plan">
-          {assigned.length === 0 && (assessment?.focus?.length ?? 0) === 0 ? (
+          {assigned.length === 0 && focus.length === 0 ? (
             <p className="muted">No focus and no measure yet.</p>
           ) : (
             <ul className="mini-rows">
-              {(assessment?.focus ?? []).map((f) => (
+              {focus.map((f) => (
                 <li key={f}>
                   <span>
                     {content.competencies.find((c) => c.id === f)?.name}
@@ -174,7 +187,7 @@ function TeamPreview({ id }: { id: string }) {
   const members = org.employees.filter((e) => e.team === team.id);
   const k = kpis(content, members, assessments);
   const visible = k.completed >= MIN_GROUP;
-  const stats = competencyStats(content, members, assessments).filter((s) => s.rated > 0);
+  const stats = competencyStats(content, members, assessments);
   const withMeasures = members.filter((e) => (assignments[e.id] ?? []).length > 0).length;
 
   return (
@@ -193,15 +206,11 @@ function TeamPreview({ id }: { id: string }) {
       <div className="facts stacked">
         <Fact label="Conversations done" value={`${k.completed} of ${k.headcount}`} />
         <Fact label="Fit for today" value={visible ? `${k.readyToday} of ${k.completed}` : `n<${MIN_GROUP}`} />
-        <Fact label="With measures" value={withMeasures} />
+        <Fact label="With measures" value={visible ? withMeasures : `n<${MIN_GROUP}`} />
       </div>
       <Section title="Below the 2030 target, by competency">
         {visible ? (
-          <div className="meters">
-            {stats.map((s) => (
-              <Meter key={s.competency.id} name={s.competency.name} value={s.belowTarget} of={s.rated} />
-            ))}
-          </div>
+          <CompetencyMeters stats={stats} />
         ) : (
           <p className="muted">Fewer than {MIN_GROUP} rated employees. Results appear once more conversations are done.</p>
         )}
@@ -237,8 +246,8 @@ function CompetencyPreview({ id }: { id: string }) {
       <p className="drawer-lead">{competency.why}</p>
       <div className="facts stacked">
         <Fact label="Rated" value={stat.rated} />
-        <Fact label="Below today’s expectation" value={stat.rated ? percent(stat.belowToday / stat.rated) : "–"} />
-        <Fact label="Below 2030 target" value={stat.rated ? percent(stat.belowTarget / stat.rated) : "–"} />
+        <Fact label="Below today’s expectation" value={stat.hidden ? `n<${MIN_GROUP}` : percent(stat.belowToday / stat.rated)} />
+        <Fact label="Below 2030 target" value={stat.hidden ? `n<${MIN_GROUP}` : percent(stat.belowTarget / stat.rated)} />
       </div>
       <Section title="Below the 2030 target, by job family">
         <div className="meters">
@@ -260,7 +269,7 @@ function CompetencyPreview({ id }: { id: string }) {
             <li key={m.id}>
               <span>
                 {m.title}
-                <span className="sub">agreed for {measureUptake(org.employees, assignments, m.id).assigned} employees</span>
+                <span className="sub">{uptakeText(measureUptake(org.employees, assignments, m.id).assigned, measureReach(content, org.employees, assessments, m))}</span>
               </span>
             </li>
           ))}
@@ -324,7 +333,7 @@ function CellPreview({ familyId, competencyId }: { familyId: string; competencyI
                 {m.title}
                 <span className="sub">
                   {content.measureTypes.find((t) => t.id === m.type)?.perPerson
-                    ? `agreed for ${measureUptake(members, assignments, m.id).assigned} of ${measureReach(content, members, assessments, m)} it would fit in this family`
+                    ? uptakeText(measureUptake(members, assignments, m.id).assigned, measureReach(content, members, assessments, m))
                     : "for the organisation"}
                 </span>
               </span>

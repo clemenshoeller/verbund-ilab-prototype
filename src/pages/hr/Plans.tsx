@@ -1,7 +1,7 @@
 import { DraftTag, Meter } from "../../components/Figures";
 import { Card, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
-import { measureReach } from "../../lib/metrics";
+import { MIN_GROUP, measureReach, tooFew } from "../../lib/metrics";
 import { go } from "../../lib/router";
 import { measureUptake } from "../../lib/workflow";
 
@@ -61,7 +61,9 @@ export function HrMeasures({ typeId }: { typeId?: string }) {
                     <span className="kind">{typeName(m.type)}</span>
                   </td>
                   <td className="meter-cell">
-                    {perPerson(m.type) ? (
+                    {perPerson(m.type) && tooFew(reach) ? (
+                      <span className="sub">Would fit fewer than {MIN_GROUP} employees</span>
+                    ) : perPerson(m.type) ? (
                       <Meter name="" value={Math.min(assigned, reach)} of={reach} />
                     ) : (
                       <span className="sub">For the organisation · {reach} employees with a fitting gap</span>

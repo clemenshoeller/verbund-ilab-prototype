@@ -26,7 +26,7 @@ export function PageHead({
             ))}
           </p>
         )}
-        <h1>{title}</h1>
+        <h1 tabIndex={-1}>{title}</h1>
         {sub && <p className="lead">{sub}</p>}
       </div>
       {actions && <div className="head-actions">{actions}</div>}

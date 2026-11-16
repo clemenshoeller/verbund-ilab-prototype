@@ -101,15 +101,18 @@ export function TeamHome() {
                 const family = content.families.find((f) => f.id === employee.family)!;
                 const rows = gapRows(content, family, assessments[employee.id]);
                 return (
-                  <tr
-                    key={employee.id}
-                    className="clickable"
-                    tabIndex={0}
-                    onClick={() => openDrawer({ type: "person", id: employee.id })}
-                    onKeyDown={(event) => event.key === "Enter" && openDrawer({ type: "person", id: employee.id })}
-                  >
+                  <tr key={employee.id} className="clickable" onClick={() => openDrawer({ type: "person", id: employee.id })}>
                     <td>
-                      <strong>{employee.name}</strong>
+                      <button
+                      type="button"
+                      className="rowlink"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        openDrawer({ type: "person", id: employee.id });
+                      }}
+                    >
+                      {employee.name}
+                    </button>
                     </td>
                     {columns.map((c) => {
                       const row = rows.find((r) => r.competency.id === c.id);

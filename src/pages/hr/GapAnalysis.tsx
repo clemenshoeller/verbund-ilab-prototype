@@ -53,16 +53,19 @@ export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
             </thead>
             <tbody>
               {rows.slice(0, 8).map((row, index) => (
-                <tr
-                  key={row.family.id + row.competency.id}
-                  className="clickable"
-                  tabIndex={0}
-                  onClick={() => openDrawer({ type: "cell", familyId: row.family.id, competencyId: row.competency.id })}
-                  onKeyDown={(event) => event.key === "Enter" && openDrawer({ type: "cell", familyId: row.family.id, competencyId: row.competency.id })}
-                >
+                <tr key={row.family.id + row.competency.id} className="clickable" onClick={() => openDrawer({ type: "cell", familyId: row.family.id, competencyId: row.competency.id })}>
                   <td className="num muted">{index + 1}</td>
                   <td>
-                    <strong>{row.competency.name}</strong>
+                    <button
+                      type="button"
+                      className="rowlink"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        openDrawer({ type: "cell", familyId: row.family.id, competencyId: row.competency.id });
+                      }}
+                    >
+                      {row.competency.name}
+                    </button>
                   </td>
                   <td>{row.family.name}</td>
                   <td className="num">{row.belowToday > 0 ? <strong>{row.belowToday} of {row.assessed}</strong> : "–"}</td>

@@ -6,6 +6,9 @@ export type Horizon = "baseline" | "target";
 /** HR sees aggregates only; groups smaller than this are hidden. */
 export const MIN_GROUP = 5;
 
+/** True if a figure rests on too few rated people to be shown to HR. Use it for every HR-facing figure. */
+export const tooFew = (rated: number) => rated < MIN_GROUP;
+
 /** One agreed rating of one person in one competency of the own profile. */
 export interface Pair {
   employeeId: string;
@@ -45,39 +48,27 @@ export interface Kpis {
   inProgress: number;
   /** Share of ratings at or above the 2030 target, 0 to 1; null without ratings. */
   atTargetShare: number | null;
-  /** Sum of levels missing to the 2030 target. */
-  missingLevels: number;
   /** Assessed people with at least one competency below today's level. */
   belowTodayPeople: number;
-  /** Competency with the most missing levels to 2030, if any. */
-  largestGap: Competency | null;
   /** Assessed people who meet today's expectation in every competency of their profile. */
   readyToday: number;
 }
 
 export function kpis(content: Content, employees: Employee[], assessments: Assessments): Kpis {
   const pairs = ratedPairs(content, employees, assessments);
-  const perCompetency = new Map<string, number>();
   const belowToday = new Set<string>();
   let atTarget = 0;
-  let missingLevels = 0;
   for (const pair of pairs) {
-    const gap = missing(pair, "target");
-    if (gap === 0) atTarget++;
-    missingLevels += gap;
-    perCompetency.set(pair.competencyId, (perCompetency.get(pair.competencyId) ?? 0) + gap);
+    if (missing(pair, "target") === 0) atTarget++;
     if (missing(pair, "baseline") > 0) belowToday.add(pair.employeeId);
   }
-  const top = [...perCompetency.entries()].sort((a, b) => b[1] - a[1])[0];
   return {
     headcount: employees.length,
     completed: employees.filter((e) => isCompleted(assessments, e.id)).length,
     inProgress: employees.filter((e) => assessments[e.id]?.status === "in-progress").length,
     atTargetShare: pairs.length ? atTarget / pairs.length : null,
-    missingLevels,
     belowTodayPeople: belowToday.size,
     readyToday: new Set(pairs.map((p) => p.employeeId)).size - belowToday.size,
-    largestGap: top && top[1] > 0 ? (content.competencies.find((c) => c.id === top[0]) ?? null) : null,
   };
 }
 
@@ -120,7 +111,7 @@ export function familyGrid(content: Content, employees: Employee[], assessments:
         below,
         share: own.length ? below / own.length : 0,
         missingLevels: own.reduce((sum, p) => sum + missing(p, horizon), 0),
-        hidden: own.length < MIN_GROUP,
+        hidden: tooFew(own.length),
       };
     }
     return {
@@ -200,8 +191,8 @@ export interface CompetencyStats {
   belowToday: number;
   belowTarget: number;
   missingLevels: number;
-  /** How many people were rated at level 0, 1, 2, 3. */
-  distribution: number[];
+  /** True if too few people are rated for the figures to be shown to HR. */
+  hidden: boolean;
 }
 
 /** One row per competency for the given people, across all job families that need it. */
@@ -209,15 +200,13 @@ export function competencyStats(content: Content, employees: Employee[], assessm
   const pairs = ratedPairs(content, employees, assessments);
   return content.competencies.map((competency) => {
     const own = pairs.filter((p) => p.competencyId === competency.id);
-    const distribution = [0, 0, 0, 0];
-    for (const pair of own) distribution[pair.agreed]++;
     return {
       competency,
       rated: own.length,
       belowToday: own.filter((p) => missing(p, "baseline") > 0).length,
       belowTarget: own.filter((p) => missing(p, "target") > 0).length,
       missingLevels: own.reduce((sum, p) => sum + missing(p, "target"), 0),
-      distribution,
+      hidden: tooFew(own.length),
     };
   });
 }

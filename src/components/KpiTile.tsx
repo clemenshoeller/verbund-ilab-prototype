@@ -90,9 +90,9 @@ export function Tiles({ children }: { children: ReactNode }) {
   return <div className="tiles">{children}</div>;
 }
 
-/** "+5" or "−2" with a unit, or nothing when there is no change. */
-export function change(now: number, before: number, unit = ""): string | undefined {
+/** "+5 in 4 weeks" or "−2 pts in 1 week", or nothing when there is no change or no earlier week. */
+export function change(now: number, before: number, weeks: number, unit = ""): string | undefined {
   const d = Math.round(now - before);
-  if (d === 0) return undefined;
-  return `${d > 0 ? "+" : "−"}${Math.abs(d)}${unit} in 4 weeks`;
+  if (d === 0 || weeks < 1) return undefined;
+  return `${d > 0 ? "+" : "−"}${Math.abs(d)}${unit} in ${weeks} ${weeks === 1 ? "week" : "weeks"}`;
 }

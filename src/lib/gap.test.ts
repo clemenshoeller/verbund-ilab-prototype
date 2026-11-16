@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import contentJson from "../data/content.json";
 import orgJson from "../data/org.json";
 import type { Content, Org } from "../types";
-import { agreedCount, gapRows, gapTo, profileCompetencies, standing, standingText, summarise, totalGap } from "./gap";
+import { activeFocus, agreedCount, gapRows, gapTo, profileCompetencies, standing, standingText, summarise, totalGap } from "./gap";
 
 const content = contentJson as unknown as Content;
 const org = orgJson as unknown as Org;
@@ -86,5 +86,14 @@ describe("standing in words", () => {
       "Julia meets today\u2019s expectations in all 4 competencies. For 2030, 4 steps are still to go in 3 of 4 competencies, most in \u201cCritical review of results\u201d.",
     );
     expect(summarise("Katharina", gapRows(content, family("D"), undefined))).toBe("Katharina has no agreed levels yet.");
+  });
+});
+
+describe("activeFocus", () => {
+  const rows = gapRows(content, family("B"), org.assessments["e3"]); // gaps 0, 2, 1, 1
+  it("keeps a focus only while its gap is open", () => {
+    expect(activeFocus(rows, ["safe-use", "check-results"])).toEqual(["check-results"]);
+    expect(activeFocus(rows, undefined)).toEqual([]);
+    expect(activeFocus(rows, ["unknown"])).toEqual([]);
   });
 });

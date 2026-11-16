@@ -2,7 +2,7 @@ import { CompetencyDetails, GapHeadline } from "../../components/CompetencyDetai
 import { StepsLegend } from "../../components/Steps";
 import { Card, PageHead, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
-import { gapRows } from "../../lib/gap";
+import { activeFocus, gapRows } from "../../lib/gap";
 import { go } from "../../lib/router";
 import { MIN_GROUP } from "../../lib/metrics";
 import { selfCheckDone } from "../../lib/workflow";
@@ -33,7 +33,7 @@ export function MyProfile() {
   const first = employee.name.split(" ")[0];
   // Before the conversation the profile shows the own self-check, afterwards the agreed levels.
   const shown = completed ? rows : rows.map((row) => ({ ...row, agreed: assessment?.ratings[row.competency.id]?.self ?? null, gap: null }));
-  const focus = assessment?.focus ?? [];
+  const focus = activeFocus(rows, assessment?.focus);
 
   return (
     <>

@@ -55,6 +55,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 td.empty { text-align: center; }
 .state { padding: 48px 16px; text-align: center; color: var(--muted); }
 .icon { flex: none; }
+.skip { position: absolute; z-index: 100; left: 12px; top: -60px; padding: 10px 16px; border: 0; border-radius: var(--radius-s); background: var(--blue-dark); color: var(--white); font-weight: 700; cursor: pointer; }
+.skip:focus { top: 12px; }
+h1:focus { outline: none; }
+.hidden-note { margin-top: 12px; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 /* ---------- Frame: sidebar, top bar, content ---------- */
@@ -89,8 +93,8 @@ main > .lead, main > .legend { margin-top: -8px; }
 .search input:focus, .filters input:focus { background: var(--white); border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px var(--blue-20); }
 .search kbd { position: absolute; right: 12px; padding: 1px 7px; border: 1px solid var(--line); border-radius: 6px; background: var(--white); color: var(--muted); font: 0.7rem var(--body); pointer-events: none; }
 .search-hits { position: absolute; z-index: 6; top: calc(100% + 6px); left: 0; right: 0; margin: 0; padding: 6px; list-style: none; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-up); animation: pop 0.14s ease-out; }
-.search-hits a { display: block; padding: 8px 12px; border-radius: var(--radius-s); text-decoration: none; color: var(--text); }
-.search-hits a:hover, .search-hits a:focus { background: var(--blue-05); }
+.hit { padding: 8px 12px; border-radius: var(--radius-s); cursor: pointer; }
+.hit.on { background: var(--blue-05); }
 .search-hits .none { padding: 8px 12px; color: var(--muted); }
 
 /* ---------- View as: role menu ---------- */
@@ -105,11 +109,13 @@ main > .lead, main > .legend { margin-top: -8px; }
 .menu-title { padding: 8px 10px 4px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-60); }
 .menu-item { display: flex; align-items: center; gap: 11px; width: 100%; padding: 9px 10px; border: 0; border-radius: 10px; background: none; color: var(--text); text-decoration: none; text-align: left; font-size: 0.9rem; cursor: pointer; transition: background 0.12s; }
 .menu-item > span:not(.avatar) { flex: 1; }
+.menu ul.menu-more .menu-item { font-weight: 400; }
 .menu-item:hover, .menu-item:focus-visible, .menu-item.on { background: var(--blue-05); }
 .menu-item.on > .icon { color: var(--blue); }
 .menu-item.plain { color: var(--muted); }
 .menu-item.plain:hover { color: var(--blue); }
-.menu hr { border: 0; border-top: 1px solid var(--line); margin: 6px 0; }
+.menu ul { margin: 0; padding: 0; list-style: none; }
+.menu-more { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--line); }
 .menu-note { padding: 6px 10px 4px; font-size: 0.72rem; color: var(--muted); }
 
 /* ---------- Page head and records ---------- */
@@ -216,6 +222,8 @@ a.row:hover .go { transform: translateX(3px); background: var(--blue-dark); }
 .table tr.clickable { cursor: pointer; }
 .table tr.clickable td { transition: background 0.12s; }
 .table tr.clickable:hover td { background: var(--blue-05); }
+.rowlink { padding: 0; border: 0; background: none; font: inherit; font-weight: 700; color: inherit; text-align: left; cursor: pointer; }
+.rowlink:hover { color: var(--blue); }
 .sort { padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
 .sort:hover, .sort.on { color: var(--blue); }
 .sort.on::after { content: " ↓"; }

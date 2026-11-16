@@ -7,7 +7,7 @@ import { App } from "./App";
 /**
  * Automated accessibility check (axe-core) of the main screens.
  * Colour contrast is switched off because the simulated browser cannot compute it;
- * contrast of the palette is documented in the README.
+ * it is not checked anywhere else either (see "Known limitations" in the README).
  */
 const PAGES = [
   "/",
@@ -74,13 +74,19 @@ describe("accessibility", () => {
     expect(found).toEqual({});
   }, 60000);
 
-  it("finds no violations with the role menu and a preview open", async () => {
+  it("finds no violations with the role list, the search results and a preview open", async () => {
     window.location.hash = "/team/people";
     render(<App />);
     await screen.findByRole("navigation", { name: "Main" });
     fireEvent.click(screen.getByRole("button", { name: /View as/ }));
     expect(await violations()).toEqual([]);
     fireEvent.keyDown(document, { key: "Escape" });
+    const box = screen.getByRole("combobox", { name: "Search" });
+    fireEvent.focus(box);
+    fireEvent.change(box, { target: { value: "an" } });
+    expect(screen.getAllByRole("option").length).toBeGreaterThan(0);
+    expect(await violations()).toEqual([]);
+    fireEvent.blur(box);
     fireEvent.click(screen.getByText("Julia Steiner"));
     expect(screen.getByRole("dialog")).toBeTruthy();
     expect(await violations()).toEqual([]);

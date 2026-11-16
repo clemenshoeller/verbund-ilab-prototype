@@ -47,7 +47,11 @@ export function App() {
 
   if (failed) return <p className="state">The data could not be loaded. Please reload the page.</p>;
   if (!data) return <p className="state">Loading…</p>;
-  return <Root content={data.content} org={data.org} />;
+  return (
+    <ErrorBoundary scope="app">
+      <Root content={data.content} org={data.org} />
+    </ErrorBoundary>
+  );
 }
 
 function Root({ content, org }: { content: Content; org: Org }) {
@@ -79,6 +83,18 @@ function Shell() {
   // Outside a role: the start page (also reached as "guide") or the data model.
   const extra = inRole ? "" : route[0] === "about" ? "about" : "start";
   const open = nextActions(content, team.employees, assessments, assignments).length;
+
+  // After moving to another page the heading takes the focus, so keyboard and screen-reader users land on the new content.
+  const hash = window.location.hash;
+  const firstPage = useRef(true);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the address is the trigger, the effect reads the page that was rendered for it
+  useEffect(() => {
+    if (firstPage.current) {
+      firstPage.current = false;
+      return;
+    }
+    document.querySelector<HTMLElement>("main h1")?.focus({ preventScroll: true });
+  }, [hash]);
 
   // The browser tab names the page that is open. Runs after every render, so it also follows data changes.
   useEffect(() => {
@@ -141,6 +157,9 @@ function Shell() {
 
   return (
     <div className="app">
+      <button type="button" className="skip" onClick={() => document.querySelector<HTMLElement>("main h1")?.focus()}>
+        Skip to the content
+      </button>
       <aside className="side">
         <a className="brand" href="#/" aria-label="AI Competency Check, start page">
           <span className="wordmark">VERBUND</span>
@@ -184,8 +203,8 @@ function Shell() {
           <ViewAs view={view} />
         </header>
 
-        <main key={route.join("/")}>
-          <ErrorBoundary resetKey={route.join("/")}>
+        <main key={window.location.hash}>
+          <ErrorBoundary scope="page">
           {extra === "start" ? (
             <Start />
           ) : extra === "about" ? (

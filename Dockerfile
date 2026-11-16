@@ -4,6 +4,11 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
+# Settings are read at build time (see .env.example). Pass them with --build-arg, for example
+#   docker build --build-arg VITE_DATA_SOURCE=api --build-arg VITE_API_BASE_URL=https://example.internal/api .
+ARG VITE_DATA_SOURCE=mock
+ARG VITE_API_BASE_URL=
+ENV VITE_DATA_SOURCE=$VITE_DATA_SOURCE VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
 # Runtime stage: static files on an nginx that runs without root (works on OpenShift,

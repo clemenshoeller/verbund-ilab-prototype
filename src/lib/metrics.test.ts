@@ -39,10 +39,8 @@ describe("kpis", () => {
   });
   it("computes the share at target and the missing levels", () => {
     expect(result.atTargetShare).toBeCloseTo(7 / 12);
-    expect(result.missingLevels).toBe(4 + 2);
     expect(result.belowTodayPeople).toBe(1);
     expect(result.readyToday).toBe(2);
-    expect(result.largestGap?.id).toBe("safe-use");
   });
   it("returns no share without ratings", () => {
     expect(kpis(content, employees, {}).atTargetShare).toBeNull();
@@ -115,10 +113,10 @@ describe("sample organisation", () => {
 });
 
 describe("competencyStats", () => {
-  it("counts ratings per level and the people below each horizon", () => {
+  it("counts the people below each horizon and hides small groups", () => {
     const { employees, assessments } = build([person("a", [0, 2, 2, 1]), person("b", [1, 2, 2, 1]), person("c", [2, 2, 2, 1])]);
     const safe = competencyStats(content, employees, assessments).find((s) => s.competency.id === "safe-use")!;
-    expect(safe).toMatchObject({ rated: 3, belowToday: 1, belowTarget: 2, missingLevels: 3, distribution: [1, 1, 1, 0] });
+    expect(safe).toMatchObject({ rated: 3, belowToday: 1, belowTarget: 2, missingLevels: 3, hidden: true });
     const lead = competencyStats(content, employees, assessments).find((s) => s.competency.id === "steer-use")!;
     expect(lead.rated).toBe(0);
   });
@@ -136,5 +134,18 @@ describe("kpiHistory", () => {
   });
   it("is empty without completed conversations", () => {
     expect(kpiHistory(content, org.employees, {})).toEqual([]);
+  });
+});
+
+describe("minimum group size for HR", () => {
+  it("hides a competency that only one or two managers of a team are rated in", () => {
+    // Team t2 has one manager with a completed conversation; the leadership competencies rest on that one person.
+    const members = org.employees.filter((e) => e.team === "t2");
+    const stats = competencyStats(content, members, org.assessments);
+    const lead = stats.find((s) => s.competency.id === "steer-use")!;
+    expect(lead.rated).toBeGreaterThan(0);
+    expect(lead.rated).toBeLessThan(MIN_GROUP);
+    expect(lead.hidden).toBe(true);
+    expect(stats.find((s) => s.competency.id === "safe-use")!.hidden).toBe(false);
   });
 });

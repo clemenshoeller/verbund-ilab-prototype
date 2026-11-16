@@ -2,7 +2,7 @@ import { CompetencyDetails, GapHeadline } from "../../components/CompetencyDetai
 import { StepsLegend } from "../../components/Steps";
 import { Avatar, Card, LinkTabs, NotFound, PageHead, StageChip, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
-import { gapRows, standing, summarise, type GapRow } from "../../lib/gap";
+import { activeFocus, gapRows, standing, summarise, type GapRow } from "../../lib/gap";
 import { selfCheckDone, stageOf } from "../../lib/workflow";
 import type { Employee } from "../../types";
 import { Conversation } from "./Conversation";
@@ -82,7 +82,7 @@ function Overview({ employee, rows }: { employee: Employee; rows: GapRow[] }) {
   const { content, assessments, assignments } = useData();
   const assessment = assessments[employee.id];
   const assigned = assignments[employee.id] ?? [];
-  const focus = assessment?.focus ?? [];
+  const focus = activeFocus(rows, assessment?.focus);
   const first = employee.name.split(" ")[0];
   const completed = assessment?.status === "completed";
   const prepared = selfCheckDone(content, employee, assessment);

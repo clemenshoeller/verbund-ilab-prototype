@@ -43,7 +43,8 @@ Requires Node.js 22.12 or newer.
 ```bash
 npm install
 npm run dev        # http://localhost:5173 (next free port if taken)
-npm test           # 45 tests
+npm test           # 62 tests
+npm run lint       # code and accessibility rules
 npm run build      # production build in dist/
 ```
 
@@ -56,7 +57,7 @@ docker run --rm -p 8080:8080 ai-competency-check
 
 Then open http://localhost:8080. `GET /healthz` answers `ok`.
 
-On OpenShift: `deploy/openshift.yaml` holds a Deployment, a Service and a Route. Push the image to a registry the cluster can reach, replace the image placeholder and apply the file. The manifests were checked for valid syntax only; they were not applied to a cluster.
+On OpenShift: `deploy/openshift.yaml` holds a Deployment, a Service and a Route. Push the image to a registry the cluster can reach, replace the image placeholder and apply the file. The Deployment and the Service are rolled out on a Kubernetes cluster (kind) in CI on every push, under the restricted pod security standard and with a random user ID, the way OpenShift starts containers. They were not applied to an OpenShift cluster; the Route is specific to OpenShift and untested.
 
 ### Change the content without coding
 
@@ -106,9 +107,10 @@ src/
   components/          search, View-as menu, preview drawer, KPI tile, level path, icons, ...
   styles.css           one stylesheet with the design tokens at the top
   app.test.tsx         click tests of the whole app
+  a11y.test.tsx        accessibility tests with axe-core
 scripts/generate-sample-org.mjs   builds data/org.json
 deploy/nginx.conf, deploy/openshift.yaml
-Dockerfile, .github/workflows/ci.yml
+Dockerfile, .github/workflows/ci.yml, biome.json (lint rules)
 ```
 
 Data model (details in `src/types.ts` and on the page "Data model and status"): Competency, Job family with its target profile, Team, Employee, Assessment with Ratings (self, manager, agreed, note) and focus areas, Measure, Assignment of a measure to a person.
@@ -131,31 +133,62 @@ There are no secrets in this project. Two settings exist, read at build time fro
 | `VITE_DATA_SOURCE` | `mock` | `mock` reads the JSON files, `api` calls a backend |
 | `VITE_API_BASE_URL` | empty | Base address of that backend |
 
-Because Vite reads them at build time, changing them means building the image again. With a backend on another address, `connect-src` in `deploy/nginx.conf` has to allow it.
+Because Vite reads them at build time, changing them means building the image again: `docker build --build-arg VITE_DATA_SOURCE=api --build-arg VITE_API_BASE_URL=https://... .` With a backend on another address, `connect-src` in `deploy/nginx.conf` has to allow it.
+
+Edits made in the app are saved in the browser together with a fingerprint of the sample data. If the sample data changes, old edits are dropped; saved content that cannot be read is dropped as well.
 
 ## Data and security
 
 - No real VERBUND data, accounts, systems or interfaces. No personal data of real persons.
 - In mock mode the app makes no network requests after loading; ratings never leave the browser.
 - Free text is limited to 300 characters and shown as text (React escapes it). The code uses no `innerHTML`, no `eval` and writes nothing to the console.
-- A page that fails shows a plain message without technical detail.
-- The container runs without root and sends a Content-Security-Policy, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` and `Permissions-Policy`; the nginx version is not shown.
-- The git history was searched for keys, tokens and passwords: none.
+- A page that fails shows a plain message without technical detail; if the whole app fails, the message offers to reset the demo data and reload.
+- The container runs without root and sends a Content-Security-Policy, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` and `Permissions-Policy` with every response; the nginx version is not shown. The page itself is never cached, the hashed asset files for a year.
+- The git history is scanned for keys, tokens and passwords in CI (gitleaks): none.
 - `npm audit` reports no known vulnerabilities (checked on every push).
-- "HR sees no persons" and "groups under five are hidden" are rules of the display. Without a login they are not access control.
+- "HR sees no persons" and "groups under five are hidden" hold for every HR figure: totals, teams, competencies, heatmap, measures, previews and the dashboard, which shows nothing before five conversations are completed. One function decides it (`tooFew` in `src/lib/metrics.ts`). Without a login these are rules of the display, not access control.
+- Keyboard: every control is reachable; the heading takes the focus after a page change; a skip button leads to the content; the search works with arrow keys; the page behind an open preview cannot be reached.
 
 ## External services and AI
 
-| Service | Used for | What goes there | Assessment |
-|---|---|---|---|
-| GitHub (private repository, GitHub Actions) | Source code, automated tests, container build | Source code and invented data | Access limited to the account owner. The repository can be exported at any time (`git clone`, ZIP) and deleted. Where GitHub processes and stores data, and its subprocessors, were not checked against the current terms |
-| Claude Code (Anthropic) | Writing code, placeholder content and documentation | Instructions of the student team, the team's own project notes, colours and fonts of public VERBUND material | Externally hosted AI service. No VERBUND credentials, systems or data sets were entered. Whether the team's notes from talks with VERBUND may be processed there is to be confirmed with VERBUND. Use of inputs for training and data location were not checked against the current terms |
+Two external services were used to build the prototype. The app itself loads no hosting, analytics, fonts or other content from third parties.
 
-No hosting, analytics, fonts or other content from third parties is loaded by the app.
+| | GitHub | Claude Code (Anthropic) |
+|---|---|---|
+| Used for | Source code in a private repository of a personal account; GitHub Actions for tests and container build | Writing code, placeholder content and documentation, through the desktop app with a personal subscription |
+| What goes there | Source code and invented data | Instructions of the student team, the files of this repository, the team's own project notes, colours and fonts of public VERBUND material |
+| Where data is processed and stored | "GitHub stores data for GitHub.com in the USA" by default; a choice of region exists only for GitHub Enterprise Cloud with data residency [1]. The privacy statement names processing in the US and other countries [2] | Runs locally; prompts, file contents and command output go to Anthropic over TLS [8]. For commercial products the data "is stored in the US" [11]; for personal plans no page states the location beyond "US servers or other countries" in the privacy policy [12] |
+| Used for model training | Stored content of private repositories is not used. Content given as input to AI features (Copilot) may be used unless opted out [3][4]. Copilot was not used for this repository | Personal plans (Free, Pro, Max): used for training when the setting "Help improve our AI models" is on, Claude Code included [8][9]. Commercial plans (Team, Enterprise, API): not used unless the customer opts in [8]. **Which way the setting is on the account used here was not checked** |
+| Retention | Actions logs and artifacts 90 days by default, deletable earlier [6] | Personal plans: 30 days with the training setting off, up to 5 years with it on; deleted conversations leave the back end within 30 days [8][10]. Local transcripts lie in plain text under `~/.claude/projects/` [8] |
+| Subprocessors | List published (for example AWS, Google Cloud, Cloudflare) [5] | List published in the Trust Center (for example Google Cloud, AWS, Azure, Cloudflare) [13] |
+| Deletion | The owner can delete the repository; it can be restored for 90 days [6] | Conversations can be deleted; local transcripts with `claude purge` [8] |
+| Access control | Only the owner and invited collaborators see a private repository; two-factor authentication is required for contributors [7] | Bound to the personal account |
+| Transfer and export | Transfer to another owner in the repository settings; `git clone` gives the full history, the ZIP download has no history [6] | Not applicable; the result is the code in the repository |
 
-The repository currently lies in one student's personal GitHub account. For the handover it has to be transferred to an account VERBUND or WU controls, or handed over as an archive.
+What follows for the handover:
 
-**Use of AI.** All code, the placeholder content and this documentation were written with Claude Code on instructions of the student team. Reviewed by: type check, 45 automated tests, dependency audit, a search of the history for secrets, and click-throughs in the browser at desktop and phone width. A line-by-line review by a developer has not taken place.
+- The repository lies in one student's personal GitHub account and has to be transferred to an account VERBUND or WU controls, or handed over as an archive (`git bundle` with history, or ZIP without).
+- Whether the team's notes from talks with VERBUND may be processed in an externally hosted AI service is to be confirmed with VERBUND. No VERBUND credentials, systems or data sets were entered.
+- The training setting of the Claude account should be checked and, if it is on, switched off for further work on the project (claude.ai → Settings → Privacy).
+
+**Use of AI.** All code, the placeholder content and this documentation were written with Claude Code on instructions of the student team. Reviewed by: type check, lint with accessibility rules, 62 automated tests including an accessibility check with axe-core, dependency audit, a scan of the git history for secrets, click-throughs in the browser at desktop and phone width, and a second, independent review pass by an AI agent that had not written the code (see below). A line-by-line review by a human developer has not taken place.
+
+**Findings of the independent AI review (16.11.2026), all fixed and covered by tests:** the HR role showed figures that rested on one or two managers of a team; broken saved data could blank the app with no way back; saved edits could shadow new sample data; editing a note reopened a completed conversation; focus areas could lock after a level was raised; organisation-wide figures had no minimum group size; settings could not be passed to the container build. Accessibility: focus was lost on every page change, search results could not be reached by keyboard, the preview was not really modal, clickable rows were not announced as controls, the role menu had no keyboard support. Not acted on: the number of nginx worker processes under a small memory limit, judged a low risk.
+
+Sources, opened on 16.11.2026 (effective dates as shown on the pages; they should be rechecked before being cited formally):
+[1] https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/about-github-enterprise-cloud-with-data-residency ·
+[2] https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement ·
+[3] https://docs.github.com/en/site-policy/github-terms/github-terms-of-service ·
+[4] https://github.blog/changelog/2026-03-25-updates-to-our-privacy-statement-and-terms-of-service-how-we-use-your-data/ ·
+[5] https://docs.github.com/en/site-policy/privacy-policies/github-subprocessors ·
+[6] https://docs.github.com/en/repositories/creating-and-managing-repositories/deleting-a-repository, https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository, https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository, https://docs.github.com/en/repositories/working-with-files/using-files/downloading-source-code-archives ·
+[7] https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories, https://docs.github.com/en/authentication/securing-your-account-with-two-factor-authentication-2fa/about-two-factor-authentication ·
+[8] https://code.claude.com/docs/en/data-usage ·
+[9] https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training ·
+[10] https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data ·
+[11] https://privacy.claude.com/en/articles/7996890-where-are-your-servers-located-do-you-host-your-models-on-eu-servers ·
+[12] https://www.anthropic.com/legal/privacy ·
+[13] https://trust.anthropic.com/subprocessors
 
 ## Dependencies and licences
 
@@ -169,17 +202,20 @@ The repository currently lies in one student's personal GitHub account. For the 
 | jsdom | 31.0.1 | MIT | click tests |
 | @testing-library/react, @testing-library/dom | 16.3.3, 10.4.2 | MIT | click tests |
 | @types/react, @types/react-dom | 19.3.0 | MIT | type check |
+| @biomejs/biome | 2.6.8 | MIT OR Apache-2.0 | lint |
+| axe-core | 4.14.1 | MPL-2.0 | accessibility tests |
 
 Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-alpine` (runtime). Exact versions of all packages are locked in `package-lock.json`. Only React reaches the browser; its licence allows any further use.
 
 ## Tests
 
-`npm test` runs 45 tests.
+`npm test` runs 62 tests.
 
-- **34 unit tests**: gaps and status in words, totals and trend, heatmap, prioritisation, minimum group size, stages and next steps, consistency of the content files.
-- **11 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as menu; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from self-check through the conversation to the changed HR totals; reload and reset.
+- **39 unit tests**: gaps and status in words, focus areas, totals and trend, heatmap, prioritisation, minimum group size, stages and next steps, loading of saved data, consistency of the content files.
+- **2 accessibility tests** (`src/a11y.test.tsx`, axe-core): no violations on 25 pages, nor with the role list, the search results or a preview open. Colour contrast is excluded because the simulated browser cannot compute it.
+- **21 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as list; the search with arrow keys; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from self-check through the conversation to the changed HR totals; reload and reset; and one test for each finding of the code review.
 
-The CI workflow (`.github/workflows/ci.yml`) runs on every push: tests, build, `npm audit`, the container build, a start as an arbitrary non-root user, the health endpoint, the security headers, and the syntax of the OpenShift manifests.
+The CI workflow (`.github/workflows/ci.yml`) runs on every push to `main` and on pull requests, in four jobs: lint, tests, build and `npm audit` (fails from severity high); the container build with a start as an arbitrary non-root user, the health endpoint, the security and cache headers and a second build with settings passed in; a rollout of the manifests on a Kubernetes cluster; a scan of the whole git history for secrets (gitleaks). After a transfer to a GitHub organisation the gitleaks action needs a licence key, or has to be replaced by the gitleaks command line.
 
 Manual test: as employee do the self-check; as manager open that person's conversation, agree all levels, choose a focus and a measure, complete it; check that the employee's profile and the HR figures changed; reset the demo data.
 
@@ -199,7 +235,8 @@ Manual test: as employee do the self-check; as manager open that person's conver
 - Content is not validated against VERBUND's competency model or the project's interview results.
 - The sample ratings are random around today's level, so the figures show how the screens work and are no finding.
 - Gaps are ordered by urgency and size; strategic relevance is not weighted.
-- Click tests run in a simulated browser; there are no tests in real browsers and no visual regression tests.
+- Click and accessibility tests run in a simulated browser; there are no tests in real browsers, no visual regression tests and no check of colour contrast.
+- The linter reports no errors and about 80 warnings, most of them places where the code assumes that a record exists (`!`) and the order of rules in the stylesheet.
 - Cards in the pipeline cannot be dragged; they move when the state of the person changes.
 - The look follows VERBUND's public material (company presentation, verbund.com, the V-Go app). VERBUND's fonts are licensed and replaced by the fallbacks its website names; no logo or other brand asset is included.
 
@@ -223,11 +260,11 @@ Status against the minimum checklist of the technical guidelines.
 | 2 | No secrets hardcoded | Yes; history searched | Configuration and secrets |
 | 3 | Source code complete and accessible | Yes; repository still in a personal account | External services and AI |
 | 4 | Can be installed and started from the documentation | Yes | Run it |
-| 5 | Containerised, preferably OpenShift, at least Docker | Docker: yes, checked in CI. OpenShift: example manifests, not applied to a cluster | Run it |
-| 6 | Configuration through environment variables or separate files | Yes; read at build time | Configuration and secrets |
+| 5 | Containerised, preferably OpenShift, at least Docker | Docker: yes, checked in CI. Kubernetes: Deployment and Service rolled out in CI under the restricted policy with a random user ID. OpenShift itself: not tried; the Route is untested | Run it |
+| 6 | Configuration through environment variables or separate files | Yes; read at build time, passed to the container build as build arguments | Configuration and secrets |
 | 7 | External dependencies and licences documented | Yes | Dependencies and licences |
-| 8 | External cloud, SaaS and AI services listed | Yes; terms of the two services not checked in detail | External services and AI |
-| 9 | AI-generated results and code reviewed | By tests and click-throughs; no line-by-line review by a developer | External services and AI |
+| 8 | External cloud, SaaS and AI services listed | Yes, with data location, training use, retention, subprocessors, deletion and export; the training setting of the Claude account is unchecked | External services and AI |
+| 9 | AI-generated results and code reviewed | By lint, tests, accessibility checks and an independent AI review; no line-by-line review by a human developer | External services and AI |
 | 10 | Mocked data, interfaces and functions identified | Yes | Functional, mocked, out of scope |
 | 11 | Architecture and main components documented | Yes | Architecture |
 | 12 | Tests or documented test procedures | Yes | Tests |

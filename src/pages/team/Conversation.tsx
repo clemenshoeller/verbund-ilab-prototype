@@ -1,7 +1,8 @@
 import { Steps } from "../../components/Steps";
 import { formatDate } from "../../components/Ui";
 import { useData } from "../../data";
-import { agreedCount, standing, standingText, summarise, type GapRow } from "../../lib/gap";
+import { useState } from "react";
+import { activeFocus, agreedCount, standing, standingText, summarise, type GapRow } from "../../lib/gap";
 import { go } from "../../lib/router";
 import { MAX_FOCUS } from "../../lib/store";
 import { selfCheckDone } from "../../lib/workflow";
@@ -28,7 +29,7 @@ export function Conversation({ employee, family, rows, step }: { employee: Emplo
   const first = employee.name.split(" ")[0];
   const label = (id: string) => (id === "start" ? "Before you start" : id === "focus" ? "Focus and measures" : id === "summary" ? "Summary" : content.competencies.find((c) => c.id === id)!.name);
   const done = (id: string) =>
-    id === "start" ? index > 0 : id === "focus" ? (assessment?.focus?.length ?? 0) > 0 : id === "summary" ? assessment?.status === "completed" : assessment?.ratings[id]?.agreed != null;
+    id === "start" ? index > 0 : id === "focus" ? activeFocus(rows, assessment?.focus).length > 0 : id === "summary" ? assessment?.status === "completed" : assessment?.ratings[id]?.agreed != null;
 
   return (
     <div className="flow">
@@ -110,6 +111,8 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
     { key: "manager", label: "You" },
     { key: "agreed", label: "Agreed" },
   ];
+  // Open if there is a note already; typing or clearing it does not close it.
+  const [noteOpen, setNoteOpen] = useState(Boolean(rating?.note));
   const same = rating?.self != null && rating.self === rating.manager;
   const differ = rating?.self != null && rating?.manager != null && rating.self !== rating.manager;
 
@@ -186,7 +189,7 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
       )}
       {differ && rating?.agreed == null && <p className="callout">Your views differ. Ask for one or two concrete examples, then choose the agreed level together.</p>}
 
-      <details className="more" open={Boolean(rating?.note)}>
+      <details className="more" open={noteOpen} onToggle={(event) => setNoteOpen(event.currentTarget.open)}>
         <summary>Add a note</summary>
         <textarea
           rows={2}
@@ -204,7 +207,8 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
 function Focus({ employee, rows, first }: { employee: Employee; rows: GapRow[]; first: string }) {
   const { content, assessments, assignments, setFocus, assign, setAssignmentStatus, unassign } = useData();
   const { toast } = useUi();
-  const focus = assessments[employee.id]?.focus ?? [];
+  // A focus whose gap was closed afterwards is dropped, so it can never block a new choice.
+  const focus = activeFocus(rows, assessments[employee.id]?.focus);
   const assigned = assignments[employee.id] ?? [];
   const open = rows.filter((r) => (r.gap ?? 0) > 0).sort((a, b) => Number(standing(b) === "below") - Number(standing(a) === "below") || (b.gap ?? 0) - (a.gap ?? 0));
   const perPerson = new Set(content.measureTypes.filter((t) => t.perPerson).map((t) => t.id));
@@ -327,7 +331,7 @@ function Summary({ employee, rows, first }: { employee: Employee; rows: GapRow[]
   const { toast } = useUi();
   const assessment = assessments[employee.id];
   const assigned = assignments[employee.id] ?? [];
-  const focus = assessment?.focus ?? [];
+  const focus = activeFocus(rows, assessment?.focus);
   const all = agreedCount(rows) === rows.length;
   const completed = assessment?.status === "completed";
 

@@ -1,7 +1,7 @@
 import { LevelBar } from "../../components/Level";
 import { Card, NotFound, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
-import { competencyStats, familyGrid, measureReach, percent } from "../../lib/metrics";
+import { MIN_GROUP, competencyStats, familyGrid, measureReach, percent, tooFew } from "../../lib/metrics";
 import { useUi } from "../../ui";
 import { measureUptake } from "../../lib/workflow";
 
@@ -27,20 +27,23 @@ export function CompetencyList() {
             </thead>
             <tbody>
               {stats.map((s) => (
-                <tr
-                  key={s.competency.id}
-                  className="clickable"
-                  tabIndex={0}
-                  onClick={() => openDrawer({ type: "competency", id: s.competency.id })}
-                  onKeyDown={(event) => event.key === "Enter" && openDrawer({ type: "competency", id: s.competency.id })}
-                >
+                <tr key={s.competency.id} className="clickable" onClick={() => openDrawer({ type: "competency", id: s.competency.id })}>
                   <td>
-                    <strong>{s.competency.name}</strong>
+                    <button
+                      type="button"
+                      className="rowlink"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        openDrawer({ type: "competency", id: s.competency.id });
+                      }}
+                    >
+                      {s.competency.name}
+                    </button>
                     <span className="sub">{s.competency.description}</span>
                   </td>
                   <td>{groupName(s.competency.group)}</td>
-                  <td className="num">{s.rated ? percent(s.belowToday / s.rated) : "–"}</td>
-                  <td className="num">{s.rated ? percent(s.belowTarget / s.rated) : "–"}</td>
+                  <td className="num">{s.hidden ? `n<${MIN_GROUP}` : percent(s.belowToday / s.rated)}</td>
+                  <td className="num">{s.hidden ? `n<${MIN_GROUP}` : percent(s.belowTarget / s.rated)}</td>
                 </tr>
               ))}
             </tbody>
@@ -73,11 +76,11 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
         </span>
         <span>
           <em>Below today’s expectation</em>
-          <strong>{stat.rated ? percent(stat.belowToday / stat.rated) : "–"}</strong>
+          <strong>{stat.hidden ? `n<${MIN_GROUP}` : percent(stat.belowToday / stat.rated)}</strong>
         </span>
         <span>
           <em>Below 2030 target</em>
-          <strong>{stat.rated ? percent(stat.belowTarget / stat.rated) : "–"}</strong>
+          <strong>{stat.hidden ? `n<${MIN_GROUP}` : percent(stat.belowTarget / stat.rated)}</strong>
         </span>
       </div>
 
@@ -129,7 +132,7 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
                       <LevelBar value={entry.target} />
                     </td>
                     <td className="num">{cell.assessed}</td>
-                    <td className="num">{cell.hidden ? "n<5" : `${cell.below} (${percent(cell.share)})`}</td>
+                    <td className="num">{cell.hidden ? `n<${MIN_GROUP}` : `${cell.below} (${percent(cell.share)})`}</td>
                   </tr>
                 );
               })}
@@ -142,6 +145,7 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
         <ul className="rows">
           {measures.map((m) => {
             const uptake = measureUptake(org.employees, assignments, m.id);
+            const reach = measureReach(content, org.employees, assessments, m);
             return (
               <li key={m.id} className="row static">
                 <span className="kind">{typeName(m.type)}</span>
@@ -150,14 +154,15 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
                   <span className="sub">{m.description}</span>
                 </span>
                 <span className="row-figure">
-                  {content.measureTypes.find((t) => t.id === m.type)?.perPerson ? (
-                    <>
-                      <strong>{uptake.assigned}</strong> agreed
-                    </>
-                  ) : (
+                  {!content.measureTypes.find((t) => t.id === m.type)?.perPerson ? (
                     "For the organisation"
+                  ) : tooFew(reach) ? (
+                    `would fit fewer than ${MIN_GROUP}`
+                  ) : (
+                    <>
+                      <strong>{uptake.assigned}</strong> of {reach} agreed
+                    </>
                   )}
-                  <span className="sub">{measureReach(content, org.employees, assessments, m)} employees with a fitting gap</span>
                 </span>
               </li>
             );

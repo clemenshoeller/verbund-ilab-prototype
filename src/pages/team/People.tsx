@@ -12,7 +12,11 @@ export function People() {
   const { content, team, assessments, assignments } = useData();
   const [query, setQuery] = useState("");
   const [family, setFamily] = useState("all");
-  const [stage, setStage] = useState(queryParam("stage") ?? "all");
+  // The address may carry a stage filter; anything unknown counts as "all".
+  const [stage, setStage] = useState(() => {
+    const wanted = queryParam("stage");
+    return STAGES.some((s) => s.id === wanted) ? (wanted as string) : "all";
+  });
   const { openDrawer } = useUi();
   const [sort, setSort] = useState<SortKey>("stage");
 
@@ -45,7 +49,7 @@ export function People() {
     );
 
   const head = (key: SortKey, label: string, num?: boolean) => (
-    <th className={num ? "num" : ""} aria-sort={sort === key ? "ascending" : undefined}>
+    <th className={num ? "num" : ""} aria-sort={sort === key ? (key === "gap" ? "descending" : "ascending") : undefined}>
       <button type="button" className={"sort" + (sort === key ? " on" : "")} onClick={() => setSort(key)}>
         {label}
       </button>
@@ -97,18 +101,21 @@ export function People() {
             </thead>
             <tbody>
               {list.map((p) => (
-                <tr
-                  key={p.employee.id}
-                  className="clickable"
-                  tabIndex={0}
-                  onClick={() => openDrawer({ type: "person", id: p.employee.id })}
-                  onKeyDown={(event) => event.key === "Enter" && openDrawer({ type: "person", id: p.employee.id })}
-                >
+                <tr key={p.employee.id} className="clickable" onClick={() => openDrawer({ type: "person", id: p.employee.id })}>
                   <td>
                     <span className="person">
                       <Avatar name={p.employee.name} small />
                       <span>
-                        <strong>{p.employee.name}</strong>
+                        <button
+                      type="button"
+                      className="rowlink"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        openDrawer({ type: "person", id: p.employee.id });
+                      }}
+                    >
+                      {p.employee.name}
+                    </button>
                         <span className="sub">{p.employee.role}</span>
                       </span>
                     </span>

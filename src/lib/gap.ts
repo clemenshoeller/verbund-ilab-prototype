@@ -85,3 +85,8 @@ export function summarise(name: string, rows: GapRow[]): string {
         (largest ? `, most in “${largest.competency.name}”.` : ".");
   return `${today} ${future}`;
 }
+
+/** Focus areas that still have a gap. A focus whose gap was closed later no longer counts. */
+export function activeFocus(rows: GapRow[], focus: string[] | undefined): string[] {
+  return (focus ?? []).filter((id) => rows.some((row) => row.competency.id === id && (row.gap ?? 0) > 0));
+}

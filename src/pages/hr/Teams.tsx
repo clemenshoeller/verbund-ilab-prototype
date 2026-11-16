@@ -1,4 +1,5 @@
 import { Kpi, KpiRow, Meter } from "../../components/Figures";
+import { CompetencyMeters } from "../../components/HiddenStats";
 import { Card, NotFound, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
 import { MIN_GROUP, competencyStats, kpis } from "../../lib/metrics";
@@ -29,15 +30,18 @@ export function TeamList() {
             </thead>
             <tbody>
               {rows.map(({ team, k, visible, measures }) => (
-                <tr
-                  key={team.id}
-                  className="clickable"
-                  tabIndex={0}
-                  onClick={() => openDrawer({ type: "team", id: team.id })}
-                  onKeyDown={(event) => event.key === "Enter" && openDrawer({ type: "team", id: team.id })}
-                >
+                <tr key={team.id} className="clickable" onClick={() => openDrawer({ type: "team", id: team.id })}>
                   <td>
-                    <strong>{team.name}</strong>
+                    <button
+                      type="button"
+                      className="rowlink"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        openDrawer({ type: "team", id: team.id });
+                      }}
+                    >
+                      {team.name}
+                    </button>
                     <span className="sub">
                       {team.manager} · {k.headcount} employees
                     </span>
@@ -46,7 +50,7 @@ export function TeamList() {
                     <Meter name="" value={k.completed} of={k.headcount} />
                   </td>
                   <td className="num">{visible ? `${k.readyToday} of ${k.completed}` : `n<${MIN_GROUP}`}</td>
-                  <td className="num">{measures}</td>
+                  <td className="num">{visible ? measures : `n<${MIN_GROUP}`}</td>
                 </tr>
               ))}
             </tbody>
@@ -65,7 +69,7 @@ export function TeamRecord({ teamId }: { teamId: string }) {
   const members = org.employees.filter((e) => e.team === team.id);
   const k = kpis(content, members, assessments);
   const visible = k.completed >= MIN_GROUP;
-  const stats = competencyStats(content, members, assessments).filter((s) => s.rated > 0);
+  const stats = competencyStats(content, members, assessments);
   const withMeasures = members.filter((e) => (assignments[e.id] ?? []).length > 0).length;
   const families = content.families
     .map((f) => ({ family: f, count: members.filter((e) => e.family === f.id).length }))
@@ -82,16 +86,12 @@ export function TeamRecord({ teamId }: { teamId: string }) {
       <KpiRow>
         <Kpi label="Conversations done" value={`${k.completed} of ${k.headcount}`} sub={`${k.inProgress} running`} />
         <Kpi label="Fit for today" value={visible ? `${k.readyToday} of ${k.completed}` : "–"} sub={visible ? "meet today’s expectations" : `fewer than ${MIN_GROUP} rated`} />
-        <Kpi label="With measures" value={withMeasures} sub="have a development plan" />
+        <Kpi label="With measures" value={visible ? withMeasures : "–"} sub={visible ? "have a development plan" : `fewer than ${MIN_GROUP} rated`} />
       </KpiRow>
 
       <Card title="Below the 2030 target, by competency" aside="rated employees below target">
         {visible ? (
-          <div className="meters">
-            {stats.map((s) => (
-              <Meter key={s.competency.id} name={s.competency.name} value={s.belowTarget} of={s.rated} />
-            ))}
-          </div>
+          <CompetencyMeters stats={stats} />
         ) : (
           <p className="empty">Fewer than {MIN_GROUP} rated employees. Results are shown once more conversations are completed.</p>
         )}

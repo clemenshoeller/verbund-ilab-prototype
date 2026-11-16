@@ -88,26 +88,66 @@ describe("start page", () => {
 });
 
 describe("view as", () => {
-  it("switches the role from the menu at the top right", async () => {
+  it("switches the role from the list at the top right", async () => {
     await start();
-    click(screen.getByRole("button", { name: /View as Manager/ }));
-    const menu = screen.getByRole("menu", { name: "View as" });
-    expect(within(menu).getAllByRole("menuitemradio")).toHaveLength(3);
-    click(within(menu).getByRole("menuitemradio", { name: /HR/ }));
+    const button = screen.getByRole("button", { name: /View as Manager/ });
+    click(button);
+    const list = screen.getByRole("navigation", { name: "View as" });
+    expect(within(list).getAllByRole("link")).toHaveLength(5);
+    expect(within(list).getByRole("link", { name: /Manager/ }).getAttribute("aria-current")).toBe("true");
+    click(within(list).getByRole("link", { name: /HR/ }));
     await open("/hr");
-    expect(screen.queryByRole("menu")).toBeNull();
+    expect(screen.queryByRole("navigation", { name: "View as" })).toBeNull();
     expect(screen.getByRole("button", { name: /View as HR/ })).toBeTruthy();
     expect(main().querySelector("h1")!.textContent).toContain("assessed employees meet today");
   });
 
-  it("closes with Escape and resets the demo data with a confirmation", async () => {
+  it("closes with Escape and when the current role is chosen again", async () => {
+    await start();
+    const button = screen.getByRole("button", { name: /View as/ });
+    click(button);
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("navigation", { name: "View as" })).toBeNull();
+    expect(document.activeElement).toBe(button);
+    click(button);
+    click(within(screen.getByRole("navigation", { name: "View as" })).getByRole("link", { name: /Manager/ }));
+    expect(screen.queryByRole("navigation", { name: "View as" })).toBeNull();
+  });
+
+  it("resets the demo data with a confirmation", async () => {
     await start();
     click(screen.getByRole("button", { name: /View as/ }));
-    fireEvent.keyDown(document, { key: "Escape" });
-    expect(screen.queryByRole("menu")).toBeNull();
-    click(screen.getByRole("button", { name: /View as/ }));
-    click(screen.getByRole("menuitem", { name: /Reset demo data/ }));
+    click(screen.getByRole("button", { name: /Reset demo data/ }));
     expect(screen.getByRole("status").textContent).toContain("Demo data reset");
+  });
+});
+
+describe("search", () => {
+  it("is operated with the arrow keys and Enter", async () => {
+    await start("/hr");
+    const box = screen.getByRole("combobox", { name: "Search" });
+    fireEvent.focus(box);
+    fireEvent.change(box, { target: { value: "a" } });
+    const options = screen.getAllByRole("option");
+    expect(options.length).toBeGreaterThan(1);
+    expect(options[0].getAttribute("aria-selected")).toBe("true");
+    fireEvent.keyDown(box, { key: "ArrowDown" });
+    expect(screen.getAllByRole("option")[1].getAttribute("aria-selected")).toBe("true");
+    const wanted = screen.getAllByRole("option")[1].querySelector("strong")!.textContent!;
+    fireEvent.keyDown(box, { key: "Enter" });
+    await open(window.location.hash.slice(1));
+    expect(window.location.hash.startsWith("#/hr/")).toBe(true);
+    expect(document.body.textContent).toContain(wanted);
+    expect(screen.queryByRole("listbox")).toBeNull();
+  });
+
+  it("finds no persons for HR", async () => {
+    await start("/hr");
+    const box = screen.getByRole("combobox", { name: "Search" });
+    fireEvent.focus(box);
+    fireEvent.change(box, { target: { value: "Berger" } });
+    expect(screen.queryAllByRole("option")).toHaveLength(0);
+    expect(screen.getByRole("listbox").textContent).toContain("Nothing found");
   });
 });
 
@@ -203,7 +243,80 @@ describe("the journey of one person", () => {
     await start("/me/check/1");
     expect((within(main()).getAllByRole("radio")[2] as HTMLInputElement).checked).toBe(true);
     click(screen.getByRole("button", { name: /View as/ }));
-    click(screen.getByRole("menuitem", { name: /Reset demo data/ }));
+    click(screen.getByRole("button", { name: /Reset demo data/ }));
     expect((within(main()).getAllByRole("radio")[2] as HTMLInputElement).checked).toBe(false);
+  });
+});
+
+describe("findings of the code review", () => {
+  it("never shows HR a figure that rests on one or two managers of a team", async () => {
+    await start("/hr/teams/t2");
+    expect(main().textContent).not.toMatch(/Steering AI use in the team\s*\d+ of \d+/);
+    expect(main().textContent).toContain("Not shown, fewer than 5 rated: Steering AI use in the team, Guiding the change.");
+    await open("/hr/teams");
+    click(within(main()).getByRole("button", { name: "Data & Analytics" }));
+    const dialog = screen.getByRole("dialog");
+    expect(dialog.textContent).toContain("Not shown, fewer than 5 rated");
+    expect(dialog.textContent).not.toMatch(/Guiding the change\s*\d+ of \d+/);
+  });
+
+  it("survives broken saved data", async () => {
+    for (const broken of ["{}", "null", "not json", JSON.stringify({ assessments: { e1: {} } })]) {
+      localStorage.setItem("ai-competency-check.state.v5", broken);
+      await start("/team");
+      expect(main().querySelector("h1")!.textContent).toBe("3 of 7 conversations are done.");
+      expect(localStorage.getItem("ai-competency-check.state.v5")).toBeNull();
+      cleanup();
+    }
+  });
+
+  it("keeps a completed conversation completed when a note is edited", async () => {
+    await start("/team/people/e3/conversation/check-results");
+    click(within(main()).getByText("Add a note"));
+    const note = within(main()).getByRole("textbox", { name: "Note" });
+    fireEvent.change(note, { target: { value: "x" } });
+    fireEvent.change(note, { target: { value: "" } });
+    expect(within(main()).getByRole("textbox", { name: "Note" })).toBeTruthy();
+    await open("/team/people/e3");
+    expect(main().textContent).toContain("Agreed on 05.11.2026");
+    await open("/team");
+    expect(main().querySelector("h1")!.textContent).toBe("3 of 7 conversations are done.");
+  });
+
+  it("frees a focus area when its gap is closed afterwards", async () => {
+    await start("/team/people/e3/conversation/focus");
+    const options = () => [...main().querySelectorAll<HTMLButtonElement>(".options .option")];
+    expect(options().filter((o) => o.getAttribute("aria-pressed") === "true")).toHaveLength(2);
+    expect(options()[2].disabled).toBe(true);
+    // Raise "Critical review of results" to its target: it is no gap any more and no focus either.
+    await open("/team/people/e3/conversation/check-results");
+    click([...main().querySelectorAll<HTMLInputElement>(".pickcell.agreed input")][3]);
+    await open("/team/people/e3/conversation/focus");
+    expect(options().map((o) => o.textContent)).not.toContain(expect.stringContaining("Critical review"));
+    expect(options().filter((o) => o.getAttribute("aria-pressed") === "true")).toHaveLength(1);
+    expect(options().every((o) => !o.disabled)).toBe(true);
+  });
+
+  it("ignores an unknown stage in the address and clears the filter from the navigation", async () => {
+    await start("/team/people?stage=nonsense");
+    expect(within(main()).getByText("7 of 7")).toBeTruthy();
+    await open("/team/people?stage=agreed");
+    expect(within(main()).getByText("1 of 7")).toBeTruthy();
+    await open("/team/people");
+    expect(within(main()).getByText("7 of 7")).toBeTruthy();
+  });
+
+  it("moves the focus to the heading of the new page", async () => {
+    await start("/team");
+    await open("/team/pipeline");
+    expect(document.activeElement).toBe(main().querySelector("h1"));
+  });
+
+  it("makes the page behind an open preview unreachable", async () => {
+    await start("/team/people");
+    click(within(main()).getByRole("button", { name: "Julia Steiner" }));
+    expect(document.querySelector<HTMLElement>(".app > .main")!.inert).toBe(true);
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(document.querySelector<HTMLElement>(".app > .main")!.inert).toBe(false);
   });
 });
