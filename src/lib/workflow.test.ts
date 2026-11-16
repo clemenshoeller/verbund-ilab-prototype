@@ -33,7 +33,7 @@ describe("nextActions", () => {
   });
   it("puts running conversations first, then missing measures, then new conversations", () => {
     expect(actions.map((a) => a.stage)).toEqual(["talking", "agreed", "open", "open", "open"]);
-    expect(actions[1]).toMatchObject({ label: "Agree measures", detail: "3 levels missing to 2030, no measure yet" });
+    expect(actions[1]).toMatchObject({ label: "Agree measures", detail: "3 steps to the 2030 target, no measure yet" });
   });
 });
 

@@ -42,7 +42,14 @@
         "Knows the approved tools and the rules for data and confidentiality.",
         "Applies the rules in daily work without guidance and spots unclear cases.",
         "Advises colleagues on unclear cases and helps to improve the rules."
-      ]
+      ],
+      "why": "Everyone who uses AI at work needs basic AI literacy; the EU AI Act asks companies to take measures for it.",
+      "examples": {
+        "A": "Decides which code and data may go into a coding assistant.",
+        "B": "Knows that contracts and personal data do not belong in a public chatbot.",
+        "D": "Uses only released tools for plant data and maintenance reports.",
+        "M": "Makes sure the team knows the rules and where to ask."
+      }
     },
     {
       "id": "check-results",
@@ -54,7 +61,14 @@
         "Knows that AI output can be wrong and checks facts before using it.",
         "Verifies output systematically with sources, plausibility checks or a second person.",
         "Defines quality checks for the team and trains others in them."
-      ]
+      ],
+      "why": "AI output can sound right and be wrong. Whoever uses it stays responsible for the result.",
+      "examples": {
+        "A": "Reviews and tests generated code before it is merged.",
+        "B": "Checks figures and sources of an AI-drafted report against the original data.",
+        "D": "Compares an AI fault diagnosis with measurements and own experience.",
+        "M": "Asks how a result was checked before deciding on it."
+      }
     },
     {
       "id": "spot-potential",
@@ -66,7 +80,14 @@
         "Can name tasks in the own job that AI could support.",
         "Describes a use case with benefit, data needed and risks.",
         "Prioritises use cases for the unit and brings them into the decision process."
-      ]
+      ],
+      "why": "The best ideas for using AI come from the people who know the work.",
+      "examples": {
+        "A": "Sees where tests, documentation or monitoring can be supported by AI.",
+        "B": "Spots recurring reports or enquiries that an assistant could prepare.",
+        "D": "Suggests where inspection data could point to maintenance needs earlier.",
+        "M": "Collects ideas from the team and brings the best ones forward."
+      }
     },
     {
       "id": "build-scale",
@@ -78,7 +99,14 @@
         "Uses templates and solutions that others have built.",
         "Builds simple solutions for the own work and shares them.",
         "Develops solutions for several teams and takes care of operation and quality."
-      ]
+      ],
+      "why": "A use case only pays off once it runs and others can reuse it.",
+      "examples": {
+        "A": "Builds an agent or a pipeline and looks after operation and quality.",
+        "B": "Sets up a prompt template for a recurring report and shares it.",
+        "D": "Configures an assistant for standard maintenance documentation.",
+        "M": "Makes sure a working solution is handed over and reused in other teams."
+      }
     },
     {
       "id": "steer-use",
@@ -90,7 +118,11 @@
         "Knows where the team already uses AI.",
         "Sets goals and priorities for AI use and reviews results regularly.",
         "Aligns AI use with the unit's strategy and with data, process and project needs."
-      ]
+      ],
+      "why": "Managers decide where AI is used and answer for the results.",
+      "examples": {
+        "M": "Sets two or three AI goals for the team and reviews them every quarter."
+      }
     },
     {
       "id": "guide-change",
@@ -102,7 +134,11 @@
         "Uses AI visibly in the own work and talks about it.",
         "Plans learning time, addresses concerns and uses role models in the team.",
         "Builds a learning culture across teams and develops other managers."
-      ]
+      ],
+      "why": "Teams follow what managers do, not what they announce.",
+      "examples": {
+        "M": "Blocks learning time and shows the own use of AI in team meetings."
+      }
     }
   ],
   "families": [
@@ -432,10 +468,13 @@
       }
     ],
     "rules": [
-      "HR sees aggregated results only, never single persons.",
+      "The check serves development. It is not used for pay, appraisal or staffing decisions.",
+      "Levels are agreed by two people in a conversation. No AI rates anyone.",
+      "A manager sees the own team. HR sees totals only, never single persons.",
       "Groups with fewer than five rated employees are not shown.",
-      "Ratings serve development, not pay or appraisal.",
-      "A manager sees the own team only."
+      "Employees can see everything stored about them and ask for corrections.",
+      "Entries are replaced by next year's conversation.",
+      "Purpose, access and retention are fixed in a works agreement (Betriebsvereinbarung) before any real use."
     ]
   }
 }

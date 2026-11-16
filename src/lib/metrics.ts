@@ -51,6 +51,8 @@ export interface Kpis {
   belowTodayPeople: number;
   /** Competency with the most missing levels to 2030, if any. */
   largestGap: Competency | null;
+  /** Assessed people who meet today's expectation in every competency of their profile. */
+  readyToday: number;
 }
 
 export function kpis(content: Content, employees: Employee[], assessments: Assessments): Kpis {
@@ -74,6 +76,7 @@ export function kpis(content: Content, employees: Employee[], assessments: Asses
     atTargetShare: pairs.length ? atTarget / pairs.length : null,
     missingLevels,
     belowTodayPeople: belowToday.size,
+    readyToday: new Set(pairs.map((p) => p.employeeId)).size - belowToday.size,
     largestGap: top && top[1] > 0 ? (content.competencies.find((c) => c.id === top[0]) ?? null) : null,
   };
 }

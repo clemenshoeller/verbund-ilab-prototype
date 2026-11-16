@@ -41,6 +41,7 @@ describe("kpis", () => {
     expect(result.atTargetShare).toBeCloseTo(7 / 12);
     expect(result.missingLevels).toBe(4 + 2);
     expect(result.belowTodayPeople).toBe(1);
+    expect(result.readyToday).toBe(2);
     expect(result.largestGap?.id).toBe("safe-use");
   });
   it("returns no share without ratings", () => {

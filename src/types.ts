@@ -18,6 +18,10 @@ export interface Competency {
   question: string;
   /** One descriptor per level, index 0 = level 1. */
   levels: string[];
+  /** One sentence on why the competency matters. */
+  why: string;
+  /** What it looks like in daily work, per job family id. */
+  examples: Record<string, string>;
 }
 
 export interface ProfileEntry {
@@ -90,6 +94,8 @@ export interface Rating {
   manager: number | null;
   agreed: number | null;
   note: string;
+  /** Example from the own work the employee gave in the self-check. */
+  selfNote?: string;
 }
 
 export type AssessmentStatus = "open" | "in-progress" | "completed";
@@ -98,6 +104,8 @@ export interface Assessment {
   status: AssessmentStatus;
   date: string | null;
   ratings: Record<string, Rating>;
+  /** Competencies manager and employee chose to work on first (at most two). */
+  focus?: string[];
 }
 
 export type AssignmentStatus = "planned" | "running" | "done";
@@ -118,8 +126,10 @@ export interface TeamInfo {
 }
 
 export interface Org {
-  /** Team of the demo manager shown in the team view. */
+  /** Team of the demo manager shown in the manager role. */
   currentTeamId: string;
+  /** Demo employee shown in the employee role. */
+  currentEmployeeId: string;
   teams: TeamInfo[];
   employees: Employee[];
   assessments: Record<string, Assessment>;

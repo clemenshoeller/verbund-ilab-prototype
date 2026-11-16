@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Assessments, AssignmentStatus, Assignments, Rating } from "../types";
 
 /** Demo state lives in the browser only. "Reset demo data" deletes it. */
-const STORAGE_KEY = "ai-competency-check.state.v3";
+const STORAGE_KEY = "ai-competency-check.state.v4";
 
 interface State {
   assessments: Assessments;
@@ -18,6 +18,9 @@ function load(seed: State): State {
   }
   return structuredClone(seed);
 }
+
+/** How many competencies a person works on at a time. Guidance suggests one or two, three at most. */
+export const MAX_FOCUS = 2;
 
 const emptyRating: Rating = { self: null, manager: null, agreed: null, note: "" };
 const today = () => new Date().toISOString().slice(0, 10);
@@ -39,6 +42,23 @@ export function useStore(seed: State) {
       const rating = { ...emptyRating, ...current.ratings[competencyId], ...patch };
       const assessment = { ...current, status: "in-progress" as const, date: today(), ratings: { ...current.ratings, [competencyId]: rating } };
       return { ...prev, assessments: { ...prev.assessments, [employeeId]: assessment } };
+    });
+  }, []);
+
+  /** Self-check of the employee before the talk: fills the self-rating without starting the conversation. */
+  const setSelf = useCallback((employeeId: string, competencyId: string, patch: { self?: number; selfNote?: string }) => {
+    setState((prev) => {
+      const current = prev.assessments[employeeId] ?? { status: "open" as const, date: null, ratings: {} };
+      const rating = { ...emptyRating, ...current.ratings[competencyId], ...patch };
+      return { ...prev, assessments: { ...prev.assessments, [employeeId]: { ...current, ratings: { ...current.ratings, [competencyId]: rating } } } };
+    });
+  }, []);
+
+  const setFocus = useCallback((employeeId: string, focus: string[]) => {
+    setState((prev) => {
+      const current = prev.assessments[employeeId];
+      if (!current) return prev;
+      return { ...prev, assessments: { ...prev.assessments, [employeeId]: { ...current, focus: focus.slice(0, MAX_FOCUS) } } };
     });
   }, []);
 
@@ -84,7 +104,7 @@ export function useStore(seed: State) {
     setState(structuredClone(seed));
   }, [seed]);
 
-  return { ...state, setRating, complete, assign, setAssignmentStatus, unassign, reset };
+  return { ...state, setRating, setSelf, setFocus, complete, assign, setAssignmentStatus, unassign, reset };
 }
 
 export type Store = ReturnType<typeof useStore>;

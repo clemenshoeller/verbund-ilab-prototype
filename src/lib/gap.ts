@@ -43,3 +43,46 @@ export function agreedCount(rows: GapRow[]): number {
 export function statusOf(assessment?: Assessment): AssessmentStatus {
   return assessment?.status ?? "open";
 }
+
+/** How one competency stands, in the words shown to users. */
+export type Standing = "open" | "below" | "steps" | "reached";
+
+export function standing(row: GapRow): Standing {
+  if (row.agreed === null) return "open";
+  if (row.agreed < row.baseline) return "below";
+  return row.agreed >= row.target ? "reached" : "steps";
+}
+
+export function standingText(row: GapRow): string {
+  switch (standing(row)) {
+    case "open":
+      return "Not agreed yet";
+    case "below":
+      return "Below today’s expectation";
+    case "reached":
+      return "2030 target reached";
+    default: {
+      const steps = row.target - (row.agreed ?? 0);
+      return `${steps} ${steps === 1 ? "step" : "steps"} to the 2030 target`;
+    }
+  }
+}
+
+/** One or two sentences that say where a person stands, for the top of a record. */
+export function summarise(name: string, rows: GapRow[]): string {
+  const rated = rows.filter((r) => r.agreed !== null);
+  if (rated.length === 0) return `${name} has no agreed levels yet.`;
+  const below = rated.filter((r) => standing(r) === "below");
+  const reached = rated.filter((r) => standing(r) === "reached").length;
+  const steps = rated.reduce((sum, r) => sum + (r.gap ?? 0), 0);
+  const largest = [...rated].sort((a, b) => (b.gap ?? 0) - (a.gap ?? 0))[0];
+  const today =
+    below.length === 0
+      ? `${name} meets today’s expectations in all ${rated.length} competencies.`
+      : `${name} is below today’s expectation in ${below.length} of ${rated.length} competencies, first of all “${below[0].competency.name}”.`;
+  const future =
+    steps === 0
+      ? "The 2030 profile is already reached."
+      : `For 2030, ${reached} of ${rated.length} are reached; the largest step is in “${largest.competency.name}”.`;
+  return `${today} ${future}`;
+}

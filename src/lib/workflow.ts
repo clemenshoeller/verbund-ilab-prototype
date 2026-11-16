@@ -21,6 +21,13 @@ export function stageOf(content: Content, employee: Employee, assessment?: Asses
   return gap === 0 || assigned.length > 0 ? "planned" : "agreed";
 }
 
+/** True once the employee has rated themself in every competency of the profile. */
+export function selfCheckDone(content: Content, employee: Employee, assessment?: Assessment): boolean {
+  const family = content.families.find((f) => f.id === employee.family)!;
+  const rows = gapRows(content, family, assessment);
+  return rows.length > 0 && rows.every((row) => assessment?.ratings[row.competency.id]?.self != null);
+}
+
 export interface NextAction {
   employee: Employee;
   stage: Stage;
@@ -47,7 +54,7 @@ export function nextActions(content: Content, employees: Employee[], assessments
         stage,
         label: "Finish the conversation",
         detail: `${agreedCount(rows)} of ${rows.length} competencies agreed`,
-        href: `#/team/people/${employee.id}/conversation`,
+        href: `#/team/people/${employee.id}/conversation/${rows.find((r) => r.agreed === null)?.competency.id ?? "summary"}`,
       });
     } else if (stage === "agreed") {
       const gap = totalGap(rows) ?? 0;
@@ -55,15 +62,15 @@ export function nextActions(content: Content, employees: Employee[], assessments
         employee,
         stage,
         label: "Agree measures",
-        detail: `${gap} ${gap === 1 ? "level" : "levels"} missing to 2030, no measure yet`,
-        href: `#/team/people/${employee.id}/measures`,
+        detail: `${gap} ${gap === 1 ? "step" : "steps"} to the 2030 target, no measure yet`,
+        href: `#/team/people/${employee.id}/conversation/focus`,
       });
     } else if (stage === "open") {
       actions.push({
         employee,
         stage,
         label: "Start the conversation",
-        detail: `Target profile ${family.name}`,
+        detail: selfCheckDone(content, employee, assessment) ? "Self-check is in" : "Self-check not done yet",
         href: `#/team/people/${employee.id}/conversation`,
       });
     }

@@ -92,7 +92,7 @@ export function People() {
                 <th>Job family</th>
                 {head("stage", "Stage")}
                 <th className="num">Agreed</th>
-                {head("gap", "Levels missing to 2030", true)}
+                {head("gap", "Steps to 2030", true)}
                 {head("measures", "Measures", true)}
                 <th>Last change</th>
               </tr>
