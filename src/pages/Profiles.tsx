@@ -1,47 +1,40 @@
 import { LevelBar } from "../components/Level";
-import { go } from "../lib/router";
+import { Card, PageHead } from "../components/Ui";
+import { useData } from "../data";
 import { profileCompetencies } from "../lib/gap";
+import { go } from "../lib/router";
 import type { Content } from "../types";
 
-export function Profiles({ content, familyId, base }: { content: Content; familyId?: string; base: string }) {
+/** Target profile per job family. Shown in both views; HR reaches it as "Job families". */
+export function Profiles({ familyId, base }: { familyId?: string; base: string }) {
+  const { content, org } = useData();
   const family = content.families.find((f) => f.id === familyId) ?? content.families[0];
   const competencies = profileCompetencies(content, family);
+  const hr = base === "/hr";
+  const headcount = org.employees.filter((e) => e.family === family.id).length;
 
   return (
     <>
-      <div className="page-head">
-        <p className="eyebrow">{base === "/hr" ? "HR view · future target state" : "Step 1"}</p>
-        <h1>Target profiles</h1>
-        <p className="lead">The level each job family needs today and in 2030, on a scale of three levels.</p>
-      </div>
+      <PageHead title={hr ? "Job families" : "Target profiles"} sub="The level each job family needs today and in 2030, on a scale of three levels." />
 
       <div className="tabs" role="tablist" aria-label="Job family">
         {content.families.map((f) => (
-          <button
-            key={f.id}
-            role="tab"
-            type="button"
-            aria-selected={f.id === family.id}
-            className={"tab" + (f.id === family.id ? " on" : "")}
-            onClick={() => go(`${base}/profiles/${f.id}`)}
-          >
+          <button key={f.id} role="tab" type="button" aria-selected={f.id === family.id} className={"tab" + (f.id === family.id ? " on" : "")} onClick={() => go(`${base}/profiles/${f.id}`)}>
             {f.name}
           </button>
         ))}
       </div>
 
-      <section className="panel">
-        <h2>{family.name}</h2>
+      <Card title={family.name} aside={hr ? `${headcount} employees` : undefined}>
         <p>{family.summary}</p>
         <p className="muted">{family.example}</p>
-      </section>
+      </Card>
 
       {content.groups.map((group) => {
         const inGroup = competencies.filter((c) => c.group === group.id);
         if (inGroup.length === 0) return null;
         return (
-          <section key={group.id}>
-            <h3 className="group-title">{group.name}</h3>
+          <Card key={group.id} title={group.name} flush>
             <div className="table-wrap">
               <table className="table profile">
                 <thead>
@@ -58,7 +51,13 @@ export function Profiles({ content, familyId, base }: { content: Content; family
                     return (
                       <tr key={c.id}>
                         <td>
-                          <strong>{c.name}</strong>
+                          {hr ? (
+                            <a href={`#/hr/competencies/${c.id}`}>
+                              <strong>{c.name}</strong>
+                            </a>
+                          ) : (
+                            <strong>{c.name}</strong>
+                          )}
                           <span className="sub">{c.description}</span>
                         </td>
                         <td>
@@ -76,17 +75,17 @@ export function Profiles({ content, familyId, base }: { content: Content; family
                 </tbody>
               </table>
             </div>
-          </section>
+          </Card>
         );
       })}
 
-      <section className="legend">
+      <p className="legend">
         {content.levels.map((level) => (
           <span key={level.value}>
             <LevelBar value={level.value} /> <strong>{level.name}</strong> {level.short}
           </span>
         ))}
-      </section>
+      </p>
     </>
   );
 }

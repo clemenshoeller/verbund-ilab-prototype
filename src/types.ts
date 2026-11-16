@@ -40,6 +40,8 @@ export interface MeasureType {
   id: string;
   name: string;
   short: string;
+  /** False for measures of the organisation, such as recruiting, that are not agreed with one person. */
+  perPerson: boolean;
 }
 
 export interface Measure {
@@ -98,6 +100,17 @@ export interface Assessment {
   ratings: Record<string, Rating>;
 }
 
+export type AssignmentStatus = "planned" | "running" | "done";
+
+/** A measure agreed for one person. */
+export interface Assignment {
+  measureId: string;
+  status: AssignmentStatus;
+  date: string;
+}
+
+export type Assignments = Record<string, Assignment[]>;
+
 export interface TeamInfo {
   id: string;
   name: string;
@@ -110,6 +123,7 @@ export interface Org {
   teams: TeamInfo[];
   employees: Employee[];
   assessments: Record<string, Assessment>;
+  assignments: Assignments;
 }
 
 export type Assessments = Record<string, Assessment>;

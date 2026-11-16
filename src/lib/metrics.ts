@@ -189,3 +189,32 @@ export function measureReach(content: Content, employees: Employee[], assessment
 }
 
 export const percent = (share: number | null) => (share === null ? "–" : `${Math.round(share * 100)}%`);
+
+export interface CompetencyStats {
+  competency: Competency;
+  /** People with an agreed rating in this competency. */
+  rated: number;
+  belowToday: number;
+  belowTarget: number;
+  missingLevels: number;
+  /** How many people were rated at level 0, 1, 2, 3. */
+  distribution: number[];
+}
+
+/** One row per competency for the given people, across all job families that need it. */
+export function competencyStats(content: Content, employees: Employee[], assessments: Assessments): CompetencyStats[] {
+  const pairs = ratedPairs(content, employees, assessments);
+  return content.competencies.map((competency) => {
+    const own = pairs.filter((p) => p.competencyId === competency.id);
+    const distribution = [0, 0, 0, 0];
+    for (const pair of own) distribution[pair.agreed]++;
+    return {
+      competency,
+      rated: own.length,
+      belowToday: own.filter((p) => missing(p, "baseline") > 0).length,
+      belowTarget: own.filter((p) => missing(p, "target") > 0).length,
+      missingLevels: own.reduce((sum, p) => sum + missing(p, "target"), 0),
+      distribution,
+    };
+  });
+}

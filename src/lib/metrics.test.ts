@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import contentJson from "../data/content.json";
 import orgJson from "../data/org.json";
 import type { Assessment, Assessments, Content, Employee, Org } from "../types";
-import { MIN_GROUP, familyGrid, kpis, measureReach, priorities, ratedPairs, teamCoverage } from "./metrics";
+import { MIN_GROUP, competencyStats, familyGrid, kpis, measureReach, priorities, ratedPairs, teamCoverage } from "./metrics";
 
 const content = contentJson as unknown as Content;
 const org = orgJson as unknown as Org;
@@ -110,5 +110,15 @@ describe("sample organisation", () => {
       expect(types.has(m.type)).toBe(true);
       expect(m.competencies.every((c) => competencies.has(c))).toBe(true);
     }
+  });
+});
+
+describe("competencyStats", () => {
+  it("counts ratings per level and the people below each horizon", () => {
+    const { employees, assessments } = build([person("a", [0, 2, 2, 1]), person("b", [1, 2, 2, 1]), person("c", [2, 2, 2, 1])]);
+    const safe = competencyStats(content, employees, assessments).find((s) => s.competency.id === "safe-use")!;
+    expect(safe).toMatchObject({ rated: 3, belowToday: 1, belowTarget: 2, missingLevels: 3, distribution: [1, 1, 1, 0] });
+    const lead = competencyStats(content, employees, assessments).find((s) => s.competency.id === "steer-use")!;
+    expect(lead.rated).toBe(0);
   });
 });

@@ -15,37 +15,37 @@
     {
       "id": "t3",
       "name": "IT Applications",
-      "manager": "David Baumann"
+      "manager": "Georg Zach"
     },
     {
       "id": "t4",
       "name": "Finance & Controlling",
-      "manager": "Hannah Kaiser"
+      "manager": "Jakob Koller"
     },
     {
       "id": "t5",
       "name": "Procurement & Legal",
-      "manager": "Wolfgang Lechner"
+      "manager": "Johanna Unger"
     },
     {
       "id": "t6",
       "name": "HR Services",
-      "manager": "Sarah Eder"
+      "manager": "Maria Mayr"
     },
     {
       "id": "t7",
       "name": "Plant Engineering",
-      "manager": "Wolfgang Stadler"
+      "manager": "Andrea Auer"
     },
     {
       "id": "t8",
       "name": "Maintenance",
-      "manager": "Hannah Weber"
+      "manager": "Sarah Lindner"
     },
     {
       "id": "t9",
       "name": "Grid Services",
-      "manager": "Maria Auer"
+      "manager": "Viktoria Schwarz"
     }
   ],
   "employees": [
@@ -107,539 +107,539 @@
     },
     {
       "id": "e9",
-      "name": "Patrick Hofer",
+      "name": "Georg Baumann",
       "role": "Data Scientist",
       "family": "A",
       "team": "t2"
     },
     {
       "id": "e10",
-      "name": "Lukas Winkler",
-      "role": "Data Scientist",
+      "name": "Martin Wimmer",
+      "role": "Data Analyst",
       "family": "A",
       "team": "t2"
     },
     {
       "id": "e11",
-      "name": "Sarah Baumann",
-      "role": "Data Engineer",
+      "name": "Verena Wolf",
+      "role": "Data Scientist",
       "family": "A",
       "team": "t2"
     },
     {
       "id": "e12",
-      "name": "Simon Winkler",
+      "name": "Sabine Pichler",
       "role": "Data Scientist",
       "family": "A",
       "team": "t2"
     },
     {
       "id": "e13",
-      "name": "Daniel Lang",
+      "name": "Nina Vogl",
       "role": "Data Engineer",
       "family": "A",
       "team": "t2"
     },
     {
       "id": "e14",
-      "name": "Manuel Lindner",
-      "role": "Data Scientist",
+      "name": "Daniel Wimmer",
+      "role": "Data Engineer",
       "family": "A",
       "team": "t2"
     },
     {
       "id": "e15",
-      "name": "Alexander Hofer",
+      "name": "Florian Vogl",
       "role": "Data Engineer",
       "family": "A",
       "team": "t2"
     },
     {
       "id": "e16",
-      "name": "Martin Weber",
+      "name": "David Winkler",
       "role": "BI Developer",
       "family": "A",
       "team": "t2"
     },
     {
       "id": "e17",
-      "name": "David Baumann",
+      "name": "Georg Zach",
       "role": "Team Lead IT Applications",
       "family": "M",
       "team": "t3"
     },
     {
       "id": "e18",
-      "name": "Florian Lang",
+      "name": "Alexander Riedl",
       "role": "Deputy Team Lead IT Applications",
       "family": "M",
       "team": "t3"
     },
     {
       "id": "e19",
-      "name": "Lukas Wolf",
-      "role": "Application Manager",
-      "family": "A",
-      "team": "t3"
-    },
-    {
-      "id": "e20",
-      "name": "Viktoria Kern",
+      "name": "Daniel Haas",
       "role": "System Administrator",
       "family": "A",
       "team": "t3"
     },
     {
+      "id": "e20",
+      "name": "Daniel Riedl",
+      "role": "Software Developer",
+      "family": "A",
+      "team": "t3"
+    },
+    {
       "id": "e21",
-      "name": "Martin Egger",
+      "name": "Alexander Pichler",
       "role": "Application Manager",
       "family": "A",
       "team": "t3"
     },
     {
       "id": "e22",
-      "name": "Eva Strobl",
+      "name": "Wolfgang Hofer",
       "role": "Application Manager",
       "family": "A",
       "team": "t3"
     },
     {
       "id": "e23",
-      "name": "Martin Baumann",
+      "name": "David Pichler",
       "role": "IT Security Specialist",
       "family": "A",
       "team": "t3"
     },
     {
       "id": "e24",
-      "name": "Jakob Haas",
-      "role": "IT Security Specialist",
+      "name": "Karin Ebner",
+      "role": "Application Manager",
       "family": "A",
       "team": "t3"
     },
     {
       "id": "e25",
-      "name": "Patrick Lang",
-      "role": "Software Developer",
+      "name": "Verena Lindner",
+      "role": "Application Manager",
       "family": "A",
       "team": "t3"
     },
     {
       "id": "e26",
-      "name": "Magdalena Winkler",
-      "role": "Software Developer",
+      "name": "Sabine Zach",
+      "role": "IT Security Specialist",
       "family": "A",
       "team": "t3"
     },
     {
       "id": "e27",
-      "name": "Lukas Lindner",
-      "role": "System Administrator",
+      "name": "Barbara Riedl",
+      "role": "Software Developer",
       "family": "A",
       "team": "t3"
     },
     {
       "id": "e28",
-      "name": "Hannah Kaiser",
+      "name": "Jakob Koller",
       "role": "Team Lead Finance & Controlling",
       "family": "M",
       "team": "t4"
     },
     {
       "id": "e29",
-      "name": "Simon Wolf",
+      "name": "Hannah Brandl",
       "role": "Deputy Team Lead Finance & Controlling",
       "family": "M",
       "team": "t4"
     },
     {
       "id": "e30",
-      "name": "Barbara Strobl",
-      "role": "Controller",
+      "name": "Hannah Eder",
+      "role": "Accountant",
       "family": "B",
       "team": "t4"
     },
     {
       "id": "e31",
-      "name": "Magdalena Maier",
+      "name": "Petra Kaiser",
       "role": "Financial Analyst",
       "family": "B",
       "team": "t4"
     },
     {
       "id": "e32",
-      "name": "Tobias Strobl",
-      "role": "Accountant",
+      "name": "Christina Stadler",
+      "role": "Controller",
       "family": "B",
       "team": "t4"
     },
     {
       "id": "e33",
-      "name": "Martin Lang",
-      "role": "Controller",
-      "family": "B",
-      "team": "t4"
-    },
-    {
-      "id": "e34",
-      "name": "Johanna Egger",
+      "name": "Hannah Kaiser",
       "role": "Accountant",
       "family": "B",
       "team": "t4"
     },
     {
+      "id": "e34",
+      "name": "Eva Hofer",
+      "role": "Financial Analyst",
+      "family": "B",
+      "team": "t4"
+    },
+    {
       "id": "e35",
-      "name": "Patrick Mayr",
-      "role": "Controller",
+      "name": "Jakob Posch",
+      "role": "Accountant",
       "family": "B",
       "team": "t4"
     },
     {
       "id": "e36",
-      "name": "Patrick Zach",
+      "name": "Barbara Unger",
       "role": "Controller",
       "family": "B",
       "team": "t4"
     },
     {
       "id": "e37",
-      "name": "Wolfgang Ebner",
+      "name": "Magdalena Brandl",
       "role": "Controller",
       "family": "B",
       "team": "t4"
     },
     {
       "id": "e38",
-      "name": "Wolfgang Lechner",
+      "name": "Johanna Unger",
       "role": "Team Lead Procurement & Legal",
       "family": "M",
       "team": "t5"
     },
     {
       "id": "e39",
-      "name": "Paul Haas",
+      "name": "Eva Unger",
       "role": "Legal Counsel",
       "family": "B",
       "team": "t5"
     },
     {
       "id": "e40",
-      "name": "Johanna Pichler",
-      "role": "Procurement Specialist",
+      "name": "Simon Kaiser",
+      "role": "Contract Manager",
       "family": "B",
       "team": "t5"
     },
     {
       "id": "e41",
-      "name": "Martin Schmid",
+      "name": "Georg Schwarz",
       "role": "Contract Manager",
       "family": "B",
       "team": "t5"
     },
     {
       "id": "e42",
-      "name": "Johanna Kaiser",
-      "role": "Procurement Specialist",
-      "family": "B",
-      "team": "t5"
-    },
-    {
-      "id": "e43",
-      "name": "Manuel Koller",
+      "name": "Karin Mayr",
       "role": "Contract Manager",
       "family": "B",
       "team": "t5"
     },
     {
+      "id": "e43",
+      "name": "Martin Baumann",
+      "role": "Legal Counsel",
+      "family": "B",
+      "team": "t5"
+    },
+    {
       "id": "e44",
-      "name": "Nina Ebner",
-      "role": "Procurement Specialist",
+      "name": "Viktoria Hahn",
+      "role": "Contract Manager",
       "family": "B",
       "team": "t5"
     },
     {
       "id": "e45",
-      "name": "Alexander Wimmer",
+      "name": "Sarah Ebner",
       "role": "Legal Counsel",
       "family": "B",
       "team": "t5"
     },
     {
       "id": "e46",
-      "name": "Sarah Eder",
+      "name": "Maria Mayr",
       "role": "Team Lead HR Services",
       "family": "M",
       "team": "t6"
     },
     {
       "id": "e47",
-      "name": "Simon Stadler",
+      "name": "Eva Lang",
       "role": "HR Business Partner",
       "family": "B",
       "team": "t6"
     },
     {
       "id": "e48",
-      "name": "Jakob Reiter",
-      "role": "HR Business Partner",
+      "name": "David Schwarz",
+      "role": "Recruiter",
       "family": "B",
       "team": "t6"
     },
     {
       "id": "e49",
-      "name": "Georg Posch",
-      "role": "Recruiter",
+      "name": "Karin Schmid",
+      "role": "HR Business Partner",
       "family": "B",
       "team": "t6"
     },
     {
       "id": "e50",
-      "name": "Lukas Hahn",
-      "role": "Recruiter",
+      "name": "Florian Zach",
+      "role": "Payroll Specialist",
       "family": "B",
       "team": "t6"
     },
     {
       "id": "e51",
-      "name": "Bernhard Kaiser",
-      "role": "Recruiter",
+      "name": "Nina Stadler",
+      "role": "Payroll Specialist",
       "family": "B",
       "team": "t6"
     },
     {
       "id": "e52",
-      "name": "Karin Auer",
+      "name": "Paul Unger",
       "role": "Payroll Specialist",
       "family": "B",
       "team": "t6"
     },
     {
       "id": "e53",
-      "name": "Viktoria Hahn",
+      "name": "Barbara Schmid",
       "role": "Recruiter",
       "family": "B",
       "team": "t6"
     },
     {
       "id": "e54",
-      "name": "Wolfgang Stadler",
+      "name": "Andrea Auer",
       "role": "Team Lead Plant Engineering",
       "family": "M",
       "team": "t7"
     },
     {
       "id": "e55",
-      "name": "Johanna Seidl",
+      "name": "Florian Maier",
       "role": "Deputy Team Lead Plant Engineering",
       "family": "M",
       "team": "t7"
     },
     {
       "id": "e56",
-      "name": "Florian Eder",
-      "role": "Project Engineer",
+      "name": "Hannah Lang",
+      "role": "Electrical Engineer",
       "family": "D",
       "team": "t7"
     },
     {
       "id": "e57",
-      "name": "Martin Vogl",
-      "role": "Project Engineer",
+      "name": "Magdalena Seidl",
+      "role": "Electrical Engineer",
       "family": "D",
       "team": "t7"
     },
     {
       "id": "e58",
-      "name": "Magdalena Haas",
+      "name": "Sarah Maier",
       "role": "Project Engineer",
       "family": "D",
       "team": "t7"
     },
     {
       "id": "e59",
-      "name": "David Lindner",
+      "name": "Florian Auer",
       "role": "Mechanical Engineer",
       "family": "D",
       "team": "t7"
     },
     {
       "id": "e60",
-      "name": "David Hahn",
-      "role": "Civil Engineer",
-      "family": "D",
-      "team": "t7"
-    },
-    {
-      "id": "e61",
-      "name": "Nina Schmid",
-      "role": "Electrical Engineer",
-      "family": "D",
-      "team": "t7"
-    },
-    {
-      "id": "e62",
-      "name": "Maria Zach",
+      "name": "Christina Eder",
       "role": "Mechanical Engineer",
       "family": "D",
       "team": "t7"
     },
     {
-      "id": "e63",
-      "name": "Patrick Hahn",
+      "id": "e61",
+      "name": "Jakob Thaler",
       "role": "Civil Engineer",
       "family": "D",
       "team": "t7"
     },
     {
+      "id": "e62",
+      "name": "Jakob Wimmer",
+      "role": "Civil Engineer",
+      "family": "D",
+      "team": "t7"
+    },
+    {
+      "id": "e63",
+      "name": "Viktoria Posch",
+      "role": "Electrical Engineer",
+      "family": "D",
+      "team": "t7"
+    },
+    {
       "id": "e64",
-      "name": "Lukas Zach",
+      "name": "Patrick Hahn",
       "role": "Project Engineer",
       "family": "D",
       "team": "t7"
     },
     {
       "id": "e65",
-      "name": "Hannah Weber",
+      "name": "Sarah Lindner",
       "role": "Team Lead Maintenance",
       "family": "M",
       "team": "t8"
     },
     {
       "id": "e66",
-      "name": "Andrea Unger",
+      "name": "Maria Baumann",
       "role": "Deputy Team Lead Maintenance",
       "family": "M",
       "team": "t8"
     },
     {
       "id": "e67",
-      "name": "David Binder",
-      "role": "Service Technician",
+      "name": "Florian Baumann",
+      "role": "Maintenance Technician",
       "family": "D",
       "team": "t8"
     },
     {
       "id": "e68",
-      "name": "Petra Kaiser",
+      "name": "Eva Lechner",
       "role": "Electrician",
       "family": "D",
       "team": "t8"
     },
     {
       "id": "e69",
-      "name": "Nina Kern",
-      "role": "Maintenance Technician",
-      "family": "D",
-      "team": "t8"
-    },
-    {
-      "id": "e70",
-      "name": "Nina Schwarz",
-      "role": "Service Technician",
-      "family": "D",
-      "team": "t8"
-    },
-    {
-      "id": "e71",
-      "name": "Barbara Fischer",
-      "role": "Service Technician",
-      "family": "D",
-      "team": "t8"
-    },
-    {
-      "id": "e72",
-      "name": "Bernhard Egger",
-      "role": "Service Technician",
-      "family": "D",
-      "team": "t8"
-    },
-    {
-      "id": "e73",
-      "name": "Magdalena Mayr",
-      "role": "Maintenance Technician",
-      "family": "D",
-      "team": "t8"
-    },
-    {
-      "id": "e74",
-      "name": "Manuel Mayr",
-      "role": "Maintenance Technician",
-      "family": "D",
-      "team": "t8"
-    },
-    {
-      "id": "e75",
-      "name": "Tobias Lechner",
-      "role": "Maintenance Technician",
-      "family": "D",
-      "team": "t8"
-    },
-    {
-      "id": "e76",
-      "name": "Petra Schwarz",
+      "name": "Bernhard Posch",
       "role": "Electrician",
       "family": "D",
       "team": "t8"
     },
     {
+      "id": "e70",
+      "name": "Barbara Strobl",
+      "role": "Electrician",
+      "family": "D",
+      "team": "t8"
+    },
+    {
+      "id": "e71",
+      "name": "Verena Lechner",
+      "role": "Maintenance Technician",
+      "family": "D",
+      "team": "t8"
+    },
+    {
+      "id": "e72",
+      "name": "Petra Vogl",
+      "role": "Electrician",
+      "family": "D",
+      "team": "t8"
+    },
+    {
+      "id": "e73",
+      "name": "Johanna Seidl",
+      "role": "Service Technician",
+      "family": "D",
+      "team": "t8"
+    },
+    {
+      "id": "e74",
+      "name": "Christina Wimmer",
+      "role": "Electrician",
+      "family": "D",
+      "team": "t8"
+    },
+    {
+      "id": "e75",
+      "name": "Johanna Haas",
+      "role": "Service Technician",
+      "family": "D",
+      "team": "t8"
+    },
+    {
+      "id": "e76",
+      "name": "Viktoria Thaler",
+      "role": "Maintenance Technician",
+      "family": "D",
+      "team": "t8"
+    },
+    {
       "id": "e77",
-      "name": "Maria Auer",
+      "name": "Viktoria Schwarz",
       "role": "Team Lead Grid Services",
       "family": "M",
       "team": "t9"
     },
     {
       "id": "e78",
-      "name": "Johanna Kern",
+      "name": "Andrea Brandl",
       "role": "Grid Planner",
       "family": "D",
       "team": "t9"
     },
     {
       "id": "e79",
-      "name": "Wolfgang Winkler",
+      "name": "Tobias Brandl",
       "role": "Protection Engineer",
       "family": "D",
       "team": "t9"
     },
     {
       "id": "e80",
-      "name": "Florian Kaiser",
-      "role": "Protection Engineer",
+      "name": "Andrea Vogl",
+      "role": "Grid Planner",
       "family": "D",
       "team": "t9"
     },
     {
       "id": "e81",
-      "name": "Manuel Thaler",
+      "name": "Patrick Seidl",
       "role": "Protection Engineer",
       "family": "D",
       "team": "t9"
     },
     {
       "id": "e82",
-      "name": "Verena Brandl",
-      "role": "Grid Planner",
+      "name": "Martin Eder",
+      "role": "Protection Engineer",
       "family": "D",
       "team": "t9"
     },
     {
       "id": "e83",
-      "name": "Maria Schmid",
-      "role": "Grid Planner",
-      "family": "D",
-      "team": "t9"
-    },
-    {
-      "id": "e84",
-      "name": "Sarah Pichler",
+      "name": "Tobias Aigner",
       "role": "Field Technician",
       "family": "D",
       "team": "t9"
     },
     {
+      "id": "e84",
+      "name": "Christina Lang",
+      "role": "Protection Engineer",
+      "family": "D",
+      "team": "t9"
+    },
+    {
       "id": "e85",
-      "name": "Karin Maier",
+      "name": "Sabine Binder",
       "role": "Grid Planner",
       "family": "D",
       "team": "t9"
@@ -804,40 +804,130 @@
     },
     "e9": {
       "status": "completed",
-      "date": "2026-10-11",
+      "date": "2026-10-18",
       "ratings": {
         "safe-use": {
           "self": 3,
-          "manager": 2,
-          "agreed": 2,
+          "manager": 3,
+          "agreed": 3,
           "note": ""
         },
         "check-results": {
           "self": 2,
-          "manager": 1,
-          "agreed": 1,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         },
         "spot-potential": {
-          "self": 2,
-          "manager": 1,
+          "self": 1,
+          "manager": 2,
           "agreed": 2,
           "note": ""
         },
         "build-scale": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 2,
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
           "note": ""
         }
       }
     },
     "e10": {
       "status": "completed",
-      "date": "2026-10-17",
+      "date": "2026-11-13",
+      "ratings": {
+        "safe-use": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "check-results": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        }
+      }
+    },
+    "e11": {
+      "status": "completed",
+      "date": "2026-10-06",
       "ratings": {
         "safe-use": {
           "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "check-results": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        }
+      }
+    },
+    "e12": {
+      "status": "completed",
+      "date": "2026-10-04",
+      "ratings": {
+        "safe-use": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "check-results": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 3,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        }
+      }
+    },
+    "e13": {
+      "status": "completed",
+      "date": "2026-11-02",
+      "ratings": {
+        "safe-use": {
+          "self": 1,
           "manager": 1,
           "agreed": 2,
           "note": ""
@@ -849,69 +939,9 @@
           "note": ""
         },
         "spot-potential": {
-          "self": 3,
-          "manager": 3,
-          "agreed": 3,
-          "note": ""
-        },
-        "build-scale": {
           "self": 1,
-          "manager": 2,
+          "manager": 1,
           "agreed": 2,
-          "note": ""
-        }
-      }
-    },
-    "e11": {
-      "status": "completed",
-      "date": "2026-10-07",
-      "ratings": {
-        "safe-use": {
-          "self": 3,
-          "manager": 2,
-          "agreed": 2,
-          "note": ""
-        },
-        "check-results": {
-          "self": 3,
-          "manager": 2,
-          "agreed": 3,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 3,
-          "manager": 3,
-          "agreed": 3,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 3,
-          "manager": 3,
-          "agreed": 3,
-          "note": ""
-        }
-      }
-    },
-    "e12": {
-      "status": "completed",
-      "date": "2026-10-11",
-      "ratings": {
-        "safe-use": {
-          "self": 2,
-          "manager": 2,
-          "agreed": 2,
-          "note": ""
-        },
-        "check-results": {
-          "self": 1,
-          "manager": 2,
-          "agreed": 2,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 3,
-          "manager": 2,
-          "agreed": 3,
           "note": ""
         },
         "build-scale": {
@@ -924,37 +954,37 @@
     },
     "e14": {
       "status": "completed",
-      "date": "2026-11-10",
+      "date": "2026-11-04",
       "ratings": {
         "safe-use": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 2,
-          "note": ""
-        },
-        "check-results": {
           "self": 2,
           "manager": 3,
           "agreed": 3,
           "note": ""
         },
-        "spot-potential": {
-          "self": 3,
+        "check-results": {
+          "self": 1,
           "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
+          "manager": 3,
           "agreed": 3,
           "note": ""
         },
         "build-scale": {
           "self": 2,
-          "manager": 3,
-          "agreed": 3,
+          "manager": 0,
+          "agreed": 1,
           "note": ""
         }
       }
     },
     "e15": {
       "status": "completed",
-      "date": "2026-11-08",
+      "date": "2026-10-19",
       "ratings": {
         "safe-use": {
           "self": 3,
@@ -964,18 +994,18 @@
         },
         "check-results": {
           "self": 3,
-          "manager": 2,
-          "agreed": 3,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 3,
           "manager": 3,
           "agreed": 3,
           "note": ""
         },
+        "spot-potential": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
         "build-scale": {
-          "self": 2,
+          "self": 1,
           "manager": 2,
           "agreed": 2,
           "note": ""
@@ -984,7 +1014,7 @@
     },
     "e16": {
       "status": "completed",
-      "date": "2026-10-19",
+      "date": "2026-10-13",
       "ratings": {
         "safe-use": {
           "self": 2,
@@ -993,15 +1023,15 @@
           "note": ""
         },
         "check-results": {
-          "self": 3,
+          "self": 2,
           "manager": 3,
           "agreed": 3,
           "note": ""
         },
         "spot-potential": {
-          "self": 2,
-          "manager": 2,
-          "agreed": 2,
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         },
         "build-scale": {
@@ -1014,60 +1044,60 @@
     },
     "e17": {
       "status": "completed",
-      "date": "2026-11-04",
+      "date": "2026-10-21",
       "ratings": {
         "safe-use": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 1,
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
           "note": ""
         },
         "check-results": {
-          "self": 2,
+          "self": 3,
           "manager": 3,
           "agreed": 3,
           "note": ""
         },
         "spot-potential": {
-          "self": 2,
-          "manager": 3,
-          "agreed": 2,
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
           "note": ""
         },
         "build-scale": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 1,
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
           "note": ""
         },
         "steer-use": {
-          "self": 1,
+          "self": 2,
           "manager": 1,
-          "agreed": 1,
+          "agreed": 2,
           "note": ""
         },
         "guide-change": {
           "self": 1,
-          "manager": 2,
-          "agreed": 2,
+          "manager": 0,
+          "agreed": 0,
           "note": ""
         }
       }
     },
     "e18": {
       "status": "completed",
-      "date": "2026-11-10",
+      "date": "2026-10-05",
       "ratings": {
         "safe-use": {
-          "self": 1,
+          "self": 0,
           "manager": 0,
-          "agreed": 1,
+          "agreed": 0,
           "note": ""
         },
         "check-results": {
-          "self": 1,
-          "manager": 2,
-          "agreed": 2,
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
           "note": ""
         },
         "spot-potential": {
@@ -1083,22 +1113,82 @@
           "note": ""
         },
         "steer-use": {
-          "self": 2,
-          "manager": 1,
+          "self": 0,
+          "manager": 0,
           "agreed": 1,
           "note": ""
         },
         "guide-change": {
-          "self": 2,
-          "manager": 0,
+          "self": 1,
+          "manager": 1,
           "agreed": 1,
+          "note": ""
+        }
+      }
+    },
+    "e19": {
+      "status": "completed",
+      "date": "2026-10-12",
+      "ratings": {
+        "safe-use": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "check-results": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 3,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 2,
           "note": ""
         }
       }
     },
     "e20": {
       "status": "completed",
-      "date": "2026-10-02",
+      "date": "2026-11-05",
+      "ratings": {
+        "safe-use": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "check-results": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        }
+      }
+    },
+    "e21": {
+      "status": "completed",
+      "date": "2026-11-02",
       "ratings": {
         "safe-use": {
           "self": 3,
@@ -1107,97 +1197,169 @@
           "note": ""
         },
         "check-results": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 1,
+          "self": 2,
           "manager": 2,
           "agreed": 2,
           "note": ""
         },
+        "spot-potential": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
         "build-scale": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        }
+      }
+    },
+    "e22": {
+      "status": "completed",
+      "date": "2026-10-20",
+      "ratings": {
+        "safe-use": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
           "self": 2,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 1,
           "manager": 2,
           "agreed": 2,
           "note": ""
         }
       }
     },
-    "e21": {
-      "status": "in-progress",
-      "date": "2026-11-13",
+    "e23": {
+      "status": "completed",
+      "date": "2026-10-16",
       "ratings": {
         "safe-use": {
-          "self": 3,
-          "manager": 3,
-          "agreed": 3,
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         },
         "check-results": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        }
+      }
+    },
+    "e24": {
+      "status": "completed",
+      "date": "2026-10-29",
+      "ratings": {
+        "safe-use": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "check-results": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
           "self": 3,
-          "manager": 3,
-          "agreed": 3,
+          "manager": 1,
+          "agreed": 2,
           "note": ""
         }
       }
     },
     "e25": {
       "status": "completed",
-      "date": "2026-11-13",
+      "date": "2026-11-07",
       "ratings": {
         "safe-use": {
           "self": 2,
-          "manager": 3,
+          "manager": 1,
           "agreed": 2,
           "note": ""
         },
         "check-results": {
-          "self": 2,
+          "self": 3,
           "manager": 2,
           "agreed": 2,
           "note": ""
         },
         "spot-potential": {
           "self": 2,
-          "manager": 1,
-          "agreed": 1,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         },
         "build-scale": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 2,
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
           "note": ""
         }
       }
     },
     "e27": {
       "status": "completed",
-      "date": "2026-10-08",
+      "date": "2026-10-27",
       "ratings": {
         "safe-use": {
-          "self": 1,
-          "manager": 3,
+          "self": 3,
+          "manager": 2,
           "agreed": 2,
           "note": ""
         },
         "check-results": {
           "self": 2,
-          "manager": 2,
-          "agreed": 2,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 2,
           "manager": 3,
           "agreed": 2,
           "note": ""
         },
-        "build-scale": {
+        "spot-potential": {
           "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 2,
           "manager": 2,
           "agreed": 2,
           "note": ""
@@ -1206,52 +1368,10 @@
     },
     "e28": {
       "status": "completed",
-      "date": "2026-11-11",
+      "date": "2026-10-03",
       "ratings": {
         "safe-use": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "check-results": {
           "self": 0,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 1,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "steer-use": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 1,
-          "note": ""
-        },
-        "guide-change": {
-          "self": 0,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        }
-      }
-    },
-    "e29": {
-      "status": "completed",
-      "date": "2026-10-26",
-      "ratings": {
-        "safe-use": {
-          "self": 2,
           "manager": 1,
           "agreed": 1,
           "note": ""
@@ -1263,9 +1383,9 @@
           "note": ""
         },
         "spot-potential": {
-          "self": 2,
+          "self": 1,
           "manager": 2,
-          "agreed": 2,
+          "agreed": 1,
           "note": ""
         },
         "build-scale": {
@@ -1275,9 +1395,9 @@
           "note": ""
         },
         "steer-use": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 1,
+          "self": 0,
+          "manager": 1,
+          "agreed": 0,
           "note": ""
         },
         "guide-change": {
@@ -1290,54 +1410,24 @@
     },
     "e30": {
       "status": "completed",
-      "date": "2026-10-08",
+      "date": "2026-10-07",
       "ratings": {
         "safe-use": {
           "self": 2,
-          "manager": 2,
-          "agreed": 2,
-          "note": ""
-        },
-        "check-results": {
-          "self": 0,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 1,
           "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        }
-      }
-    },
-    "e31": {
-      "status": "completed",
-      "date": "2026-10-30",
-      "ratings": {
-        "safe-use": {
-          "self": 1,
-          "manager": 2,
           "agreed": 1,
           "note": ""
         },
         "check-results": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
+          "self": 2,
+          "manager": 3,
+          "agreed": 2,
           "note": ""
         },
         "spot-potential": {
-          "self": 1,
+          "self": 0,
           "manager": 1,
-          "agreed": 2,
+          "agreed": 1,
           "note": ""
         },
         "build-scale": {
@@ -1350,10 +1440,10 @@
     },
     "e32": {
       "status": "completed",
-      "date": "2026-11-08",
+      "date": "2026-10-26",
       "ratings": {
         "safe-use": {
-          "self": 1,
+          "self": 0,
           "manager": 0,
           "agreed": 0,
           "note": ""
@@ -1361,13 +1451,13 @@
         "check-results": {
           "self": 2,
           "manager": 1,
-          "agreed": 1,
+          "agreed": 2,
           "note": ""
         },
         "spot-potential": {
-          "self": 2,
+          "self": 0,
           "manager": 1,
-          "agreed": 2,
+          "agreed": 1,
           "note": ""
         },
         "build-scale": {
@@ -1380,29 +1470,29 @@
     },
     "e33": {
       "status": "completed",
-      "date": "2026-10-16",
+      "date": "2026-11-12",
       "ratings": {
         "safe-use": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 1,
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         },
         "check-results": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 0,
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         },
         "spot-potential": {
           "self": 1,
-          "manager": 1,
+          "manager": 2,
           "agreed": 1,
           "note": ""
         },
         "build-scale": {
           "self": 0,
-          "manager": 0,
+          "manager": 1,
           "agreed": 0,
           "note": ""
         }
@@ -1410,48 +1500,18 @@
     },
     "e34": {
       "status": "completed",
-      "date": "2026-10-16",
+      "date": "2026-10-24",
       "ratings": {
         "safe-use": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "check-results": {
           "self": 1,
           "manager": 1,
           "agreed": 1,
           "note": ""
         },
-        "spot-potential": {
+        "check-results": {
           "self": 2,
           "manager": 2,
-          "agreed": 2,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        }
-      }
-    },
-    "e35": {
-      "status": "completed",
-      "date": "2026-10-07",
-      "ratings": {
-        "safe-use": {
-          "self": 0,
-          "manager": 1,
           "agreed": 1,
-          "note": ""
-        },
-        "check-results": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
           "note": ""
         },
         "spot-potential": {
@@ -1461,45 +1521,27 @@
           "note": ""
         },
         "build-scale": {
-          "self": 1,
-          "manager": 1,
+          "self": 0,
+          "manager": 0,
           "agreed": 0,
           "note": ""
         }
       }
     },
     "e36": {
-      "status": "in-progress",
-      "date": "2026-11-13",
-      "ratings": {
-        "safe-use": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "check-results": {
-          "self": 2,
-          "manager": 2,
-          "agreed": 2,
-          "note": ""
-        }
-      }
-    },
-    "e37": {
       "status": "completed",
-      "date": "2026-11-01",
+      "date": "2026-10-04",
       "ratings": {
         "safe-use": {
           "self": 1,
-          "manager": 1,
-          "agreed": 1,
+          "manager": 0,
+          "agreed": 0,
           "note": ""
         },
         "check-results": {
-          "self": 2,
-          "manager": 2,
-          "agreed": 2,
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
           "note": ""
         },
         "spot-potential": {
@@ -1516,27 +1558,9 @@
         }
       }
     },
-    "e38": {
-      "status": "in-progress",
-      "date": "2026-11-13",
-      "ratings": {
-        "safe-use": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 1,
-          "note": ""
-        },
-        "check-results": {
-          "self": 3,
-          "manager": 3,
-          "agreed": 3,
-          "note": ""
-        }
-      }
-    },
-    "e39": {
+    "e37": {
       "status": "completed",
-      "date": "2026-10-02",
+      "date": "2026-10-04",
       "ratings": {
         "safe-use": {
           "self": 1,
@@ -1546,8 +1570,38 @@
         },
         "check-results": {
           "self": 1,
-          "manager": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 1,
+          "manager": 1,
           "agreed": 0,
+          "note": ""
+        }
+      }
+    },
+    "e38": {
+      "status": "completed",
+      "date": "2026-10-09",
+      "ratings": {
+        "safe-use": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
           "note": ""
         },
         "spot-potential": {
@@ -1557,6 +1611,66 @@
           "note": ""
         },
         "build-scale": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "steer-use": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "guide-change": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        }
+      }
+    },
+    "e39": {
+      "status": "completed",
+      "date": "2026-10-29",
+      "ratings": {
+        "safe-use": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        }
+      }
+    },
+    "e40": {
+      "status": "in-progress",
+      "date": "2026-11-13",
+      "ratings": {
+        "safe-use": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
           "self": 0,
           "manager": 0,
           "agreed": 0,
@@ -1566,22 +1680,82 @@
     },
     "e41": {
       "status": "completed",
-      "date": "2026-10-18",
+      "date": "2026-10-14",
       "ratings": {
         "safe-use": {
           "self": 1,
-          "manager": 2,
+          "manager": 1,
           "agreed": 1,
           "note": ""
         },
         "check-results": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "spot-potential": {
           "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        }
+      }
+    },
+    "e42": {
+      "status": "completed",
+      "date": "2026-10-27",
+      "ratings": {
+        "safe-use": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "check-results": {
+          "self": 1,
           "manager": 0,
           "agreed": 0,
           "note": ""
         },
         "spot-potential": {
           "self": 2,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        }
+      }
+    },
+    "e43": {
+      "status": "completed",
+      "date": "2026-11-01",
+      "ratings": {
+        "safe-use": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "check-results": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 3,
           "manager": 2,
           "agreed": 2,
           "note": ""
@@ -1594,9 +1768,9 @@
         }
       }
     },
-    "e42": {
+    "e45": {
       "status": "completed",
-      "date": "2026-10-24",
+      "date": "2026-10-27",
       "ratings": {
         "safe-use": {
           "self": 2,
@@ -1605,15 +1779,15 @@
           "note": ""
         },
         "check-results": {
-          "self": 0,
+          "self": 1,
           "manager": 0,
           "agreed": 0,
           "note": ""
         },
         "spot-potential": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         },
         "build-scale": {
@@ -1626,17 +1800,17 @@
     },
     "e46": {
       "status": "completed",
-      "date": "2026-10-25",
+      "date": "2026-10-31",
       "ratings": {
         "safe-use": {
-          "self": 1,
+          "self": 2,
           "manager": 2,
-          "agreed": 1,
+          "agreed": 2,
           "note": ""
         },
         "check-results": {
-          "self": 2,
-          "manager": 0,
+          "self": 1,
+          "manager": 1,
           "agreed": 1,
           "note": ""
         },
@@ -1647,8 +1821,8 @@
           "note": ""
         },
         "build-scale": {
-          "self": 2,
-          "manager": 2,
+          "self": 0,
+          "manager": 0,
           "agreed": 1,
           "note": ""
         },
@@ -1659,36 +1833,6 @@
           "note": ""
         },
         "guide-change": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        }
-      }
-    },
-    "e47": {
-      "status": "completed",
-      "date": "2026-11-01",
-      "ratings": {
-        "safe-use": {
-          "self": 0,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "check-results": {
-          "self": 1,
-          "manager": 2,
-          "agreed": 2,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 3,
-          "manager": 2,
-          "agreed": 2,
-          "note": ""
-        },
-        "build-scale": {
           "self": 0,
           "manager": 0,
           "agreed": 0,
@@ -1696,14 +1840,14 @@
         }
       }
     },
-    "e48": {
+    "e47": {
       "status": "completed",
-      "date": "2026-10-19",
+      "date": "2026-10-11",
       "ratings": {
         "safe-use": {
-          "self": 3,
-          "manager": 2,
-          "agreed": 2,
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
           "note": ""
         },
         "check-results": {
@@ -1713,14 +1857,44 @@
           "note": ""
         },
         "spot-potential": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "build-scale": {
           "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        }
+      }
+    },
+    "e48": {
+      "status": "completed",
+      "date": "2026-11-08",
+      "ratings": {
+        "safe-use": {
+          "self": 1,
+          "manager": 3,
+          "agreed": 2,
+          "note": ""
+        },
+        "check-results": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 3,
           "manager": 2,
           "agreed": 2,
           "note": ""
         },
         "build-scale": {
-          "self": 1,
-          "manager": 0,
+          "self": 0,
+          "manager": 1,
           "agreed": 0,
           "note": ""
         }
@@ -1728,101 +1902,11 @@
     },
     "e49": {
       "status": "completed",
-      "date": "2026-10-16",
-      "ratings": {
-        "safe-use": {
-          "self": 0,
-          "manager": 1,
-          "agreed": 0,
-          "note": ""
-        },
-        "check-results": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        }
-      }
-    },
-    "e50": {
-      "status": "completed",
-      "date": "2026-11-01",
-      "ratings": {
-        "safe-use": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "check-results": {
-          "self": 3,
-          "manager": 1,
-          "agreed": 2,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 0,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        }
-      }
-    },
-    "e51": {
-      "status": "completed",
-      "date": "2026-10-28",
+      "date": "2026-10-30",
       "ratings": {
         "safe-use": {
           "self": 1,
           "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "check-results": {
-          "self": 2,
-          "manager": 0,
-          "agreed": 1,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 0,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        }
-      }
-    },
-    "e52": {
-      "status": "completed",
-      "date": "2026-10-14",
-      "ratings": {
-        "safe-use": {
-          "self": 1,
-          "manager": 1,
           "agreed": 1,
           "note": ""
         },
@@ -1833,13 +1917,103 @@
           "note": ""
         },
         "spot-potential": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "build-scale": {
           "self": 1,
           "manager": 0,
           "agreed": 0,
           "note": ""
+        }
+      }
+    },
+    "e50": {
+      "status": "completed",
+      "date": "2026-11-06",
+      "ratings": {
+        "safe-use": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         },
         "build-scale": {
           "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        }
+      }
+    },
+    "e51": {
+      "status": "completed",
+      "date": "2026-10-27",
+      "ratings": {
+        "safe-use": {
+          "self": 2,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        }
+      }
+    },
+    "e52": {
+      "status": "completed",
+      "date": "2026-11-06",
+      "ratings": {
+        "safe-use": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 1,
           "manager": 0,
           "agreed": 0,
           "note": ""
@@ -1848,18 +2022,18 @@
     },
     "e53": {
       "status": "completed",
-      "date": "2026-11-02",
+      "date": "2026-11-04",
       "ratings": {
         "safe-use": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 1,
+          "self": 1,
+          "manager": 0,
+          "agreed": 0,
           "note": ""
         },
         "check-results": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         },
         "spot-potential": {
@@ -1869,6 +2043,48 @@
           "note": ""
         },
         "build-scale": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        }
+      }
+    },
+    "e54": {
+      "status": "completed",
+      "date": "2026-10-11",
+      "ratings": {
+        "safe-use": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "steer-use": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "guide-change": {
           "self": 1,
           "manager": 1,
           "agreed": 1,
@@ -1876,26 +2092,26 @@
         }
       }
     },
-    "e54": {
+    "e55": {
       "status": "completed",
-      "date": "2026-10-16",
+      "date": "2026-10-13",
       "ratings": {
         "safe-use": {
-          "self": 3,
-          "manager": 2,
+          "self": 2,
+          "manager": 1,
           "agreed": 2,
           "note": ""
         },
         "check-results": {
-          "self": 3,
-          "manager": 3,
-          "agreed": 3,
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         },
         "spot-potential": {
-          "self": 2,
-          "manager": 2,
-          "agreed": 2,
+          "self": 0,
+          "manager": 1,
+          "agreed": 0,
           "note": ""
         },
         "build-scale": {
@@ -1911,21 +2127,21 @@
           "note": ""
         },
         "guide-change": {
-          "self": 1,
+          "self": 0,
           "manager": 1,
-          "agreed": 2,
+          "agreed": 0,
           "note": ""
         }
       }
     },
     "e56": {
       "status": "completed",
-      "date": "2026-10-16",
+      "date": "2026-10-08",
       "ratings": {
         "safe-use": {
-          "self": 1,
+          "self": 3,
           "manager": 1,
-          "agreed": 1,
+          "agreed": 2,
           "note": ""
         },
         "check-results": {
@@ -1935,7 +2151,37 @@
           "note": ""
         },
         "spot-potential": {
-          "self": 0,
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        }
+      }
+    },
+    "e57": {
+      "status": "completed",
+      "date": "2026-10-17",
+      "ratings": {
+        "safe-use": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
           "manager": 1,
           "agreed": 1,
           "note": ""
@@ -1944,66 +2190,108 @@
           "self": 0,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        }
+      }
+    },
+    "e58": {
+      "status": "completed",
+      "date": "2026-10-15",
+      "ratings": {
+        "safe-use": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         }
       }
     },
     "e59": {
       "status": "completed",
-      "date": "2026-10-15",
+      "date": "2026-11-05",
       "ratings": {
         "safe-use": {
           "self": 0,
-          "manager": 2,
-          "agreed": 1,
+          "manager": 0,
+          "agreed": 0,
           "note": ""
         },
         "check-results": {
-          "self": 1,
-          "manager": 2,
-          "agreed": 2,
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
           "note": ""
         },
         "spot-potential": {
           "self": 2,
-          "manager": 2,
+          "manager": 1,
           "agreed": 1,
           "note": ""
         },
         "build-scale": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
           "note": ""
         }
       }
     },
     "e60": {
-      "status": "in-progress",
-      "date": "2026-11-13",
+      "status": "completed",
+      "date": "2026-10-31",
       "ratings": {
         "safe-use": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "check-results": {
           "self": 2,
           "manager": 1,
           "agreed": 1,
           "note": ""
         },
-        "check-results": {
+        "spot-potential": {
           "self": 2,
-          "manager": 0,
-          "agreed": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 0,
           "note": ""
         }
       }
     },
     "e61": {
       "status": "completed",
-      "date": "2026-10-07",
+      "date": "2026-10-02",
       "ratings": {
         "safe-use": {
-          "self": 1,
-          "manager": 2,
-          "agreed": 2,
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         },
         "check-results": {
@@ -2013,9 +2301,9 @@
           "note": ""
         },
         "spot-potential": {
-          "self": 2,
+          "self": 1,
           "manager": 1,
-          "agreed": 2,
+          "agreed": 1,
           "note": ""
         },
         "build-scale": {
@@ -2026,13 +2314,13 @@
         }
       }
     },
-    "e70": {
-      "status": "completed",
-      "date": "2026-10-14",
+    "e62": {
+      "status": "in-progress",
+      "date": "2026-11-13",
       "ratings": {
         "safe-use": {
-          "self": 1,
-          "manager": 2,
+          "self": 0,
+          "manager": 1,
           "agreed": 1,
           "note": ""
         },
@@ -2040,6 +2328,24 @@
           "self": 0,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        }
+      }
+    },
+    "e64": {
+      "status": "completed",
+      "date": "2026-11-03",
+      "ratings": {
+        "safe-use": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "check-results": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
           "note": ""
         },
         "spot-potential": {
@@ -2049,8 +2355,50 @@
           "note": ""
         },
         "build-scale": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        }
+      }
+    },
+    "e65": {
+      "status": "completed",
+      "date": "2026-10-23",
+      "ratings": {
+        "safe-use": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "check-results": {
           "self": 2,
           "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 0,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 0,
+          "note": ""
+        },
+        "steer-use": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "guide-change": {
+          "self": 1,
+          "manager": 1,
           "agreed": 1,
           "note": ""
         }
@@ -2058,46 +2406,58 @@
     },
     "e71": {
       "status": "completed",
-      "date": "2026-11-01",
+      "date": "2026-10-06",
       "ratings": {
         "safe-use": {
           "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "check-results": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 2,
           "manager": 1,
           "agreed": 1,
           "note": ""
         },
+        "check-results": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
         "build-scale": {
           "self": 1,
-          "manager": 0,
-          "agreed": 0,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         }
       }
     },
     "e72": {
-      "status": "in-progress",
-      "date": "2026-11-13",
+      "status": "completed",
+      "date": "2026-10-16",
       "ratings": {
         "safe-use": {
           "self": 0,
           "manager": 1,
-          "agreed": 1,
+          "agreed": 0,
           "note": ""
         },
         "check-results": {
           "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 3,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 0,
           "manager": 0,
           "agreed": 0,
           "note": ""
@@ -2106,29 +2466,29 @@
     },
     "e73": {
       "status": "completed",
-      "date": "2026-10-02",
+      "date": "2026-10-15",
       "ratings": {
         "safe-use": {
           "self": 0,
-          "manager": 1,
+          "manager": 0,
           "agreed": 0,
           "note": ""
         },
         "check-results": {
-          "self": 2,
+          "self": 1,
           "manager": 1,
           "agreed": 1,
           "note": ""
         },
         "spot-potential": {
-          "self": 0,
-          "manager": 1,
-          "agreed": 0,
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         },
         "build-scale": {
-          "self": 1,
-          "manager": 1,
+          "self": 0,
+          "manager": 0,
           "agreed": 0,
           "note": ""
         }
@@ -2136,11 +2496,11 @@
     },
     "e74": {
       "status": "completed",
-      "date": "2026-10-22",
+      "date": "2026-11-05",
       "ratings": {
         "safe-use": {
           "self": 1,
-          "manager": 2,
+          "manager": 1,
           "agreed": 1,
           "note": ""
         },
@@ -2151,14 +2511,14 @@
           "note": ""
         },
         "spot-potential": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         },
         "build-scale": {
           "self": 0,
-          "manager": 0,
+          "manager": 1,
           "agreed": 0,
           "note": ""
         }
@@ -2166,24 +2526,24 @@
     },
     "e75": {
       "status": "completed",
-      "date": "2026-10-03",
+      "date": "2026-10-23",
       "ratings": {
         "safe-use": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
+          "self": 2,
+          "manager": 2,
+          "agreed": 1,
           "note": ""
         },
         "check-results": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         },
         "spot-potential": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 0,
+          "self": 2,
+          "manager": 2,
+          "agreed": 1,
           "note": ""
         },
         "build-scale": {
@@ -2195,13 +2555,61 @@
       }
     },
     "e76": {
-      "status": "completed",
-      "date": "2026-10-16",
+      "status": "in-progress",
+      "date": "2026-11-13",
       "ratings": {
         "safe-use": {
           "self": 0,
-          "manager": 1,
+          "manager": 0,
           "agreed": 0,
+          "note": ""
+        },
+        "check-results": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        }
+      }
+    },
+    "e79": {
+      "status": "completed",
+      "date": "2026-10-08",
+      "ratings": {
+        "safe-use": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "check-results": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "build-scale": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        }
+      }
+    },
+    "e80": {
+      "status": "completed",
+      "date": "2026-10-05",
+      "ratings": {
+        "safe-use": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         },
         "check-results": {
@@ -2211,27 +2619,27 @@
           "note": ""
         },
         "spot-potential": {
-          "self": 2,
-          "manager": 0,
+          "self": 1,
+          "manager": 1,
           "agreed": 1,
           "note": ""
         },
         "build-scale": {
-          "self": 0,
+          "self": 1,
           "manager": 0,
           "agreed": 0,
           "note": ""
         }
       }
     },
-    "e77": {
+    "e83": {
       "status": "completed",
-      "date": "2026-10-16",
+      "date": "2026-10-26",
       "ratings": {
         "safe-use": {
-          "self": 2,
+          "self": 0,
           "manager": 1,
-          "agreed": 1,
+          "agreed": 0,
           "note": ""
         },
         "check-results": {
@@ -2241,225 +2649,33 @@
           "note": ""
         },
         "spot-potential": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "build-scale": {
           "self": 0,
-          "manager": 1,
-          "agreed": 0,
-          "note": ""
-        },
-        "steer-use": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "guide-change": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 1,
-          "note": ""
-        }
-      }
-    },
-    "e78": {
-      "status": "completed",
-      "date": "2026-10-30",
-      "ratings": {
-        "safe-use": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "check-results": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 1,
           "manager": 1,
           "agreed": 1,
           "note": ""
         },
         "build-scale": {
           "self": 1,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        }
-      }
-    },
-    "e79": {
-      "status": "completed",
-      "date": "2026-10-07",
-      "ratings": {
-        "safe-use": {
-          "self": 1,
           "manager": 1,
           "agreed": 1,
-          "note": ""
-        },
-        "check-results": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 1,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        }
-      }
-    },
-    "e80": {
-      "status": "completed",
-      "date": "2026-10-21",
-      "ratings": {
-        "safe-use": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "check-results": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 0,
-          "manager": 1,
-          "agreed": 0,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 0,
-          "note": ""
-        }
-      }
-    },
-    "e81": {
-      "status": "completed",
-      "date": "2026-10-08",
-      "ratings": {
-        "safe-use": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 2,
-          "note": ""
-        },
-        "check-results": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        }
-      }
-    },
-    "e82": {
-      "status": "completed",
-      "date": "2026-10-03",
-      "ratings": {
-        "safe-use": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "check-results": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 1,
-          "manager": 3,
-          "agreed": 2,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 0,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        }
-      }
-    },
-    "e83": {
-      "status": "completed",
-      "date": "2026-10-09",
-      "ratings": {
-        "safe-use": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 0,
-          "note": ""
-        },
-        "check-results": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 1,
-          "note": ""
-        },
-        "spot-potential": {
-          "self": 2,
-          "manager": 1,
-          "agreed": 1,
-          "note": ""
-        },
-        "build-scale": {
-          "self": 1,
-          "manager": 0,
-          "agreed": 0,
           "note": ""
         }
       }
     },
     "e84": {
       "status": "completed",
-      "date": "2026-10-08",
+      "date": "2026-10-26",
       "ratings": {
         "safe-use": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         },
         "check-results": {
-          "self": 1,
-          "manager": 1,
-          "agreed": 1,
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         },
         "spot-potential": {
@@ -2477,8 +2693,8 @@
       }
     },
     "e85": {
-      "status": "in-progress",
-      "date": "2026-11-13",
+      "status": "completed",
+      "date": "2026-10-06",
       "ratings": {
         "safe-use": {
           "self": 2,
@@ -2487,12 +2703,407 @@
           "note": ""
         },
         "check-results": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "spot-potential": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "build-scale": {
           "self": 0,
           "manager": 0,
-          "agreed": 1,
+          "agreed": 0,
           "note": ""
         }
       }
     }
+  },
+  "assignments": {
+    "e1": [
+      {
+        "measureId": "m1",
+        "status": "running",
+        "date": "2026-11-04"
+      }
+    ],
+    "e3": [
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-11-06"
+      },
+      {
+        "measureId": "m3",
+        "status": "planned",
+        "date": "2026-11-06"
+      }
+    ],
+    "e9": [
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-18"
+      },
+      {
+        "measureId": "m3",
+        "status": "running",
+        "date": "2026-10-18"
+      }
+    ],
+    "e10": [
+      {
+        "measureId": "m6",
+        "status": "running",
+        "date": "2026-11-13"
+      },
+      {
+        "measureId": "m1",
+        "status": "done",
+        "date": "2026-11-13"
+      }
+    ],
+    "e14": [
+      {
+        "measureId": "m9",
+        "status": "running",
+        "date": "2026-11-04"
+      },
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-11-04"
+      }
+    ],
+    "e18": [
+      {
+        "measureId": "m10",
+        "status": "planned",
+        "date": "2026-10-05"
+      }
+    ],
+    "e19": [
+      {
+        "measureId": "m3",
+        "status": "planned",
+        "date": "2026-10-12"
+      },
+      {
+        "measureId": "m4",
+        "status": "planned",
+        "date": "2026-10-12"
+      }
+    ],
+    "e21": [
+      {
+        "measureId": "m9",
+        "status": "running",
+        "date": "2026-11-02"
+      }
+    ],
+    "e22": [
+      {
+        "measureId": "m1",
+        "status": "running",
+        "date": "2026-10-20"
+      },
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-20"
+      }
+    ],
+    "e24": [
+      {
+        "measureId": "m1",
+        "status": "planned",
+        "date": "2026-10-29"
+      },
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-29"
+      }
+    ],
+    "e25": [
+      {
+        "measureId": "m10",
+        "status": "planned",
+        "date": "2026-11-07"
+      },
+      {
+        "measureId": "m2",
+        "status": "done",
+        "date": "2026-11-07"
+      }
+    ],
+    "e27": [
+      {
+        "measureId": "m1",
+        "status": "planned",
+        "date": "2026-10-27"
+      },
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-27"
+      }
+    ],
+    "e30": [
+      {
+        "measureId": "m10",
+        "status": "planned",
+        "date": "2026-10-07"
+      }
+    ],
+    "e33": [
+      {
+        "measureId": "m2",
+        "status": "running",
+        "date": "2026-11-12"
+      },
+      {
+        "measureId": "m9",
+        "status": "done",
+        "date": "2026-11-12"
+      }
+    ],
+    "e34": [
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-24"
+      },
+      {
+        "measureId": "m10",
+        "status": "running",
+        "date": "2026-10-24"
+      }
+    ],
+    "e36": [
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-04"
+      },
+      {
+        "measureId": "m1",
+        "status": "planned",
+        "date": "2026-10-04"
+      }
+    ],
+    "e37": [
+      {
+        "measureId": "m2",
+        "status": "running",
+        "date": "2026-10-04"
+      },
+      {
+        "measureId": "m1",
+        "status": "planned",
+        "date": "2026-10-04"
+      }
+    ],
+    "e38": [
+      {
+        "measureId": "m2",
+        "status": "running",
+        "date": "2026-10-09"
+      },
+      {
+        "measureId": "m5",
+        "status": "done",
+        "date": "2026-10-09"
+      }
+    ],
+    "e39": [
+      {
+        "measureId": "m2",
+        "status": "done",
+        "date": "2026-10-29"
+      }
+    ],
+    "e41": [
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-14"
+      }
+    ],
+    "e43": [
+      {
+        "measureId": "m1",
+        "status": "running",
+        "date": "2026-11-01"
+      }
+    ],
+    "e45": [
+      {
+        "measureId": "m2",
+        "status": "running",
+        "date": "2026-10-27"
+      },
+      {
+        "measureId": "m1",
+        "status": "done",
+        "date": "2026-10-27"
+      }
+    ],
+    "e47": [
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-11"
+      },
+      {
+        "measureId": "m1",
+        "status": "planned",
+        "date": "2026-10-11"
+      }
+    ],
+    "e48": [
+      {
+        "measureId": "m2",
+        "status": "running",
+        "date": "2026-11-08"
+      }
+    ],
+    "e49": [
+      {
+        "measureId": "m10",
+        "status": "planned",
+        "date": "2026-10-30"
+      },
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-30"
+      }
+    ],
+    "e50": [
+      {
+        "measureId": "m10",
+        "status": "done",
+        "date": "2026-11-06"
+      },
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-11-06"
+      }
+    ],
+    "e51": [
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-27"
+      },
+      {
+        "measureId": "m10",
+        "status": "running",
+        "date": "2026-10-27"
+      }
+    ],
+    "e53": [
+      {
+        "measureId": "m1",
+        "status": "planned",
+        "date": "2026-11-04"
+      },
+      {
+        "measureId": "m2",
+        "status": "running",
+        "date": "2026-11-04"
+      }
+    ],
+    "e54": [
+      {
+        "measureId": "m5",
+        "status": "running",
+        "date": "2026-10-11"
+      },
+      {
+        "measureId": "m10",
+        "status": "planned",
+        "date": "2026-10-11"
+      }
+    ],
+    "e56": [
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-08"
+      },
+      {
+        "measureId": "m9",
+        "status": "running",
+        "date": "2026-10-08"
+      }
+    ],
+    "e57": [
+      {
+        "measureId": "m1",
+        "status": "planned",
+        "date": "2026-10-17"
+      }
+    ],
+    "e59": [
+      {
+        "measureId": "m1",
+        "status": "running",
+        "date": "2026-11-05"
+      }
+    ],
+    "e60": [
+      {
+        "measureId": "m1",
+        "status": "planned",
+        "date": "2026-10-31"
+      }
+    ],
+    "e64": [
+      {
+        "measureId": "m6",
+        "status": "running",
+        "date": "2026-11-03"
+      }
+    ],
+    "e65": [
+      {
+        "measureId": "m5",
+        "status": "running",
+        "date": "2026-10-23"
+      }
+    ],
+    "e71": [
+      {
+        "measureId": "m1",
+        "status": "planned",
+        "date": "2026-10-06"
+      }
+    ],
+    "e72": [
+      {
+        "measureId": "m1",
+        "status": "done",
+        "date": "2026-10-16"
+      },
+      {
+        "measureId": "m2",
+        "status": "planned",
+        "date": "2026-10-16"
+      }
+    ],
+    "e80": [
+      {
+        "measureId": "m10",
+        "status": "running",
+        "date": "2026-10-05"
+      }
+    ]
   }
 }

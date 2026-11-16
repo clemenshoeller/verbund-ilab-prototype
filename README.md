@@ -2,25 +2,34 @@
 
 Clickable tool concept for managers, built in the WU Industry Lab project "Closing the AI Talent Gap in the Energy Industry" with VERBUND (deliverable D5).
 
-**Status: second rough version (16.11.2026), with team view and HR view.** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
+**Status: third rough version (16.11.2026), built like a small CRM.** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
 
 ## What it demonstrates
 
-Two views, switched by hand at the top right (provisional, there is no login):
+An app with a sidebar, lists, records and a search. Two roles, switched by hand at the top right (provisional, there is no login):
 
-**Team view**, what a manager sees for the own team:
+**Manager**, works on the own team:
 
-1. **Overview**: four key figures and the status of each team member.
-2. **Target profiles**: AI competencies per job family, level today and target 2030.
-3. **Competency conversation**: per competency an opening question, self-rating, manager rating and an agreed level.
-4. **Gaps**: agreed level against the 2030 target, per person and for the team, with types of measures.
+| Page | What it does |
+|---|---|
+| Home | Next steps per team member, four key figures, where the team stands |
+| Pipeline | Board with four stages: not started, in conversation, levels agreed, measures agreed |
+| People | List with search, filters and sorting; opens the record of a person |
+| Record of a person | Tabs: profile and gaps, the competency conversation, agreed measures with status, activity |
+| Target profiles | AI competencies per job family, level today and target 2030 |
 
-**HR view**, the whole organisation, aggregated and without single persons:
+**HR**, sees the whole organisation, aggregated and without single persons:
 
-1. **Dashboard**: key figures, completed conversations by team, largest gaps, heatmap job family by competency.
-2. **Gap analysis**: the heatmap for today's level or the 2030 target, and a prioritised list of gaps.
-3. **Measures**: types of measures (upskilling, reskilling, recruiting, organisation) and how many employees each would reach.
-4. **Roadmap** and **Governance**: first drafts as pages, marked as draft.
+| Page | What it does |
+|---|---|
+| Home | Key figures, a list of what needs attention, conversations by team, heatmap job family by competency |
+| Gap analysis | Heatmap for today's level or the 2030 target, prioritised list of gaps |
+| Teams | List of teams with coverage and figures; record of a team |
+| Job families, Competencies | The competency model as records: definition, levels, required level per family, agreed levels today |
+| Measures | Catalogue by type (upskilling, reskilling, recruiting, organisation) with how often each is agreed and done |
+| Roadmap, Governance | First drafts as pages, marked as draft |
+
+"About this prototype" lists what works, what is mocked, and the data model.
 
 ## Run it
 
@@ -47,7 +56,7 @@ All texts and numbers the user sees come from two files:
 | File | Contains |
 |---|---|
 | `src/data/content.json` | Levels, competencies, questions, job families, target profiles, measures, roadmap, governance |
-| `src/data/org.json` | Sample organisation: 9 teams, 85 employees and their ratings |
+| `src/data/org.json` | Sample organisation: 9 teams, 85 employees, their ratings and agreed measures |
 
 Edit `content.json`, save, and the running app updates. `org.json` is generated: change `scripts/generate-sample-org.mjs` and run `npm run sample-data` (same seed, same file). `npm test` checks that profiles and measures only point to existing competencies and levels.
 
@@ -55,9 +64,10 @@ Edit `content.json`, save, and the running app updates. `org.json` is generated:
 
 | Part | State |
 |---|---|
-| Navigation, profiles, conversation, gap calculation | Functional |
+| Navigation, lists, filters, search, records, pipeline, conversation, gap calculation | Functional |
+| Agreeing measures for a person and setting their status | Functional, stored in the browser only |
 | Key figures, heatmaps, prioritised gaps, reach of measures | Functional, calculated live from the ratings (`src/lib/metrics.ts`) |
-| Switch between team view and HR view | **Provisional**: switched by hand; a real tool would derive it from the login |
+| Switch between manager and HR | **Provisional**: switched by hand; a real tool would derive it from the login |
 | Roadmap and governance pages | **Draft** texts from `content.json`, a first proposal of the student team |
 | Ratings entered in the conversation | Functional, stored in the browser only (`localStorage`); "Reset demo data" deletes them |
 | Backend and database | **Mocked**: `src/api/dataSource.ts` returns the JSON files |
@@ -72,13 +82,16 @@ Edit `content.json`, save, and the running app updates. `org.json` is generated:
 src/
   api/dataSource.ts   the only place data is read (mock now, backend later)
   data/               content.json, org.json
-  lib/gap.ts          gap logic per person (tested in gap.test.ts)
-  lib/metrics.ts      aggregated figures for both views (tested in metrics.test.ts)
-  lib/store.ts        ratings in the browser
+  data.tsx            context that hands content, organisation and state to the pages
+  lib/gap.ts          gaps of one person (tested)
+  lib/metrics.ts      aggregated figures for both roles (tested)
+  lib/workflow.ts     stages, next steps, use of measures (tested)
+  lib/store.ts        ratings and agreed measures in the browser
   lib/router.ts       hash routing, needs no server rules
-  pages/              team view: Overview, Profiles, Assessment, Gaps
-  pages/hr/           HR view: Dashboard, GapAnalysis, Plans (measures, roadmap, governance)
-  components/         level bar, level picker, stat tiles, meters, heatmap cells
+  pages/team/         manager: Home, Pipeline, People, Person
+  pages/hr/           HR: Home, GapAnalysis, Teams, Competencies, Plans (measures, roadmap, governance)
+  pages/              shared: Profiles, About
+  components/         sidebar search, cards, tabs, level bar, stat tiles, meters, heatmap
 scripts/
   generate-sample-org.mjs   builds data/org.json
 ```
@@ -98,7 +111,7 @@ There are no secrets. Settings are read from environment variables at build time
 - No real VERBUND data, credentials or interfaces. No personal data of real persons.
 - No network requests in mock mode; ratings never leave the browser.
 - Free-text notes are rendered as text (escaped by React) and limited to 300 characters.
-- The HR view shows aggregates only. Groups with fewer than five rated employees are hidden (`MIN_GROUP` in `src/lib/metrics.ts`). This is a rule in the display, not access control.
+- The HR role shows aggregates only, and its search finds no persons. Groups with fewer than five rated employees are hidden (`MIN_GROUP` in `src/lib/metrics.ts`). This is a rule in the display, not access control.
 - The container runs as a non-root user.
 
 ## External services
@@ -128,9 +141,9 @@ Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-
 
 ## Tests
 
-`npm test` runs 22 unit tests: gap logic, aggregated figures (share at target, missing levels, prioritisation, minimum group size) and consistency checks of the content files. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
+`npm test` runs 29 unit tests: gap logic, aggregated figures (share at target, missing levels, prioritisation, minimum group size), stages and next steps, and consistency checks of the content files. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
 
-Manual test: open the team overview, start a conversation, set all agreed levels, complete it, check the gap view; switch to the HR view and check that the figures changed; reset the demo data.
+Manual test: as manager open a person from the pipeline, complete the conversation, add a measure and set its status, check the activity tab; switch to HR and check that the figures changed; reset the demo data.
 
 ## Known limitations
 

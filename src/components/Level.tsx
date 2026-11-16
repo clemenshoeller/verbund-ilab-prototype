@@ -50,8 +50,3 @@ export function LevelPicker({
     </div>
   );
 }
-
-export function StatusChip({ status }: { status: "open" | "in-progress" | "completed" }) {
-  const text = { open: "Open", "in-progress": "In progress", completed: "Completed" }[status];
-  return <span className={"chip " + status}>{text}</span>;
-}

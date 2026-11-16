@@ -312,22 +312,26 @@
     {
       "id": "upskilling",
       "name": "Upskilling",
-      "short": "Deepen skills in the current job"
+      "short": "Deepen skills in the current job",
+      "perPerson": true
     },
     {
       "id": "reskilling",
       "name": "Reskilling",
-      "short": "Prepare for a changed or new role"
+      "short": "Prepare for a changed or new role",
+      "perPerson": true
     },
     {
       "id": "recruiting",
       "name": "Recruiting",
-      "short": "Bring in skills from outside"
+      "short": "Bring in skills from outside",
+      "perPerson": false
     },
     {
       "id": "organisation",
       "name": "Organisation",
-      "short": "Roles, time and structures that make learning stick"
+      "short": "Roles, time and structures that make learning stick",
+      "perPerson": true
     }
   ],
   "roadmap": [

@@ -1,15 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Assessment, Rating } from "../types";
+import type { Assessments, AssignmentStatus, Assignments, Rating } from "../types";
 
 /** Demo state lives in the browser only. "Reset demo data" deletes it. */
-const STORAGE_KEY = "ai-competency-check.assessments.v2";
+const STORAGE_KEY = "ai-competency-check.state.v3";
 
-type Assessments = Record<string, Assessment>;
+interface State {
+  assessments: Assessments;
+  assignments: Assignments;
+}
 
-function load(seed: Assessments): Assessments {
+function load(seed: State): State {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw) as Assessments;
+    if (raw) return JSON.parse(raw) as State;
   } catch {
     // Storage blocked or content unreadable: fall back to the sample data.
   }
@@ -17,40 +20,59 @@ function load(seed: Assessments): Assessments {
 }
 
 const emptyRating: Rating = { self: null, manager: null, agreed: null, note: "" };
+const today = () => new Date().toISOString().slice(0, 10);
 
-export function useAssessments(seed: Assessments) {
-  const [assessments, setAssessments] = useState<Assessments>(() => load(seed));
+export function useStore(seed: State) {
+  const [state, setState] = useState<State>(() => load(seed));
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(assessments));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       // Without storage the demo still works until the page is reloaded.
     }
-  }, [assessments]);
+  }, [state]);
 
   const setRating = useCallback((employeeId: string, competencyId: string, patch: Partial<Rating>) => {
-    setAssessments((prev) => {
-      const current = prev[employeeId] ?? { status: "open", date: null, ratings: {} };
+    setState((prev) => {
+      const current = prev.assessments[employeeId] ?? { status: "open", date: null, ratings: {} };
       const rating = { ...emptyRating, ...current.ratings[competencyId], ...patch };
-      return {
-        ...prev,
-        [employeeId]: {
-          ...current,
-          status: "in-progress",
-          date: new Date().toISOString().slice(0, 10),
-          ratings: { ...current.ratings, [competencyId]: rating },
-        },
-      };
+      const assessment = { ...current, status: "in-progress" as const, date: today(), ratings: { ...current.ratings, [competencyId]: rating } };
+      return { ...prev, assessments: { ...prev.assessments, [employeeId]: assessment } };
     });
   }, []);
 
   const complete = useCallback((employeeId: string) => {
-    setAssessments((prev) => {
-      const current = prev[employeeId];
+    setState((prev) => {
+      const current = prev.assessments[employeeId];
       if (!current) return prev;
-      return { ...prev, [employeeId]: { ...current, status: "completed", date: new Date().toISOString().slice(0, 10) } };
+      return { ...prev, assessments: { ...prev.assessments, [employeeId]: { ...current, status: "completed", date: today() } } };
     });
+  }, []);
+
+  const assign = useCallback((employeeId: string, measureId: string) => {
+    setState((prev) => {
+      const list = prev.assignments[employeeId] ?? [];
+      if (list.some((a) => a.measureId === measureId)) return prev;
+      return { ...prev, assignments: { ...prev.assignments, [employeeId]: [...list, { measureId, status: "planned", date: today() }] } };
+    });
+  }, []);
+
+  const setAssignmentStatus = useCallback((employeeId: string, measureId: string, status: AssignmentStatus) => {
+    setState((prev) => ({
+      ...prev,
+      assignments: {
+        ...prev.assignments,
+        [employeeId]: (prev.assignments[employeeId] ?? []).map((a) => (a.measureId === measureId ? { ...a, status } : a)),
+      },
+    }));
+  }, []);
+
+  const unassign = useCallback((employeeId: string, measureId: string) => {
+    setState((prev) => ({
+      ...prev,
+      assignments: { ...prev.assignments, [employeeId]: (prev.assignments[employeeId] ?? []).filter((a) => a.measureId !== measureId) },
+    }));
   }, []);
 
   const reset = useCallback(() => {
@@ -59,8 +81,10 @@ export function useAssessments(seed: Assessments) {
     } catch {
       // Nothing stored, nothing to remove.
     }
-    setAssessments(structuredClone(seed));
+    setState(structuredClone(seed));
   }, [seed]);
 
-  return { assessments, setRating, complete, reset };
+  return { ...state, setRating, complete, assign, setAssignmentStatus, unassign, reset };
 }
+
+export type Store = ReturnType<typeof useStore>;

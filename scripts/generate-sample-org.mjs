@@ -115,6 +115,30 @@ function rate(familyId, bias) {
 const teams = [demoTeam];
 const employees = [...demoEmployees];
 const assessments = { ...demoAssessments };
+// Measures agreed after the conversation. e5 has none yet, so the demo shows an open next step.
+const assignments = {
+  e1: [{ measureId: "m1", status: "running", date: "2026-11-04" }],
+  e3: [
+    { measureId: "m2", status: "planned", date: "2026-11-06" },
+    { measureId: "m3", status: "planned", date: "2026-11-06" },
+  ],
+};
+
+const perPerson = new Set(content.measureTypes.filter((t) => t.perPerson).map((t) => t.id));
+
+/** One or two measures that address the largest gaps of a rated person. */
+function assign(familyId, ratings, date) {
+  const gaps = Object.entries(families[familyId].profile)
+    .map(([competencyId, entry]) => ({ competencyId, gap: entry.target - (ratings[competencyId]?.agreed ?? entry.target) }))
+    .filter((g) => g.gap > 0)
+    .sort((a, b) => b.gap - a.gap);
+  const chosen = [];
+  for (const g of gaps.slice(0, 1 + Math.floor(rand() * 2))) {
+    const options = content.measures.filter((m) => perPerson.has(m.type) && m.competencies.includes(g.competencyId) && !chosen.some((c) => c.measureId === m.id));
+    if (options.length) chosen.push({ measureId: pick(options).id, status: pick(["planned", "planned", "running", "running", "done"]), date });
+  }
+  return chosen;
+}
 let nextId = demoEmployees.length + 1;
 
 teamPlans.forEach((plan, index) => {
@@ -134,6 +158,10 @@ teamPlans.forEach((plan, index) => {
       const day = 1 + Math.floor(rand() * 44); // 1 Oct to 13 Nov 2026
       const date = day <= 31 ? `2026-10-${String(day).padStart(2, "0")}` : `2026-11-${String(day - 31).padStart(2, "0")}`;
       assessments[id] = { status: "completed", date, ratings: rate(family, plan.bias) };
+      if (rand() < 0.55) {
+        const chosen = assign(family, assessments[id].ratings, date);
+        if (chosen.length) assignments[id] = chosen;
+      }
     } else if (dice < plan.coverage + (1 - plan.coverage) * 0.3) {
       const all = Object.entries(rate(family, plan.bias));
       assessments[id] = { status: "in-progress", date: "2026-11-13", ratings: Object.fromEntries(all.slice(0, 2)) };
@@ -147,7 +175,8 @@ const org = {
   teams,
   employees,
   assessments,
+  assignments,
 };
 writeFileSync(new URL("../src/data/org.json", import.meta.url), JSON.stringify(org, null, 2) + "\n");
 const done = Object.values(assessments).filter((a) => a.status === "completed").length;
-console.log(`${teams.length} teams, ${employees.length} employees, ${done} completed conversations`);
+console.log(`${teams.length} teams, ${employees.length} employees, ${done} completed conversations, ${Object.keys(assignments).length} with measures`);

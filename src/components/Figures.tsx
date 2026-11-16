@@ -68,11 +68,13 @@ export function ShareLegend() {
 export function Meter({ name, sub, value, of }: { name: string; sub?: string; value: number; of: number }) {
   const share = of ? value / of : 0;
   return (
-    <div className="meter" title={`${name}: ${value} of ${of} (${Math.round(share * 100)}%)`}>
-      <span className="meter-name">
-        <strong>{name}</strong>
-        {sub && <span className="sub">{sub}</span>}
-      </span>
+    <div className={"meter" + (name ? "" : " bare")} title={`${name ? name + ": " : ""}${value} of ${of} (${Math.round(share * 100)}%)`}>
+      {name && (
+        <span className="meter-name">
+          {name}
+          {sub && <span className="sub">{sub}</span>}
+        </span>
+      )}
       <span className="meter-track" role="img" aria-label={`${value} of ${of}`}>
         <span className="meter-fill" style={{ width: `${share * 100}%` }} />
       </span>

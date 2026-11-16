@@ -1,64 +1,43 @@
+import { FamilyHeat } from "../../components/FamilyHeat";
 import { ShareLegend } from "../../components/Figures";
+import { Card, PageHead } from "../../components/Ui";
+import { useData } from "../../data";
 import { familyGrid, priorities, type Horizon } from "../../lib/metrics";
 import { go } from "../../lib/router";
-import type { Assessments, Content, Org } from "../../types";
-import { FamilyHeat } from "./Dashboard";
 
 const HORIZONS: { id: Horizon; label: string; what: string }[] = [
   { id: "baseline", label: "Today’s level", what: "today’s level" },
   { id: "target", label: "2030 target", what: "the 2030 target" },
 ];
 
-export function HrGapAnalysis({
-  content,
-  org,
-  assessments,
-  horizonId,
-}: {
-  content: Content;
-  org: Org;
-  assessments: Assessments;
-  horizonId?: string;
-}) {
+export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
+  const { content, org, assessments } = useData();
   const horizon = HORIZONS.find((h) => h.id === horizonId) ?? HORIZONS[1];
   const grid = familyGrid(content, org.employees, assessments, horizon.id);
   const rows = priorities(content, org.employees, assessments);
 
   return (
     <>
-      <div className="page-head">
-        <p className="eyebrow">HR view · gap analysis</p>
-        <h1>Where the gaps are</h1>
-        <p className="lead">Agreed levels compared with the target profiles, short term and for 2030.</p>
-      </div>
+      <PageHead title="Gap analysis" sub="Agreed levels compared with the target profiles, short term and for 2030." />
 
-      <section>
-        <div className="section-head">
-          <h2>Share of rated employees below {horizon.what}</h2>
-          <div className="tabs" role="tablist" aria-label="Horizon">
+      <Card
+        title={`Share of rated employees below ${horizon.what}`}
+        aside={
+          <span className="tabs" role="tablist" aria-label="Horizon">
             {HORIZONS.map((h) => (
-              <button
-                key={h.id}
-                type="button"
-                role="tab"
-                aria-selected={h.id === horizon.id}
-                className={"tab" + (h.id === horizon.id ? " on" : "")}
-                onClick={() => go(`/hr/gaps/${h.id}`)}
-              >
+              <button key={h.id} type="button" role="tab" aria-selected={h.id === horizon.id} className={"tab" + (h.id === horizon.id ? " on" : "")} onClick={() => go(`/hr/gaps/${h.id}`)}>
                 {h.label}
               </button>
             ))}
-          </div>
-        </div>
+          </span>
+        }
+        flush
+      >
         <FamilyHeat content={content} grid={grid} what={horizon.what} />
         <ShareLegend />
-      </section>
+      </Card>
 
-      <section>
-        <div className="section-head">
-          <h2>Prioritised gaps</h2>
-          <p className="muted">{rows.length} combinations of job family and competency with a gap</p>
-        </div>
+      <Card title="Prioritised gaps" aside={`${rows.length} combinations of job family and competency`} flush>
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -74,7 +53,13 @@ export function HrGapAnalysis({
             </thead>
             <tbody>
               {rows.map((row, index) => (
-                <tr key={row.family.id + row.competency.id}>
+                <tr
+                  key={row.family.id + row.competency.id}
+                  className="clickable"
+                  tabIndex={0}
+                  onClick={() => go(`/hr/competencies/${row.competency.id}`)}
+                  onKeyDown={(event) => event.key === "Enter" && go(`/hr/competencies/${row.competency.id}`)}
+                >
                   <td className="num muted">{index + 1}</td>
                   <td>
                     <strong>{row.competency.name}</strong>
@@ -89,11 +74,11 @@ export function HrGapAnalysis({
             </tbody>
           </table>
         </div>
-        <p className="muted small note-line">
+        <p className="muted small card-note">
           Order: first the number of employees below today’s level (urgency), then the levels missing to 2030 (size).
           Strategic relevance is not weighted yet.
         </p>
-      </section>
+      </Card>
     </>
   );
 }
