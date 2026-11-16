@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import contentJson from "../data/content.json";
-import teamJson from "../data/team.json";
-import type { Content, Team } from "../types";
+import orgJson from "../data/org.json";
+import type { Content, Org } from "../types";
 import { agreedCount, gapRows, gapTo, profileCompetencies, totalGap } from "./gap";
 
 const content = contentJson as unknown as Content;
-const team = teamJson as unknown as Team;
+const org = orgJson as unknown as Org;
 const family = (id: string) => content.families.find((f) => f.id === id)!;
 
 describe("gapTo", () => {
@@ -45,7 +45,7 @@ describe("profiles", () => {
 
 describe("gapRows", () => {
   it("computes the gaps of a completed sample assessment", () => {
-    const rows = gapRows(content, family("B"), team.assessments["e3"]);
+    const rows = gapRows(content, family("B"), org.assessments["e3"]);
     expect(rows.map((r) => r.gap)).toEqual([0, 2, 1, 1]);
     expect(totalGap(rows)).toBe(4);
     expect(agreedCount(rows)).toBe(4);
@@ -60,6 +60,11 @@ describe("gapRows", () => {
 describe("sample data", () => {
   it("only uses employees with a known family", () => {
     const known = new Set(content.families.map((f) => f.id));
-    expect(team.employees.every((e) => known.has(e.family))).toBe(true);
+    expect(org.employees.every((e) => known.has(e.family))).toBe(true);
+  });
+  it("puts every employee into an existing team", () => {
+    const teams = new Set(org.teams.map((t) => t.id));
+    expect(org.employees.every((e) => teams.has(e.team))).toBe(true);
+    expect(teams.has(org.currentTeamId)).toBe(true);
   });
 });

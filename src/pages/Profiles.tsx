@@ -3,14 +3,14 @@ import { go } from "../lib/router";
 import { profileCompetencies } from "../lib/gap";
 import type { Content } from "../types";
 
-export function Profiles({ content, familyId }: { content: Content; familyId?: string }) {
+export function Profiles({ content, familyId, base }: { content: Content; familyId?: string; base: string }) {
   const family = content.families.find((f) => f.id === familyId) ?? content.families[0];
   const competencies = profileCompetencies(content, family);
 
   return (
     <>
       <div className="page-head">
-        <p className="eyebrow">Step 1</p>
+        <p className="eyebrow">{base === "/hr" ? "HR view · future target state" : "Step 1"}</p>
         <h1>Target profiles</h1>
         <p className="lead">The level each job family needs today and in 2030, on a scale of three levels.</p>
       </div>
@@ -23,7 +23,7 @@ export function Profiles({ content, familyId }: { content: Content; familyId?: s
             type="button"
             aria-selected={f.id === family.id}
             className={"tab" + (f.id === family.id ? " on" : "")}
-            onClick={() => go(`/profiles/${f.id}`)}
+            onClick={() => go(`${base}/profiles/${f.id}`)}
           >
             {f.name}
           </button>

@@ -1,17 +1,17 @@
 import { LevelBar } from "../components/Level";
 import { gapRows, statusOf, totalGap } from "../lib/gap";
 import { go } from "../lib/router";
-import type { Assessment, Content, Team } from "../types";
+import type { Assessment, Assessments, Content, Employee } from "../types";
 
 interface Props {
   content: Content;
-  team: Team;
-  assessments: Record<string, Assessment>;
+  employees: Employee[];
+  assessments: Assessments;
   employeeId?: string;
 }
 
-export function Gaps({ content, team, assessments, employeeId }: Props) {
-  const employee = team.employees.find((e) => e.id === employeeId);
+export function Gaps({ content, employees, assessments, employeeId }: Props) {
+  const employee = employees.find((e) => e.id === employeeId);
 
   return (
     <>
@@ -39,7 +39,7 @@ export function Gaps({ content, team, assessments, employeeId }: Props) {
               </tr>
             </thead>
             <tbody>
-              {team.employees.map((e) => {
+              {employees.map((e) => {
                 const family = content.families.find((f) => f.id === e.family)!;
                 const rows = gapRows(content, family, assessments[e.id]);
                 return (
@@ -47,8 +47,8 @@ export function Gaps({ content, team, assessments, employeeId }: Props) {
                     key={e.id}
                     className={"clickable" + (e.id === employee?.id ? " selected" : "")}
                     tabIndex={0}
-                    onClick={() => go(`/gaps/${e.id}`)}
-                    onKeyDown={(event) => event.key === "Enter" && go(`/gaps/${e.id}`)}
+                    onClick={() => go(`/team/gaps/${e.id}`)}
+                    onKeyDown={(event) => event.key === "Enter" && go(`/team/gaps/${e.id}`)}
                   >
                     <td>
                       <strong>{e.name}</strong>
@@ -96,7 +96,7 @@ function Detail({
 }: {
   content: Content;
   assessment?: Assessment;
-  employee: Team["employees"][number];
+  employee: Employee;
 }) {
   const family = content.families.find((f) => f.id === employee.family)!;
   const rows = gapRows(content, family, assessment);
@@ -117,7 +117,7 @@ function Detail({
       {!completed && (
         <p className="panel">
           The conversation is not completed yet.{" "}
-          <a href={`#/assess/${employee.id}`}>{assessment ? "Continue the conversation" : "Start the conversation"}</a>
+          <a href={`#/team/assess/${employee.id}`}>{assessment ? "Continue the conversation" : "Start the conversation"}</a>
         </p>
       )}
 
@@ -146,16 +146,26 @@ function Detail({
               </span>
               {row.gap !== null && row.gap > 0 && (
                 <ul className="measures">
-                  {content.measures[row.competency.id]?.map((measure) => <li key={measure}>{measure}</li>)}
+                  {content.measures
+                    .filter((measure) => measure.competencies.includes(row.competency.id))
+                    .map((measure) => (
+                      <li key={measure.id}>
+                        {measure.title} <span className="type">{typeName(content, measure.type)}</span>
+                      </li>
+                    ))}
                 </ul>
               )}
             </article>
           );
         })}
       </div>
-      <p className="muted small">Measures are general suggestions per competency, not an individual learning path.</p>
+      <p className="muted small">Measures are general types per competency, not an individual learning path.</p>
     </section>
   );
+}
+
+function typeName(content: Content, id: string): string {
+  return content.measureTypes.find((t) => t.id === id)?.name ?? id;
 }
 
 function formatDate(iso: string): string {

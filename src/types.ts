@@ -36,12 +36,43 @@ export interface Family {
   profile: Record<string, ProfileEntry>;
 }
 
+export interface MeasureType {
+  id: string;
+  name: string;
+  short: string;
+}
+
+export interface Measure {
+  id: string;
+  type: string;
+  title: string;
+  description: string;
+  /** Competencies this measure helps to build. */
+  competencies: string[];
+}
+
+export interface RoadmapPhase {
+  period: string;
+  title: string;
+  current?: boolean;
+  items: string[];
+}
+
+export interface Governance {
+  roles: { role: string; who: string; tasks: string }[];
+  cycle: { when: string; what: string; detail: string }[];
+  rules: string[];
+}
+
 export interface Content {
   levels: Level[];
   groups: Group[];
   competencies: Competency[];
   families: Family[];
-  measures: Record<string, string[]>;
+  measureTypes: MeasureType[];
+  measures: Measure[];
+  roadmap: RoadmapPhase[];
+  governance: Governance;
 }
 
 export interface Employee {
@@ -49,6 +80,7 @@ export interface Employee {
   name: string;
   role: string;
   family: string;
+  team: string;
 }
 
 export interface Rating {
@@ -66,8 +98,18 @@ export interface Assessment {
   ratings: Record<string, Rating>;
 }
 
-export interface Team {
-  manager: { name: string; unit: string };
+export interface TeamInfo {
+  id: string;
+  name: string;
+  manager: string;
+}
+
+export interface Org {
+  /** Team of the demo manager shown in the team view. */
+  currentTeamId: string;
+  teams: TeamInfo[];
   employees: Employee[];
   assessments: Record<string, Assessment>;
 }
+
+export type Assessments = Record<string, Assessment>;

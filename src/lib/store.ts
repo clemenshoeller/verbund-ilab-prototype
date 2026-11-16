@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Assessment, Rating } from "../types";
 
 /** Demo state lives in the browser only. "Reset demo data" deletes it. */
-const STORAGE_KEY = "ai-competency-check.assessments.v1";
+const STORAGE_KEY = "ai-competency-check.assessments.v2";
 
 type Assessments = Record<string, Assessment>;
 

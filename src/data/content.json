@@ -1,14 +1,35 @@
 {
   "_note": "PLACEHOLDER CONTENT. Wording by the student team, not the text of VERBUND's competency model; only the grouping follows the structure shown in the team's jour fixe deck. Final profiles, levels and questions follow the interview data.",
   "levels": [
-    { "value": 1, "name": "Foundation", "short": "Knows the basics and the rules" },
-    { "value": 2, "name": "Practitioner", "short": "Applies it independently in the own job" },
-    { "value": 3, "name": "Advanced", "short": "Shapes it for others and for the unit" }
+    {
+      "value": 1,
+      "name": "Foundation",
+      "short": "Knows the basics and the rules"
+    },
+    {
+      "value": 2,
+      "name": "Practitioner",
+      "short": "Applies it independently in the own job"
+    },
+    {
+      "value": 3,
+      "name": "Advanced",
+      "short": "Shapes it for others and for the unit"
+    }
   ],
   "groups": [
-    { "id": "base", "name": "Base competencies" },
-    { "id": "future", "name": "Future competencies" },
-    { "id": "lead", "name": "Leadership competencies" }
+    {
+      "id": "base",
+      "name": "Base competencies"
+    },
+    {
+      "id": "future",
+      "name": "Future competencies"
+    },
+    {
+      "id": "lead",
+      "name": "Leadership competencies"
+    }
   ],
   "competencies": [
     {
@@ -91,10 +112,22 @@
       "summary": "Builds and runs the digital systems. Highest AI exposure and the role of multiplier.",
       "example": "e.g. coding assistants, automated testing, data pipelines with AI checks",
       "profile": {
-        "safe-use": { "baseline": 2, "target": 3 },
-        "check-results": { "baseline": 2, "target": 3 },
-        "spot-potential": { "baseline": 2, "target": 3 },
-        "build-scale": { "baseline": 2, "target": 3 }
+        "safe-use": {
+          "baseline": 2,
+          "target": 3
+        },
+        "check-results": {
+          "baseline": 2,
+          "target": 3
+        },
+        "spot-potential": {
+          "baseline": 2,
+          "target": 3
+        },
+        "build-scale": {
+          "baseline": 2,
+          "target": 3
+        }
       }
     },
     {
@@ -103,10 +136,22 @@
       "summary": "Finance, procurement, HR, legal and administration. Text- and data-heavy work.",
       "example": "e.g. report drafts, contract summaries, analysis of supplier data",
       "profile": {
-        "safe-use": { "baseline": 1, "target": 2 },
-        "check-results": { "baseline": 1, "target": 3 },
-        "spot-potential": { "baseline": 1, "target": 2 },
-        "build-scale": { "baseline": 0, "target": 1 }
+        "safe-use": {
+          "baseline": 1,
+          "target": 2
+        },
+        "check-results": {
+          "baseline": 1,
+          "target": 3
+        },
+        "spot-potential": {
+          "baseline": 1,
+          "target": 2
+        },
+        "build-scale": {
+          "baseline": 0,
+          "target": 1
+        }
       }
     },
     {
@@ -115,10 +160,22 @@
       "summary": "Plans, builds and maintains the plants. AI supports, physical work stays.",
       "example": "e.g. AI-supported CAD, simulation, maintenance and process analysis",
       "profile": {
-        "safe-use": { "baseline": 1, "target": 2 },
-        "check-results": { "baseline": 1, "target": 2 },
-        "spot-potential": { "baseline": 1, "target": 2 },
-        "build-scale": { "baseline": 0, "target": 1 }
+        "safe-use": {
+          "baseline": 1,
+          "target": 2
+        },
+        "check-results": {
+          "baseline": 1,
+          "target": 2
+        },
+        "spot-potential": {
+          "baseline": 1,
+          "target": 2
+        },
+        "build-scale": {
+          "baseline": 0,
+          "target": 1
+        }
       }
     },
     {
@@ -127,21 +184,254 @@
       "summary": "Separate group across all families: they lead the change and assess their teams.",
       "example": "e.g. team goals for AI use, competency conversations, learning time",
       "profile": {
-        "safe-use": { "baseline": 1, "target": 2 },
-        "check-results": { "baseline": 2, "target": 3 },
-        "spot-potential": { "baseline": 1, "target": 2 },
-        "build-scale": { "baseline": 0, "target": 1 },
-        "steer-use": { "baseline": 1, "target": 3 },
-        "guide-change": { "baseline": 1, "target": 3 }
+        "safe-use": {
+          "baseline": 1,
+          "target": 2
+        },
+        "check-results": {
+          "baseline": 2,
+          "target": 3
+        },
+        "spot-potential": {
+          "baseline": 1,
+          "target": 2
+        },
+        "build-scale": {
+          "baseline": 0,
+          "target": 1
+        },
+        "steer-use": {
+          "baseline": 1,
+          "target": 3
+        },
+        "guide-change": {
+          "baseline": 1,
+          "target": 3
+        }
       }
     }
   ],
-  "measures": {
-    "safe-use": ["Basic training on approved tools and data rules", "Short refresher with cases from the own unit"],
-    "check-results": ["Workshop on checking AI output with real tasks", "Four-eyes check for critical results"],
-    "spot-potential": ["Use-case workshop in the team", "Exchange with an AI champion from a similar unit"],
-    "build-scale": ["Hands-on session on prompt templates and agents", "Learning by doing on a real use case with a mentor"],
-    "steer-use": ["Leadership module on steering AI use", "Peer exchange between managers on team goals"],
-    "guide-change": ["Leadership programme on leading the AI change", "Fixed learning time in the team calendar"]
+  "measures": [
+    {
+      "id": "m1",
+      "type": "upskilling",
+      "title": "Basic training on approved tools and data rules",
+      "description": "Mandatory and repeated every year, with cases from the own unit.",
+      "competencies": [
+        "safe-use"
+      ]
+    },
+    {
+      "id": "m2",
+      "type": "upskilling",
+      "title": "Workshop on checking AI output",
+      "description": "Real tasks from the team; a four-eyes check for critical results.",
+      "competencies": [
+        "check-results"
+      ]
+    },
+    {
+      "id": "m3",
+      "type": "upskilling",
+      "title": "Use-case workshop in the team",
+      "description": "Small groups work on use cases from their own job.",
+      "competencies": [
+        "spot-potential"
+      ]
+    },
+    {
+      "id": "m4",
+      "type": "upskilling",
+      "title": "Hands-on sessions on templates and agents",
+      "description": "Learning by doing on a real use case, with a mentor.",
+      "competencies": [
+        "build-scale"
+      ]
+    },
+    {
+      "id": "m5",
+      "type": "upskilling",
+      "title": "Leadership programme on AI",
+      "description": "Steering AI use, leading the change, peer exchange between managers.",
+      "competencies": [
+        "steer-use",
+        "guide-change"
+      ]
+    },
+    {
+      "id": "m6",
+      "type": "reskilling",
+      "title": "Programme for changing roles",
+      "description": "For employees whose tasks change strongly, for example towards data or automation work.",
+      "competencies": [
+        "spot-potential",
+        "build-scale"
+      ]
+    },
+    {
+      "id": "m7",
+      "type": "recruiting",
+      "title": "Hire for scarce advanced skills",
+      "description": "Where the gap to the advanced level cannot be closed in time by training.",
+      "competencies": [
+        "build-scale"
+      ]
+    },
+    {
+      "id": "m8",
+      "type": "recruiting",
+      "title": "Target profile in job ads and selection",
+      "description": "The profile of the job family becomes part of job ads and interviews.",
+      "competencies": [
+        "safe-use",
+        "check-results"
+      ]
+    },
+    {
+      "id": "m9",
+      "type": "organisation",
+      "title": "AI champions in the units",
+      "description": "Role models who help colleagues and collect use cases.",
+      "competencies": [
+        "spot-potential",
+        "build-scale"
+      ]
+    },
+    {
+      "id": "m10",
+      "type": "organisation",
+      "title": "Fixed learning time",
+      "description": "Agreed hours per month in the team calendar.",
+      "competencies": [
+        "guide-change",
+        "safe-use"
+      ]
+    }
+  ],
+  "measureTypes": [
+    {
+      "id": "upskilling",
+      "name": "Upskilling",
+      "short": "Deepen skills in the current job"
+    },
+    {
+      "id": "reskilling",
+      "name": "Reskilling",
+      "short": "Prepare for a changed or new role"
+    },
+    {
+      "id": "recruiting",
+      "name": "Recruiting",
+      "short": "Bring in skills from outside"
+    },
+    {
+      "id": "organisation",
+      "name": "Organisation",
+      "short": "Roles, time and structures that make learning stick"
+    }
+  ],
+  "roadmap": [
+    {
+      "period": "2026",
+      "title": "Foundation",
+      "current": true,
+      "items": [
+        "Target profiles for three job families and managers",
+        "Conversation guide and gap logic",
+        "Clickable prototype with sample data"
+      ]
+    },
+    {
+      "period": "2027",
+      "title": "Pilot",
+      "items": [
+        "Pilot in two or three units",
+        "Agreement with the works council on recording competencies",
+        "Review of profiles and guide after the pilot"
+      ]
+    },
+    {
+      "period": "2028",
+      "title": "Roll-out",
+      "items": [
+        "Competency conversations in all units of the focus families",
+        "Measures matched to the largest gaps",
+        "First group-wide gap report"
+      ]
+    },
+    {
+      "period": "2029",
+      "title": "Embedding",
+      "items": [
+        "Part of the yearly appraisal cycle",
+        "Profiles for further job families",
+        "Link to workforce planning and recruiting"
+      ]
+    },
+    {
+      "period": "2030",
+      "title": "Target state",
+      "items": [
+        "Focus families reach their 2030 profiles",
+        "Yearly review runs as routine"
+      ]
+    }
+  ],
+  "governance": {
+    "roles": [
+      {
+        "role": "Owner of the competency model",
+        "who": "HR, strategic personnel development",
+        "tasks": "Maintains competencies, levels and target profiles; decides on changes."
+      },
+      {
+        "role": "AI and technology input",
+        "who": "Digital unit, AI centre of enablement",
+        "tasks": "Reports new tools and use cases; proposes changes to the profiles."
+      },
+      {
+        "role": "Assessment",
+        "who": "Managers with their employees",
+        "tasks": "Hold the competency conversation once a year and agree on levels."
+      },
+      {
+        "role": "Measures",
+        "who": "Learning & Development",
+        "tasks": "Matches the learning offer to the largest gaps."
+      },
+      {
+        "role": "Co-determination",
+        "who": "Works council",
+        "tasks": "Agrees on what is recorded, who sees it and how long it is kept."
+      }
+    ],
+    "cycle": [
+      {
+        "when": "Q1",
+        "what": "Review the profiles",
+        "detail": "Owner and digital unit check the targets against new tools and the strategy."
+      },
+      {
+        "when": "Q2",
+        "what": "Competency conversations",
+        "detail": "Managers and employees agree on levels."
+      },
+      {
+        "when": "Q3",
+        "what": "Gap report and measures",
+        "detail": "HR reads the aggregated gaps; Learning & Development adjusts the offer."
+      },
+      {
+        "when": "Q4",
+        "what": "Check the results",
+        "detail": "What did the measures change? Input for the next review."
+      }
+    ],
+    "rules": [
+      "HR sees aggregated results only, never single persons.",
+      "Groups with fewer than five rated employees are not shown.",
+      "Ratings serve development, not pay or appraisal.",
+      "A manager sees the own team only."
+    ]
   }
 }

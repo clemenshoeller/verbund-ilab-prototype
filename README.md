@@ -2,15 +2,25 @@
 
 Clickable tool concept for managers, built in the WU Industry Lab project "Closing the AI Talent Gap in the Energy Industry" with VERBUND (deliverable D5).
 
-**Status: first rough version (16.11.2026).** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
+**Status: second rough version (16.11.2026), with team view and HR view.** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
 
 ## What it demonstrates
 
-A manager goes through three steps:
+Two views, switched by hand at the top right (provisional, there is no login):
 
-1. **Target profiles**: AI competencies per job family, level today and target 2030.
-2. **Competency conversation**: per competency an opening question, self-rating, manager rating and an agreed level.
-3. **Gaps and measures**: agreed level against the 2030 target, per person and for the team, with general measures.
+**Team view**, what a manager sees for the own team:
+
+1. **Overview**: four key figures and the status of each team member.
+2. **Target profiles**: AI competencies per job family, level today and target 2030.
+3. **Competency conversation**: per competency an opening question, self-rating, manager rating and an agreed level.
+4. **Gaps**: agreed level against the 2030 target, per person and for the team, with types of measures.
+
+**HR view**, the whole organisation, aggregated and without single persons:
+
+1. **Dashboard**: key figures, completed conversations by team, largest gaps, heatmap job family by competency.
+2. **Gap analysis**: the heatmap for today's level or the 2030 target, and a prioritised list of gaps.
+3. **Measures**: types of measures (upskilling, reskilling, recruiting, organisation) and how many employees each would reach.
+4. **Roadmap** and **Governance**: first drafts as pages, marked as draft.
 
 ## Run it
 
@@ -36,21 +46,24 @@ All texts and numbers the user sees come from two files:
 
 | File | Contains |
 |---|---|
-| `src/data/content.json` | Levels, competencies, questions, job families, target profiles, measures |
-| `src/data/team.json` | Sample team and sample ratings |
+| `src/data/content.json` | Levels, competencies, questions, job families, target profiles, measures, roadmap, governance |
+| `src/data/org.json` | Sample organisation: 9 teams, 85 employees and their ratings |
 
-Edit the file, save, and the running app updates. `npm test` checks that profiles only point to existing competencies and levels.
+Edit `content.json`, save, and the running app updates. `org.json` is generated: change `scripts/generate-sample-org.mjs` and run `npm run sample-data` (same seed, same file). `npm test` checks that profiles and measures only point to existing competencies and levels.
 
 ## Functional and mocked
 
 | Part | State |
 |---|---|
 | Navigation, profiles, conversation, gap calculation | Functional |
+| Key figures, heatmaps, prioritised gaps, reach of measures | Functional, calculated live from the ratings (`src/lib/metrics.ts`) |
+| Switch between team view and HR view | **Provisional**: switched by hand; a real tool would derive it from the login |
+| Roadmap and governance pages | **Draft** texts from `content.json`, a first proposal of the student team |
 | Ratings entered in the conversation | Functional, stored in the browser only (`localStorage`); "Reset demo data" deletes them |
 | Backend and database | **Mocked**: `src/api/dataSource.ts` returns the JSON files |
-| Login and roles | **Not built**: one fixed demo manager |
+| Login and roles | **Not built**: one fixed demo manager; nothing prevents opening the other view |
 | Competency model, profiles, levels, questions, measures | **Placeholder** worded by the student team. The grouping (base, future, leadership; six competencies) follows the structure the team presented in its jour fixe deck of 17.11.2026 |
-| Employees and ratings | **Synthetic**, all persons are invented |
+| Employees, units and ratings | **Synthetic**, generated with a fixed seed; all persons are invented |
 | VERBUND systems, accounts or data | **None used** |
 
 ## Architecture
@@ -58,19 +71,23 @@ Edit the file, save, and the running app updates. `npm test` checks that profile
 ```
 src/
   api/dataSource.ts   the only place data is read (mock now, backend later)
-  data/               content.json, team.json
-  lib/gap.ts          gap logic (tested in gap.test.ts)
+  data/               content.json, org.json
+  lib/gap.ts          gap logic per person (tested in gap.test.ts)
+  lib/metrics.ts      aggregated figures for both views (tested in metrics.test.ts)
   lib/store.ts        ratings in the browser
   lib/router.ts       hash routing, needs no server rules
-  pages/              Overview, Profiles, Assessment, Gaps
-  components/         level bar, level picker, status chip
+  pages/              team view: Overview, Profiles, Assessment, Gaps
+  pages/hr/           HR view: Dashboard, GapAnalysis, Plans (measures, roadmap, governance)
+  components/         level bar, level picker, stat tiles, meters, heatmap cells
+scripts/
+  generate-sample-org.mjs   builds data/org.json
 ```
 
 Static single-page app: React 19, TypeScript, Vite. The container serves the built files with nginx.
 
 ### Deviation from the preferred stack
 
-The guidelines prefer a .NET backend and PostgreSQL or SQL Server. This version has neither, because nothing is stored on a server yet. The frontend framework (React) is on the preferred list. A backend only has to serve the shapes in `src/types.ts` at `GET /content` and `GET /team`; set `VITE_DATA_SOURCE=api` and `VITE_API_BASE_URL`, and the pages stay unchanged. Saving ratings through the backend is not built.
+The guidelines prefer a .NET backend and PostgreSQL or SQL Server. This version has neither, because nothing is stored on a server yet. The frontend framework (React) is on the preferred list. A backend only has to serve the shapes in `src/types.ts` at `GET /content` and `GET /org`; set `VITE_DATA_SOURCE=api` and `VITE_API_BASE_URL`, and the pages stay unchanged. Saving ratings through the backend is not built.
 
 ## Configuration and secrets
 
@@ -81,6 +98,7 @@ There are no secrets. Settings are read from environment variables at build time
 - No real VERBUND data, credentials or interfaces. No personal data of real persons.
 - No network requests in mock mode; ratings never leave the browser.
 - Free-text notes are rendered as text (escaped by React) and limited to 300 characters.
+- The HR view shows aggregates only. Groups with fewer than five rated employees are hidden (`MIN_GROUP` in `src/lib/metrics.ts`). This is a rule in the display, not access control.
 - The container runs as a non-root user.
 
 ## External services
@@ -110,14 +128,16 @@ Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-
 
 ## Tests
 
-`npm test` runs the unit tests of the gap logic and consistency checks of the content files. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
+`npm test` runs 22 unit tests: gap logic, aggregated figures (share at target, missing levels, prioritisation, minimum group size) and consistency checks of the content files. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
 
-Manual test: open Overview, start a conversation, set all agreed levels, complete it, check the gap view, reset the demo data.
+Manual test: open the team overview, start a conversation, set all agreed levels, complete it, check the gap view; switch to the HR view and check that the figures changed; reset the demo data.
 
 ## Known limitations
 
 - No backend, no database, no login; data does not sync between devices or users.
-- Content is not validated against VERBUND's competency model or the interview results.
+- Content is not validated against VERBUND's competency model or the interview results. Roadmap, governance and measures are drafts.
+- The sample ratings are random around today's level, so most employees are below the 2030 target; the figures show how the views work, not a finding.
+- Gaps are prioritised by urgency and size only; strategic relevance is not weighted.
 - No UI tests, no accessibility audit, English only.
 - The look follows VERBUND's company presentation (blue, Georgia, Arial). No official logo or brand assets are included.
 

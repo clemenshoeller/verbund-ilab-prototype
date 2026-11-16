@@ -1,19 +1,19 @@
 import { LevelPicker, StatusChip } from "../components/Level";
 import { agreedCount, gapRows, statusOf } from "../lib/gap";
 import { go } from "../lib/router";
-import type { Assessment as AssessmentData, Content, Rating, Team } from "../types";
+import type { Assessments, Content, Employee, Rating } from "../types";
 
 interface Props {
   content: Content;
-  team: Team;
-  assessments: Record<string, AssessmentData>;
+  employees: Employee[];
+  assessments: Assessments;
   employeeId?: string;
   setRating: (employeeId: string, competencyId: string, patch: Partial<Rating>) => void;
   complete: (employeeId: string) => void;
 }
 
-export function Assessment({ content, team, assessments, employeeId, setRating, complete }: Props) {
-  const employee = team.employees.find((e) => e.id === employeeId);
+export function Assessment({ content, employees, assessments, employeeId, setRating, complete }: Props) {
+  const employee = employees.find((e) => e.id === employeeId);
 
   if (!employee) {
     return (
@@ -24,10 +24,10 @@ export function Assessment({ content, team, assessments, employeeId, setRating, 
           <p className="lead">Choose the team member you want to talk to.</p>
         </div>
         <div className="cards">
-          {team.employees.map((e) => {
+          {employees.map((e) => {
             const family = content.families.find((f) => f.id === e.family)!;
             return (
-              <a key={e.id} className="card link" href={`#/assess/${e.id}`}>
+              <a key={e.id} className="card link" href={`#/team/assess/${e.id}`}>
                 <strong>{e.name}</strong>
                 <span className="sub">{e.role}</span>
                 <span className="sub">{family.name}</span>
@@ -148,7 +148,7 @@ export function Assessment({ content, team, assessments, employeeId, setRating, 
           disabled={!allAgreed}
           onClick={() => {
             complete(employee.id);
-            go(`/gaps/${employee.id}`);
+            go(`/team/gaps/${employee.id}`);
           }}
         >
           Complete and show gaps
