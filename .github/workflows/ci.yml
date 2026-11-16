@@ -46,4 +46,5 @@ jobs:
           done
           if echo "$headers" | grep -qi "^server: nginx/"; then echo "server version is exposed"; exit 1; fi
       - name: Check that the manifests are valid YAML
-        run: ruby -ryaml -e 'kinds = YAML.load_stream(File.read("deploy/openshift.yaml")).map { |d| d["kind"] }; puts kinds.inspect; exit(kinds == ["Deployment", "Service", "Route"] ? 0 : 1)'
+        run: |
+          ruby -ryaml -e 'kinds = YAML.load_stream(File.read("deploy/openshift.yaml")).map { |d| d["kind"] }; puts kinds.inspect; exit(kinds == ["Deployment", "Service", "Route"])'
