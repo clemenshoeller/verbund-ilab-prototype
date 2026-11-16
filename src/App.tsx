@@ -74,9 +74,10 @@ function Shell() {
   const last = useRef<View>("team");
   if (isView(route[0])) last.current = route[0];
   const view = last.current;
-  const inRole = isView(route[0]) || route.length === 0;
-  const [page = "", id, tab, step] = isView(route[0]) ? route.slice(1) : inRole ? [] : ["", ""];
-  const extra = inRole ? "" : route[0];
+  const inRole = isView(route[0]);
+  const [page = "", id, tab, step] = inRole ? route.slice(1) : [];
+  // Outside a role: the start page (also reached as "guide") or the data model.
+  const extra = inRole ? "" : route[0] === "about" ? "about" : "start";
   const open = nextActions(content, team.employees, assessments, assignments).length;
 
   const groups: { title: string; items: NavItem[] }[] =
@@ -132,7 +133,7 @@ function Shell() {
   return (
     <div className="app">
       <aside className="side">
-        <a className="brand" href={`#/${view}`} aria-label="AI Competency Check, dashboard">
+        <a className="brand" href="#/" aria-label="AI Competency Check, start page">
           <span className="wordmark">VERBUND</span>
           <span className="product">AI Competency Check</span>
         </a>
@@ -154,9 +155,9 @@ function Shell() {
           ))}
         </nav>
         <div className="side-foot">
-          <a href="#/guide" className={extra === "guide" ? "on" : ""}>
+          <a href="#/" className={extra === "start" ? "on" : ""}>
             <Icon name="info" />
-            <span>How it works</span>
+            <span>Start page</span>
           </a>
           <a href="#/about" className={extra === "about" ? "on" : ""}>
             <Icon name="database" />
@@ -176,7 +177,7 @@ function Shell() {
 
         <main key={route.join("/")}>
           <ErrorBoundary resetKey={route.join("/")}>
-          {extra === "guide" ? (
+          {extra === "start" ? (
             <Start />
           ) : extra === "about" ? (
             <About />

@@ -72,6 +72,21 @@ describe("pages", () => {
   });
 });
 
+describe("start page", () => {
+  it("is where the app opens and where the logo leads back to", async () => {
+    await start("/");
+    expect(main().querySelector("h1")!.textContent).toContain("One conversation per person a year");
+    await open("/hr/teams");
+    const logo = screen.getByRole("link", { name: "AI Competency Check, start page" });
+    expect(logo.getAttribute("href")).toBe("#/");
+    click(logo);
+    await open("/");
+    expect(main().querySelector("h1")!.textContent).toContain("One conversation per person a year");
+    // The navigation of the role last used stays in place.
+    expect(screen.getByRole("button", { name: /View as HR/ })).toBeTruthy();
+  });
+});
+
 describe("view as", () => {
   it("switches the role from the menu at the top right", async () => {
     await start();

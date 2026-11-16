@@ -62,8 +62,8 @@ export function ViewAs({ view }: { view: View }) {
             </a>
           ))}
           <hr />
-          <a role="menuitem" className="menu-item plain" href="#/guide" onClick={() => setOpen(false)}>
-            <Icon name="info" /> How it works
+          <a role="menuitem" className="menu-item plain" href="#/" onClick={() => setOpen(false)}>
+            <Icon name="info" /> Start page
           </a>
           <a role="menuitem" className="menu-item plain" href="#/about" onClick={() => setOpen(false)}>
             <Icon name="database" /> Data model and status
