@@ -1,9 +1,11 @@
 import type { GridRow } from "../lib/metrics";
 import type { Content } from "../types";
+import { useUi } from "../ui";
 import { ShareCell } from "./Figures";
 
 /** Heatmap job family by competency: share of rated employees below the chosen horizon. */
 export function FamilyHeat({ content, grid, what }: { content: Content; grid: GridRow[]; what: string }) {
+  const { openDrawer } = useUi();
   return (
     <div className="table-wrap">
       <table className="table heat">
@@ -29,7 +31,12 @@ export function FamilyHeat({ content, grid, what }: { content: Content; grid: Gr
                 </span>
               </td>
               {content.competencies.map((c) => (
-                <ShareCell key={c.id} cell={row.cells[c.id]} what={`${row.family.name}, ${c.name}, ${what}`} />
+                <ShareCell
+                  key={c.id}
+                  cell={row.cells[c.id]}
+                  what={`${row.family.name}, ${c.name}, ${what}`}
+                  onOpen={() => openDrawer({ type: "cell", familyId: row.family.id, competencyId: c.id })}
+                />
               ))}
             </tr>
           ))}

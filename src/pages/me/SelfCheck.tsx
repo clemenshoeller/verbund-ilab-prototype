@@ -2,11 +2,13 @@ import { Steps } from "../../components/Steps";
 import { PageHead } from "../../components/Ui";
 import { useData } from "../../data";
 import { go } from "../../lib/router";
+import { useUi } from "../../ui";
 import { useMe } from "./Me";
 
 /** Self-check before the talk: one competency per screen, answered by picking the description that fits. */
 export function SelfCheck({ step }: { step?: string }) {
   const { content, setSelf } = useData();
+  const { toast } = useUi();
   const { employee, family, team, assessment, rows } = useMe();
   const index = Math.min(Math.max(Number(step) || 1, 1), rows.length + 1);
   const answered = rows.filter((row) => assessment?.ratings[row.competency.id]?.self != null).length;
@@ -36,7 +38,7 @@ export function SelfCheck({ step }: { step?: string }) {
           <span className="muted">
             Saved automatically. {team.manager} sees it in your conversation; you agree on the final levels together.
           </span>
-          <button type="button" className="btn" disabled={answered < rows.length} onClick={() => go("/me")}>
+          <button type="button" className="btn" disabled={answered < rows.length} onClick={() => { toast(`Self-check shared with ${team.manager}`); go("/me"); }}>
             Done
           </button>
         </div>

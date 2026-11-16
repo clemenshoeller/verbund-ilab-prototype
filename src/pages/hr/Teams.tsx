@@ -1,12 +1,13 @@
 import { Kpi, KpiRow, Meter } from "../../components/Figures";
-import { Card, PageHead } from "../../components/Ui";
+import { Card, NotFound, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
 import { MIN_GROUP, competencyStats, kpis, percent } from "../../lib/metrics";
-import { go } from "../../lib/router";
+import { useUi } from "../../ui";
 import { STAGES, stageOf } from "../../lib/workflow";
 
 export function TeamList() {
   const { content, org, assessments, assignments } = useData();
+  const { openDrawer } = useUi();
   const rows = org.teams.map((team) => {
     const members = org.employees.filter((e) => e.team === team.id);
     const k = kpis(content, members, assessments);
@@ -35,8 +36,8 @@ export function TeamList() {
                   key={team.id}
                   className="clickable"
                   tabIndex={0}
-                  onClick={() => go(`/hr/teams/${team.id}`)}
-                  onKeyDown={(event) => event.key === "Enter" && go(`/hr/teams/${team.id}`)}
+                  onClick={() => openDrawer({ type: "team", id: team.id })}
+                  onKeyDown={(event) => event.key === "Enter" && openDrawer({ type: "team", id: team.id })}
                 >
                   <td>
                     <strong>{team.name}</strong>
@@ -64,7 +65,7 @@ export function TeamList() {
 export function TeamRecord({ teamId }: { teamId: string }) {
   const { content, org, assessments, assignments } = useData();
   const team = org.teams.find((t) => t.id === teamId);
-  if (!team) return <PageHead crumbs={[{ label: "Teams", href: "#/hr/teams" }]} title="Not found" />;
+  if (!team) return <NotFound what="Team" back="#/hr/teams" backLabel="Teams" />;
 
   const members = org.employees.filter((e) => e.team === team.id);
   const k = kpis(content, members, assessments);

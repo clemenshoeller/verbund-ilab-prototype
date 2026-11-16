@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useData } from "../data";
+import { Icon } from "./Icon";
 
 interface Hit {
   label: string;
@@ -12,6 +13,19 @@ export function Search({ view }: { view: "team" | "hr" }) {
   const { content, org, team } = useData();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const input = useRef<HTMLInputElement>(null);
+
+  // Ctrl+K or Cmd+K jumps into the search from anywhere.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        input.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const index = useMemo<Hit[]>(() => {
     if (view === "team") {
@@ -33,7 +47,9 @@ export function Search({ view }: { view: "team" | "hr" }) {
 
   return (
     <div className="search" onBlur={() => setTimeout(() => setOpen(false), 120)}>
+      <Icon name="search" />
       <input
+        ref={input}
         type="search"
         value={query}
         placeholder={view === "team" ? "Search team members and profiles" : "Search teams, competencies, measures"}
@@ -51,6 +67,7 @@ export function Search({ view }: { view: "team" | "hr" }) {
           if (event.key === "Escape") setOpen(false);
         }}
       />
+      <kbd>Ctrl K</kbd>
       {open && term && (
         <ul className="search-hits">
           {hits.length === 0 && <li className="none">Nothing found</li>}

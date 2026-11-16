@@ -1,6 +1,6 @@
 import { CompetencyDetails, GapHeadline } from "../../components/CompetencyDetails";
 import { StepsLegend } from "../../components/Steps";
-import { Avatar, Card, LinkTabs, PageHead, StageChip, formatDate } from "../../components/Ui";
+import { Avatar, Card, LinkTabs, NotFound, PageHead, StageChip, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
 import { gapRows, standing, summarise, type GapRow } from "../../lib/gap";
 import { selfCheckDone, stageOf } from "../../lib/workflow";
@@ -14,7 +14,7 @@ export function Person({ employeeId, tab = "overview", step }: { employeeId: str
   const { content, team, assessments, assignments } = useData();
   const employee = team.employees.find((e) => e.id === employeeId);
   if (!employee) {
-    return <PageHead crumbs={[{ label: "People", href: "#/team/people" }]} title="Not found" sub="This person is not in your team." />;
+    return <NotFound what="Person" back="#/team/people" backLabel="People" />;
   }
 
   const family = content.families.find((f) => f.id === employee.family)!;

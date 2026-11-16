@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Avatar, Card, PageHead, StageChip, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
 import { agreedCount, gapRows, totalGap } from "../../lib/gap";
-import { go } from "../../lib/router";
+import { queryParam } from "../../lib/router";
+import { useUi } from "../../ui";
 import { STAGES, stageOf } from "../../lib/workflow";
 
 type SortKey = "name" | "stage" | "gap" | "measures";
@@ -11,7 +12,8 @@ export function People() {
   const { content, team, assessments, assignments } = useData();
   const [query, setQuery] = useState("");
   const [family, setFamily] = useState("all");
-  const [stage, setStage] = useState("all");
+  const [stage, setStage] = useState(queryParam("stage") ?? "all");
+  const { openDrawer } = useUi();
   const [sort, setSort] = useState<SortKey>("stage");
 
   const all = team.employees.map((employee) => {
@@ -103,8 +105,8 @@ export function People() {
                   key={p.employee.id}
                   className="clickable"
                   tabIndex={0}
-                  onClick={() => go(`/team/people/${p.employee.id}`)}
-                  onKeyDown={(event) => event.key === "Enter" && go(`/team/people/${p.employee.id}`)}
+                  onClick={() => openDrawer({ type: "person", id: p.employee.id })}
+                  onKeyDown={(event) => event.key === "Enter" && openDrawer({ type: "person", id: p.employee.id })}
                 >
                   <td>
                     <span className="person">

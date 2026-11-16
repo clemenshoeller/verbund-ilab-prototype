@@ -5,6 +5,7 @@ import { agreedCount, standing, standingText, summarise, type GapRow } from "../
 import { go } from "../../lib/router";
 import { MAX_FOCUS } from "../../lib/store";
 import { selfCheckDone } from "../../lib/workflow";
+import { useUi } from "../../ui";
 import type { AssignmentStatus, Employee, Family } from "../../types";
 
 const STATUS: { id: AssignmentStatus; label: string }[] = [
@@ -202,6 +203,7 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
 
 function Focus({ employee, rows, first }: { employee: Employee; rows: GapRow[]; first: string }) {
   const { content, assessments, assignments, setFocus, assign, setAssignmentStatus, unassign } = useData();
+  const { toast } = useUi();
   const focus = assessments[employee.id]?.focus ?? [];
   const assigned = assignments[employee.id] ?? [];
   const open = rows.filter((r) => (r.gap ?? 0) > 0).sort((a, b) => Number(standing(b) === "below") - Number(standing(a) === "below") || (b.gap ?? 0) - (a.gap ?? 0));
@@ -278,7 +280,14 @@ function Focus({ employee, rows, first }: { employee: Employee; rows: GapRow[]; 
                         </option>
                       ))}
                     </select>
-                    <button type="button" className="link" onClick={() => unassign(employee.id, a.measureId)}>
+                    <button
+                      type="button"
+                      className="link"
+                      onClick={() => {
+                        unassign(employee.id, a.measureId);
+                        toast("Measure removed");
+                      }}
+                    >
                       Remove
                     </button>
                   </li>
@@ -293,7 +302,14 @@ function Focus({ employee, rows, first }: { employee: Employee; rows: GapRow[]; 
                     {typeName(measure.type)} · {measure.description}
                   </span>
                 </span>
-                <button type="button" className="btn ghost small" onClick={() => assign(employee.id, measure.id)}>
+                <button
+                  type="button"
+                  className="btn ghost small"
+                  onClick={() => {
+                    assign(employee.id, measure.id);
+                    toast(`Measure agreed with ${first}`);
+                  }}
+                >
                   Add
                 </button>
               </li>
@@ -308,6 +324,7 @@ function Focus({ employee, rows, first }: { employee: Employee; rows: GapRow[]; 
 
 function Summary({ employee, rows, first }: { employee: Employee; rows: GapRow[]; first: string }) {
   const { content, assessments, assignments, complete } = useData();
+  const { toast } = useUi();
   const assessment = assessments[employee.id];
   const assigned = assignments[employee.id] ?? [];
   const focus = assessment?.focus ?? [];
@@ -348,6 +365,7 @@ function Summary({ employee, rows, first }: { employee: Employee; rows: GapRow[]
           disabled={!all}
           onClick={() => {
             complete(employee.id);
+            toast(`Conversation with ${first} completed`);
             go(`/team/people/${employee.id}`);
           }}
         >

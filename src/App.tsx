@@ -1,6 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getContent, getOrg } from "./api/dataSource";
+import { Drawer } from "./components/Drawer";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { Icon } from "./components/Icon";
 import { Search } from "./components/Search";
+import { ViewAs, type View } from "./components/ViewAs";
 import { DataContext, useData, type Data } from "./data";
 import { useRoute } from "./lib/router";
 import { useStore } from "./lib/store";
@@ -20,21 +24,16 @@ import { People } from "./pages/team/People";
 import { Person } from "./pages/team/Person";
 import { Pipeline } from "./pages/team/Pipeline";
 import type { Content, Org } from "./types";
-
-export type View = "me" | "team" | "hr";
-
-/** PROVISIONAL: the role is switched by hand. A real tool would derive it from the login. */
-const ROLES: { id: View; label: string; hint: string }[] = [
-  { id: "me", label: "Employee", hint: "What an employee sees: the own profile" },
-  { id: "team", label: "Manager", hint: "What a manager sees: the own team" },
-  { id: "hr", label: "HR", hint: "What HR sees: the whole organisation, as totals" },
-];
+import { Toasts, UiProvider } from "./ui";
 
 interface NavItem {
   key: string;
   label: string;
+  icon: string;
   badge?: number;
 }
+
+const isView = (value?: string): value is View => value === "me" || value === "team" || value === "hr";
 
 export function App() {
   const [data, setData] = useState<{ content: Content; org: Org } | null>(null);
@@ -61,19 +60,24 @@ function Root({ content, org }: { content: Content; org: Org }) {
   const data: Data = { ...store, content, org, team };
   return (
     <DataContext.Provider value={data}>
-      <Shell />
+      <UiProvider>
+        <Shell />
+      </UiProvider>
     </DataContext.Provider>
   );
 }
 
 function Shell() {
-  const { content, org, team, assessments, assignments, reset } = useData();
+  const { content, org, team, assessments, assignments } = useData();
   const route = useRoute();
-  const view: View | null = route[0] === "me" || route[0] === "team" || route[0] === "hr" ? route[0] : null;
-  const [page = "", id, tab, step] = view ? route.slice(1) : route;
-  const me = org.employees.find((e) => e.id === org.currentEmployeeId) ?? org.employees[0];
+  // Pages outside a role (guide, data model) keep the navigation of the role last used.
+  const last = useRef<View>("team");
+  if (isView(route[0])) last.current = route[0];
+  const view = last.current;
+  const inRole = isView(route[0]) || route.length === 0;
+  const [page = "", id, tab, step] = isView(route[0]) ? route.slice(1) : inRole ? [] : ["", ""];
+  const extra = inRole ? "" : route[0];
   const open = nextActions(content, team.employees, assessments, assignments).length;
-  const user = view === "me" ? { name: me.name, sub: me.role } : view === "hr" ? { name: "Demo HR", sub: "Personnel development" } : { name: team.info.manager, sub: team.info.name };
 
   const groups: { title: string; items: NavItem[] }[] =
     view === "me"
@@ -81,9 +85,9 @@ function Shell() {
           {
             title: "My AI profile",
             items: [
-              { key: "", label: "My profile" },
-              { key: "check", label: "Self-check" },
-              { key: "data", label: "My data" },
+              { key: "", label: "My profile", icon: "person" },
+              { key: "check", label: "Self-check", icon: "checklist" },
+              { key: "data", label: "My data", icon: "lock" },
             ],
           },
         ]
@@ -92,121 +96,90 @@ function Shell() {
             {
               title: "My team",
               items: [
-                { key: "", label: "Home", badge: open || undefined },
-                { key: "pipeline", label: "Pipeline" },
-                { key: "people", label: "People", badge: team.employees.length },
+                { key: "", label: "Dashboard", icon: "home", badge: open || undefined },
+                { key: "pipeline", label: "Pipeline", icon: "board" },
+                { key: "people", label: "People", icon: "people", badge: team.employees.length },
               ],
             },
-            { title: "Reference", items: [{ key: "profiles", label: "Target profiles" }] },
+            { title: "Reference", items: [{ key: "profiles", label: "Target profiles", icon: "target" }] },
           ]
-        : view === "hr"
-          ? [
-              {
-                title: "Steering",
-                items: [
-                  { key: "", label: "Home" },
-                  { key: "gaps", label: "Gap analysis" },
-                  { key: "teams", label: "Teams", badge: org.teams.length },
-                ],
-              },
-              {
-                title: "Competency model",
-                items: [
-                  { key: "profiles", label: "Job families", badge: content.families.length },
-                  { key: "competencies", label: "Competencies", badge: content.competencies.length },
-                  { key: "measures", label: "Measures", badge: content.measures.length },
-                ],
-              },
-              {
-                title: "Plan",
-                items: [
-                  { key: "roadmap", label: "Roadmap" },
-                  { key: "governance", label: "Governance" },
-                ],
-              },
-            ]
-          : [];
+        : [
+            {
+              title: "Steering",
+              items: [
+                { key: "", label: "Dashboard", icon: "home" },
+                { key: "gaps", label: "Gap analysis", icon: "chart" },
+                { key: "teams", label: "Teams", icon: "team", badge: org.teams.length },
+              ],
+            },
+            {
+              title: "Competency model",
+              items: [
+                { key: "profiles", label: "Job families", icon: "grid", badge: content.families.length },
+                { key: "competencies", label: "Competencies", icon: "layers", badge: content.competencies.length },
+                { key: "measures", label: "Measures", icon: "measure", badge: content.measures.length },
+              ],
+            },
+            {
+              title: "Plan",
+              items: [
+                { key: "roadmap", label: "Roadmap", icon: "map" },
+                { key: "governance", label: "Governance", icon: "scale" },
+              ],
+            },
+          ];
 
   return (
     <div className="app">
       <aside className="side">
-        <a className="brand" href="#/" aria-label="AI Competency Check, start">
+        <a className="brand" href={`#/${view}`} aria-label="AI Competency Check, dashboard">
           <span className="wordmark">VERBUND</span>
           <span className="product">AI Competency Check</span>
         </a>
         <nav aria-label="Main">
-          <div className="nav-group">
-            <a href="#/" className={!view && page === "" ? "on" : ""}>
-              Start
-            </a>
-          </div>
           {groups.map((group) => (
             <div key={group.title} className="nav-group">
               <span className="nav-title">{group.title}</span>
-              {group.items.map((item) => (
-                <a key={item.key} href={`#/${view}${item.key ? "/" + item.key : ""}`} className={page === item.key ? "on" : ""} aria-current={page === item.key ? "page" : undefined}>
-                  {item.label}
-                  {item.badge !== undefined && <span className="badge">{item.badge}</span>}
-                </a>
-              ))}
+              {group.items.map((item) => {
+                const active = inRole && page === item.key;
+                return (
+                  <a key={item.key} href={`#/${view}${item.key ? "/" + item.key : ""}`} className={active ? "on" : ""} aria-current={active ? "page" : undefined}>
+                    <Icon name={item.icon} />
+                    <span>{item.label}</span>
+                    {item.badge !== undefined && <span className="badge">{item.badge}</span>}
+                  </a>
+                );
+              })}
             </div>
           ))}
-          {!view && (
-            <div className="nav-group">
-              <span className="nav-title">Open as</span>
-              {ROLES.map((role) => (
-                <a key={role.id} href={`#/${role.id}`} title={role.hint}>
-                  {role.label}
-                </a>
-              ))}
-            </div>
-          )}
         </nav>
         <div className="side-foot">
-          <a href="#/about" className={!view && page === "about" ? "on" : ""}>
-            Data model and status
+          <a href="#/guide" className={extra === "guide" ? "on" : ""}>
+            <Icon name="info" />
+            <span>How it works</span>
           </a>
-          <button type="button" onClick={reset}>
-            Reset demo data
-          </button>
-          <p>Student prototype. All persons, units and ratings are fictitious.</p>
+          <a href="#/about" className={extra === "about" ? "on" : ""}>
+            <Icon name="database" />
+            <span>Data model and status</span>
+          </a>
+          <p>
+            <span className="pill">Prototype</span> Invented data. Development only, no pay or appraisal use.
+          </p>
         </div>
       </aside>
 
       <div className="main">
         <header className="topbar">
-          {view === "team" || view === "hr" ? <Search key={view} view={view} /> : <span className="search" />}
-          <div className="switch" role="group" aria-label="Role (provisional switch)">
-            {ROLES.map((role) => (
-              <a key={role.id} href={`#/${role.id}`} className={view === role.id ? "on" : ""} aria-current={view === role.id ? "true" : undefined} title={role.hint}>
-                {role.label}
-              </a>
-            ))}
-          </div>
-          {view && (
-            <div className="user" title="Provisional: no login in the prototype">
-              <span className="avatar small">
-                {user.name
-                  .split(" ")
-                  .map((p) => p[0])
-                  .join("")}
-              </span>
-              <span>
-                <strong>{user.name}</strong>
-                <span className="sub">{user.sub}</span>
-              </span>
-            </div>
-          )}
+          {view === "me" ? <span className="search" /> : <Search key={view} view={view} />}
+          <ViewAs view={view} />
         </header>
-        <div className="notice">Prototype · invented data · development only, no pay or appraisal use · not approved for productive use</div>
 
-        <main>
-          {!view ? (
-            page === "about" ? (
-              <About />
-            ) : (
-              <Start />
-            )
+        <main key={route.join("/")}>
+          <ErrorBoundary resetKey={route.join("/")}>
+          {extra === "guide" ? (
+            <Start />
+          ) : extra === "about" ? (
+            <About />
           ) : view === "me" ? (
             page === "check" ? (
               <SelfCheck step={id} />
@@ -246,8 +219,12 @@ function Shell() {
           ) : (
             <HrHome />
           )}
+          </ErrorBoundary>
         </main>
       </div>
+
+      <Drawer />
+      <Toasts />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { Card, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
 import { familyGrid, priorities, type Horizon } from "../../lib/metrics";
 import { go } from "../../lib/router";
+import { useUi } from "../../ui";
 
 const HORIZONS: { id: Horizon; label: string; what: string }[] = [
   { id: "baseline", label: "Today’s level", what: "today’s level" },
@@ -12,6 +13,7 @@ const HORIZONS: { id: Horizon; label: string; what: string }[] = [
 
 export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
   const { content, org, assessments } = useData();
+  const { openDrawer } = useUi();
   const horizon = HORIZONS.find((h) => h.id === horizonId) ?? HORIZONS[1];
   const grid = familyGrid(content, org.employees, assessments, horizon.id);
   const rows = priorities(content, org.employees, assessments);
@@ -57,8 +59,8 @@ export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
                   key={row.family.id + row.competency.id}
                   className="clickable"
                   tabIndex={0}
-                  onClick={() => go(`/hr/competencies/${row.competency.id}`)}
-                  onKeyDown={(event) => event.key === "Enter" && go(`/hr/competencies/${row.competency.id}`)}
+                  onClick={() => openDrawer({ type: "cell", familyId: row.family.id, competencyId: row.competency.id })}
+                  onKeyDown={(event) => event.key === "Enter" && openDrawer({ type: "cell", familyId: row.family.id, competencyId: row.competency.id })}
                 >
                   <td className="num muted">{index + 1}</td>
                   <td>

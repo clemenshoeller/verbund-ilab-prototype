@@ -84,3 +84,17 @@ export function formatDate(iso?: string | null): string {
   const [year, month, day] = iso.split("-");
   return `${day}.${month}.${year}`;
 }
+
+/** Shown when an address points to a record that does not exist. */
+export function NotFound({ what, back, backLabel }: { what: string; back: string; backLabel: string }) {
+  return (
+    <>
+      <PageHead crumbs={[{ label: backLabel, href: back }]} title={`${what} not found`} sub="The address may be wrong, or the record is not part of what you can see in this role." />
+      <p>
+        <a className="btn" href={back}>
+          Back to {backLabel.toLowerCase()}
+        </a>
+      </p>
+    </>
+  );
+}

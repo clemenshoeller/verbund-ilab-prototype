@@ -2,10 +2,12 @@ import { Avatar, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
 import { agreedCount, gapRows, totalGap } from "../../lib/gap";
 import { STAGES, selfCheckDone, stageOf } from "../../lib/workflow";
+import { useUi } from "../../ui";
 
 /** Board with one column per stage; a card moves to the right as the work on a person progresses. */
 export function Pipeline() {
   const { content, team, assessments, assignments } = useData();
+  const { openDrawer } = useUi();
   const cards = team.employees.map((employee) => {
     const family = content.families.find((f) => f.id === employee.family)!;
     const assessment = assessments[employee.id];
@@ -23,7 +25,7 @@ export function Pipeline() {
     <>
       <PageHead
         title="Pipeline"
-        sub="Every team member moves from the self-check to agreed measures. Open a card to continue."
+        sub="Every team member moves from the self-check to agreed measures. Click a card for the preview and the next step."
       />
       <div className="board">
         {STAGES.map((stage) => {
@@ -38,10 +40,9 @@ export function Pipeline() {
               {inStage.length === 0 && <p className="empty">No one here</p>}
               {inStage.map(({ employee, family, rows, measures }) => {
                 const gap = totalGap(rows);
-                const tab = stage.id === "open" || stage.id === "talking" ? "conversation" : stage.id === "agreed" ? "conversation/focus" : "overview";
                 const prepared = selfCheckDone(content, employee, assessments[employee.id]);
                 return (
-                  <a key={employee.id} className="kcard" href={`#/team/people/${employee.id}/${tab}`}>
+                  <button key={employee.id} type="button" className="kcard" onClick={() => openDrawer({ type: "person", id: employee.id })}>
                     <span className="kcard-head">
                       <Avatar name={employee.name} small />
                       <span>
@@ -56,7 +57,7 @@ export function Pipeline() {
                       {stage.id === "agreed" && `${gap} steps to 2030 · agree measures`}
                       {stage.id === "planned" && (gap ? `${gap} steps to 2030 · ${measures} ${measures === 1 ? "measure" : "measures"}` : "2030 profile reached")}
                     </span>
-                  </a>
+                  </button>
                 );
               })}
             </section>

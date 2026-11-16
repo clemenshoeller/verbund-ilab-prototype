@@ -1,4 +1,4 @@
-import { Avatar } from "../components/Ui";
+import { Avatar, PageHead } from "../components/Ui";
 import { useData } from "../data";
 
 /** Entry page: who uses the tool, the one journey to follow in a demo, and why it is built this way. */
@@ -42,7 +42,7 @@ export function Start() {
   const count = Object.keys(content.families.find((f) => f.id === employee.family)!.profile).length;
 
   const journey = [
-    { who: employee.name, role: "Employee", text: `${first} does the self-check: ${count} competencies, five minutes, before the yearly appraisal talk.`, href: "#/me", link: "Open as employee" },
+    { who: employee.name, role: "Employee", text: `${first} does the self-check: ${count} competencies, five minutes, before the yearly appraisal talk.`, href: "#/me", link: "View as employee" },
     {
       who: team.info.manager,
       role: "Manager",
@@ -50,19 +50,15 @@ export function Start() {
       href: `#/team/people/${employee.id}/conversation`,
       link: "Open the conversation",
     },
-    { who: "HR and the digital unit", role: "HR", text: "The agreed levels add up: who is fit for today, where the gaps to 2030 are, which measures are used.", href: "#/hr", link: "Open as HR" },
+    { who: "HR and the digital unit", role: "HR", text: "The agreed levels add up: who is fit for today, where the gaps to 2030 are, which measures are used.", href: "#/hr", link: "View as HR" },
   ];
 
   return (
     <>
-      <section className="hero">
-        <p className="eyebrow">Tool concept · WU Industry Lab with VERBUND</p>
-        <h1>One conversation per person a year shows where the company stands on AI.</h1>
-        <p>
-          The AI Competency Check adds twenty minutes to the yearly appraisal talk. Each employee and manager agree on AI competency levels against
-          the target profile of the job family, and on what to do next. HR gets the picture for the whole company without seeing a single person.
-        </p>
-      </section>
+      <PageHead
+        title="One conversation per person a year shows where the company stands on AI."
+        sub="The AI Competency Check adds twenty minutes to the yearly appraisal talk. Employee and manager agree on AI competency levels against the target profile of the job family, and on what to do next. HR gets the picture for the whole company without seeing a single person."
+      />
 
       <section>
         <h2 className="section-title">Follow one person through it</h2>

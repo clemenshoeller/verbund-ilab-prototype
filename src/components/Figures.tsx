@@ -28,7 +28,7 @@ const STEPS = [
 const stepOf = (share: number) => STEPS.find((s) => share <= s.upTo) ?? STEPS[STEPS.length - 1];
 
 /** Heatmap cell with the share printed in it; small groups and unused cells stay empty. */
-export function ShareCell({ cell, what }: { cell: Cell | null; what: string }) {
+export function ShareCell({ cell, what, onOpen }: { cell: Cell | null; what: string; onOpen?: () => void }) {
   if (!cell) return <td className="cell na" title="Not part of this profile" />;
   if (cell.hidden)
     return (
@@ -37,11 +37,10 @@ export function ShareCell({ cell, what }: { cell: Cell | null; what: string }) {
       </td>
     );
   return (
-    <td
-      className={`cell ${stepOf(cell.share).cls}`}
-      title={`${what}: ${cell.below} of ${cell.assessed} rated employees below, ${cell.missingLevels} levels missing in total`}
-    >
-      {Math.round(cell.share * 100)}%
+    <td className={`cell ${stepOf(cell.share).cls}` + (onOpen ? " openable" : "")}>
+      <button type="button" title={`${what}: ${cell.below} of ${cell.assessed} rated employees below, ${cell.missingLevels} steps missing in total. Click for details.`} onClick={onOpen}>
+        {Math.round(cell.share * 100)}%
+      </button>
     </td>
   );
 }

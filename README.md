@@ -2,11 +2,11 @@
 
 Clickable tool concept for managers, built in the WU Industry Lab project "Closing the AI Talent Gap in the Energy Industry" with VERBUND (deliverable D5).
 
-**Status: fourth version (16.11.2026), reworked after design research.** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
+**Status: fifth version (16.11.2026): built as an app with dashboards, previews and click tests.** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
 
 ## What it demonstrates
 
-One competency conversation per person and year, as a part of the yearly appraisal talk, and what the company learns from all of them. Three roles, switched by hand at the top right (provisional, there is no login). The start page walks through one person's journey and gives the reasons for the design.
+One competency conversation per person and year, as a part of the yearly appraisal talk, and what the company learns from all of them. Three roles, chosen in the "View as" menu at the top right (provisional, there is no login). Each role starts on a dashboard whose figures, lists and charts all lead on: a click opens a preview panel from the right, and from there the full record. Actions are confirmed with a short message. "How it works" walks through one person's journey and gives the reasons for the design.
 
 **Employee**
 
@@ -20,7 +20,7 @@ One competency conversation per person and year, as a part of the yearly apprais
 
 | Page | What it does |
 |---|---|
-| Home | A sentence on where the team stands, the next steps, the team at a glance |
+| Dashboard | A sentence on where the team stands, four figures that lead to their lists, next steps, pipeline, recent activity, the team at a glance |
 | Pipeline | Board with four stages from "not started" to "measures agreed" |
 | People | List with search, filters and sorting |
 | Record of a person | Overview in words and as a level path; the guided conversation; activity |
@@ -30,8 +30,8 @@ One competency conversation per person and year, as a part of the yearly apprais
 
 | Page | What it does |
 |---|---|
-| Home | Three questions with one figure each: fit for today, on the way to 2030, is it moving; fit by job family; what needs attention |
-| Gap analysis | Heatmap for today's level or the 2030 target, prioritised list of gaps |
+| Dashboard | Three questions with one figure each: fit for today, on the way to 2030, is it moving; what needs attention; fit by job family; conversations by team; largest gaps; measures in use |
+| Gap analysis | Heatmap for today's level or the 2030 target, prioritised list of gaps; every cell and row opens a preview of that combination |
 | Teams, Job families, Competencies, Measures | Lists with records |
 | Roadmap, Governance | First drafts, marked as draft |
 
@@ -101,7 +101,11 @@ src/
   pages/team/         manager: Home, Pipeline, People, Person, Conversation
   pages/hr/           HR: Home, GapAnalysis, Teams, Competencies, Plans (measures, roadmap, governance)
   pages/              shared: Start, Profiles, About
-  components/         search, cards, tabs, level path (Steps), competency line, meters, heatmap
+  ui.tsx              confirmations (toasts) and the preview panel
+  components/         search, View-as menu, preview drawer, icons, error boundary, cards, tabs,
+                      level path (Steps), competency line, meters, heatmap
+  lib/activity.ts     recent activity of a team
+  app.test.tsx        click tests of the whole app
 scripts/
   generate-sample-org.mjs   builds data/org.json
 ```
@@ -146,12 +150,14 @@ Code and placeholder content were written with Claude Code (Anthropic) on instru
 | typescript | 7.0.2 | Apache-2.0 | type check |
 | vitest | 5.1.0 | MIT | tests |
 | @types/react, @types/react-dom | 19.3.0 | MIT | type check |
+| jsdom | 31.0.1 | MIT | click tests |
+| @testing-library/react, @testing-library/dom | 16.3.3, 10.4.2 | MIT | click tests |
 
 Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-alpine` (runtime). Exact versions of all packages are locked in `package-lock.json`.
 
 ## Tests
 
-`npm test` runs 32 unit tests: gap logic and status in words, aggregated figures (share at target, missing levels, prioritisation, minimum group size), stages and next steps, and consistency checks of the content files. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
+`npm test` runs 42 tests. 32 unit tests: gap logic and status in words, aggregated figures (share at target, missing levels, prioritisation, minimum group size), stages and next steps, and consistency checks of the content files. 10 click tests of the whole app (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading, every navigation link in every role works, the View-as menu, the preview panel for persons, pipeline cards and heatmap cells, and the whole journey from self-check through the conversation to the changed HR totals, including reload and reset. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
 
 Manual test: as employee do the self-check; as manager open that person's conversation, agree all levels, choose a focus and a measure, complete it; check that the employee's profile and the HR figures changed; reset the demo data.
 
@@ -161,7 +167,8 @@ Manual test: as employee do the self-check; as manager open that person's conver
 - Content is not validated against VERBUND's competency model or the interview results. Roadmap, governance and measures are drafts.
 - The sample ratings are random around today's level, so most employees are below the 2030 target; the figures show how the views work, not a finding.
 - Gaps are prioritised by urgency and size only; strategic relevance is not weighted.
-- No UI tests, no accessibility audit, English only.
+- Click tests run in a simulated browser (jsdom); there are no tests in real browsers, no visual regression tests and no accessibility audit. English only.
+- Cards in the pipeline cannot be dragged; they move when the state of the person changes.
 - The look follows VERBUND's company presentation (blue, Georgia, Arial). No official logo or brand assets are included.
 
 ## Next steps

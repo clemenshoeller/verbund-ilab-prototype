@@ -1,12 +1,13 @@
 import { LevelBar } from "../../components/Level";
-import { Card, PageHead } from "../../components/Ui";
+import { Card, NotFound, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
 import { competencyStats, familyGrid, measureReach, percent } from "../../lib/metrics";
-import { go } from "../../lib/router";
+import { useUi } from "../../ui";
 import { measureUptake } from "../../lib/workflow";
 
 export function CompetencyList() {
   const { content, org, assessments } = useData();
+  const { openDrawer } = useUi();
   const stats = competencyStats(content, org.employees, assessments);
   const groupName = (id: string) => content.groups.find((g) => g.id === id)?.name ?? id;
 
@@ -33,8 +34,8 @@ export function CompetencyList() {
                   key={s.competency.id}
                   className="clickable"
                   tabIndex={0}
-                  onClick={() => go(`/hr/competencies/${s.competency.id}`)}
-                  onKeyDown={(event) => event.key === "Enter" && go(`/hr/competencies/${s.competency.id}`)}
+                  onClick={() => openDrawer({ type: "competency", id: s.competency.id })}
+                  onKeyDown={(event) => event.key === "Enter" && openDrawer({ type: "competency", id: s.competency.id })}
                 >
                   <td>
                     <strong>{s.competency.name}</strong>
@@ -59,7 +60,7 @@ export function CompetencyList() {
 export function CompetencyRecord({ competencyId }: { competencyId: string }) {
   const { content, org, assessments, assignments } = useData();
   const stat = competencyStats(content, org.employees, assessments).find((s) => s.competency.id === competencyId);
-  if (!stat) return <PageHead crumbs={[{ label: "Competencies", href: "#/hr/competencies" }]} title="Not found" />;
+  if (!stat) return <NotFound what="Competency" back="#/hr/competencies" backLabel="Competencies" />;
 
   const { competency } = stat;
   const group = content.groups.find((g) => g.id === competency.group)!;
