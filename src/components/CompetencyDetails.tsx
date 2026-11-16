@@ -15,6 +15,7 @@ export function CompetencyDetails({
   note,
   focus,
   open,
+  subText,
 }: {
   content: Content;
   row: GapRow;
@@ -22,6 +23,8 @@ export function CompetencyDetails({
   note?: string;
   focus?: boolean;
   open?: boolean;
+  /** Replaces the status line and hides the status badge, for profiles that are not agreed yet. */
+  subText?: string;
 }) {
   const kind = standing(row);
   const toGo = row.target - (row.agreed ?? 0);
@@ -35,10 +38,10 @@ export function CompetencyDetails({
         <span className="comp-main">
           <strong>{row.competency.name}</strong>
           {focus && <span className="chip focus">Focus</span>}
-          <span className="sub">{standingText(row)}</span>
+          <span className="sub">{subText ?? standingText(row)}</span>
         </span>
         <Steps value={row.agreed} target={row.target} baseline={row.baseline} levels={content.levels} compact />
-        <span className={"standing " + kind}>{kind === "steps" ? `${toGo} to go` : SHORT[kind]}</span>
+        {subText ? <span /> : <span className={"standing " + kind}>{kind === "steps" ? `${toGo} to go` : SHORT[kind]}</span>}
       </summary>
       <div className="comp-body">
         <p>{row.competency.why}</p>
@@ -51,7 +54,7 @@ export function CompetencyDetails({
           )}
           {row.agreed !== null && (
             <>
-              <dt>Now: {levelName(row.agreed)}</dt>
+              <dt>{subText ? "Self-check" : "Now"}: {levelName(row.agreed)}</dt>
               <dd>{levelText(row.agreed)}</dd>
             </>
           )}

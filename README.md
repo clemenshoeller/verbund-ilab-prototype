@@ -2,34 +2,42 @@
 
 Clickable tool concept for managers, built in the WU Industry Lab project "Closing the AI Talent Gap in the Energy Industry" with VERBUND (deliverable D5).
 
-**Status: third rough version (16.11.2026), built like a small CRM.** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
+**Status: fourth version (16.11.2026), reworked after design research.** It shows what is feasible. Content is placeholder text, all data is synthetic. It is a prototype and not approved for productive use.
 
 ## What it demonstrates
 
-An app with a sidebar, lists, records and a search. Two roles, switched by hand at the top right (provisional, there is no login):
+One competency conversation per person and year, as a part of the yearly appraisal talk, and what the company learns from all of them. Three roles, switched by hand at the top right (provisional, there is no login). The start page walks through one person's journey and gives the reasons for the design.
+
+**Employee**
+
+| Page | What it does |
+|---|---|
+| My profile | The next step in one box; the target profile, later the agreed levels, focus and measures |
+| Self-check | One competency per screen: pick the description that fits, add an example from the own work |
+| My data | What is stored, who sees it, what it is used for |
 
 **Manager**, works on the own team:
 
 | Page | What it does |
 |---|---|
-| Home | Next steps per team member, four key figures, where the team stands |
-| Pipeline | Board with four stages: not started, in conversation, levels agreed, measures agreed |
-| People | List with search, filters and sorting; opens the record of a person |
-| Record of a person | Tabs: profile and gaps, the competency conversation, agreed measures with status, activity |
-| Target profiles | AI competencies per job family, level today and target 2030 |
+| Home | A sentence on where the team stands, the next steps, the team at a glance |
+| Pipeline | Board with four stages from "not started" to "measures agreed" |
+| People | List with search, filters and sorting |
+| Record of a person | Overview in words and as a level path; the guided conversation; activity |
+| Conversation | Start, one competency per step with question, job example and a grid for employee, manager and agreed level; then two focus areas at most with a measure; then a summary |
 
-**HR**, sees the whole organisation, aggregated and without single persons:
+**HR**, sees totals only, never single persons:
 
 | Page | What it does |
 |---|---|
-| Home | Key figures, a list of what needs attention, conversations by team, heatmap job family by competency |
+| Home | Three questions with one figure each: fit for today, on the way to 2030, is it moving; fit by job family; what needs attention |
 | Gap analysis | Heatmap for today's level or the 2030 target, prioritised list of gaps |
-| Teams | List of teams with coverage and figures; record of a team |
-| Job families, Competencies | The competency model as records: definition, levels, required level per family, agreed levels today |
-| Measures | Catalogue by type (upskilling, reskilling, recruiting, organisation) with how often each is agreed and done |
-| Roadmap, Governance | First drafts as pages, marked as draft |
+| Teams, Job families, Competencies, Measures | Lists with records |
+| Roadmap, Governance | First drafts, marked as draft |
 
-"About this prototype" lists what works, what is mocked, and the data model.
+## Design principles
+
+Each page opens with a sentence that states the result. Levels are described in behaviour with an example per job family. Detail opens on demand, one level deep. The check serves development only. The conversation ends in at most two focus areas and a measure. HR sees groups from five rated employees up. The sources behind these choices are on the start page and in the project's design research notes.
 
 ## Run it
 
@@ -67,7 +75,8 @@ Edit `content.json`, save, and the running app updates. `org.json` is generated:
 | Navigation, lists, filters, search, records, pipeline, conversation, gap calculation | Functional |
 | Agreeing measures for a person and setting their status | Functional, stored in the browser only |
 | Key figures, heatmaps, prioritised gaps, reach of measures | Functional, calculated live from the ratings (`src/lib/metrics.ts`) |
-| Switch between manager and HR | **Provisional**: switched by hand; a real tool would derive it from the login |
+| Self-check of the employee, focus areas, development plan | Functional, stored in the browser only |
+| Switch between employee, manager and HR | **Provisional**: switched by hand; a real tool would derive it from the login |
 | Roadmap and governance pages | **Draft** texts from `content.json`, a first proposal of the student team |
 | Ratings entered in the conversation | Functional, stored in the browser only (`localStorage`); "Reset demo data" deletes them |
 | Backend and database | **Mocked**: `src/api/dataSource.ts` returns the JSON files |
@@ -88,10 +97,11 @@ src/
   lib/workflow.ts     stages, next steps, use of measures (tested)
   lib/store.ts        ratings and agreed measures in the browser
   lib/router.ts       hash routing, needs no server rules
-  pages/team/         manager: Home, Pipeline, People, Person
+  pages/me/           employee: Me (profile, data), SelfCheck
+  pages/team/         manager: Home, Pipeline, People, Person, Conversation
   pages/hr/           HR: Home, GapAnalysis, Teams, Competencies, Plans (measures, roadmap, governance)
-  pages/              shared: Profiles, About
-  components/         sidebar search, cards, tabs, level bar, stat tiles, meters, heatmap
+  pages/              shared: Start, Profiles, About
+  components/         search, cards, tabs, level path (Steps), competency line, meters, heatmap
 scripts/
   generate-sample-org.mjs   builds data/org.json
 ```
@@ -141,9 +151,9 @@ Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-
 
 ## Tests
 
-`npm test` runs 29 unit tests: gap logic, aggregated figures (share at target, missing levels, prioritisation, minimum group size), stages and next steps, and consistency checks of the content files. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
+`npm test` runs 32 unit tests: gap logic and status in words, aggregated figures (share at target, missing levels, prioritisation, minimum group size), stages and next steps, and consistency checks of the content files. The CI workflow (`.github/workflows/ci.yml`) runs tests, build and `npm audit`, builds the container and requests the start page from it under an arbitrary non-root user.
 
-Manual test: as manager open a person from the pipeline, complete the conversation, add a measure and set its status, check the activity tab; switch to HR and check that the figures changed; reset the demo data.
+Manual test: as employee do the self-check; as manager open that person's conversation, agree all levels, choose a focus and a measure, complete it; check that the employee's profile and the HR figures changed; reset the demo data.
 
 ## Known limitations
 

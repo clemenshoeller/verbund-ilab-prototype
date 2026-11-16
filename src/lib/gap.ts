@@ -73,9 +73,11 @@ export function summarise(name: string, rows: GapRow[]): string {
   const rated = rows.filter((r) => r.agreed !== null);
   if (rated.length === 0) return `${name} has no agreed levels yet.`;
   const below = rated.filter((r) => standing(r) === "below");
-  const reached = rated.filter((r) => standing(r) === "reached").length;
   const steps = rated.reduce((sum, r) => sum + (r.gap ?? 0), 0);
-  const largest = [...rated].sort((a, b) => (b.gap ?? 0) - (a.gap ?? 0))[0];
+  const open = rated.filter((r) => (r.gap ?? 0) > 0);
+  const sorted = [...open].sort((a, b) => (b.gap ?? 0) - (a.gap ?? 0));
+  // Name a competency only if it clearly stands out.
+  const largest = sorted.length > 0 && (sorted.length === 1 || sorted[0].gap !== sorted[1].gap) ? sorted[0] : null;
   const today =
     below.length === 0
       ? `${name} meets today’s expectations in all ${rated.length} competencies.`
@@ -83,6 +85,7 @@ export function summarise(name: string, rows: GapRow[]): string {
   const future =
     steps === 0
       ? "The 2030 profile is already reached."
-      : `For 2030, ${reached} of ${rated.length} are reached; the largest step is in “${largest.competency.name}”.`;
+      : `For 2030, ${steps} ${steps === 1 ? "step is" : "steps are"} still to go in ${open.length} of ${rated.length} competencies` +
+        (largest ? `, most in “${largest.competency.name}”.` : ".");
   return `${today} ${future}`;
 }

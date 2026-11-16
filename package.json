@@ -1,7 +1,7 @@
 {
   "name": "verbund-ilab-prototype",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "AI Competency Check: clickable prototype for the WU Industry Lab project with VERBUND (synthetic data only)",
   "type": "module",
   "scripts": {

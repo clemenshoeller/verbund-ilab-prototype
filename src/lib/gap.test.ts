@@ -83,7 +83,7 @@ describe("standing in words", () => {
   });
   it("summarises a person in two sentences", () => {
     expect(summarise("Julia", rows)).toBe(
-      "Julia meets today\u2019s expectations in all 4 competencies. For 2030, 1 of 4 are reached; the largest step is in \u201cCritical review of results\u201d.",
+      "Julia meets today\u2019s expectations in all 4 competencies. For 2030, 4 steps are still to go in 3 of 4 competencies, most in \u201cCritical review of results\u201d.",
     );
     expect(summarise("Katharina", gapRows(content, family("D"), undefined))).toBe("Katharina has no agreed levels yet.");
   });

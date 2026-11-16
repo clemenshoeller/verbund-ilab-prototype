@@ -4,7 +4,7 @@ import { useData } from "../../data";
 import { gapRows } from "../../lib/gap";
 import { kpis } from "../../lib/metrics";
 import { go } from "../../lib/router";
-import { nextActions, stageOf } from "../../lib/workflow";
+import { nextActions } from "../../lib/workflow";
 
 export function TeamHome() {
   const { content, team, assessments, assignments } = useData();
@@ -68,14 +68,12 @@ export function TeamHome() {
                     {c.name}
                   </th>
                 ))}
-                <th />
               </tr>
             </thead>
             <tbody>
               {team.employees.map((employee) => {
                 const family = content.families.find((f) => f.id === employee.family)!;
                 const rows = gapRows(content, family, assessments[employee.id]);
-                const stage = stageOf(content, employee, assessments[employee.id], assignments[employee.id]);
                 return (
                   <tr key={employee.id} className="clickable" tabIndex={0} onClick={() => go(`/team/people/${employee.id}`)} onKeyDown={(event) => event.key === "Enter" && go(`/team/people/${employee.id}`)}>
                     <td>
@@ -86,9 +84,6 @@ export function TeamHome() {
                       const row = rows.find((r) => r.competency.id === c.id);
                       return <td key={c.id}>{row ? <Steps value={row.agreed} target={row.target} levels={content.levels} compact /> : <span className="muted">–</span>}</td>;
                     })}
-                    <td className="actions">
-                      <StageChip stage={stage} />
-                    </td>
                   </tr>
                 );
               })}

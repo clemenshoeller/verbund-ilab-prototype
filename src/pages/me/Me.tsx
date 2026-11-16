@@ -88,6 +88,13 @@ export function MyProfile() {
             row={row}
             familyId={family.id}
             note={completed ? assessment?.ratings[row.competency.id]?.note : undefined}
+            subText={
+              completed
+                ? undefined
+                : row.agreed === null
+                  ? `2030 target: ${content.levels.find((l) => l.value === row.target)?.name}`
+                  : `Your self-check: ${row.agreed === 0 ? "Not yet" : content.levels[row.agreed - 1].name}`
+            }
             focus={focus.includes(row.competency.id)}
           />
         ))}
