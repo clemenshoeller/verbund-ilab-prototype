@@ -177,28 +177,49 @@ function SeenDifferently({ employee, rows }: { employee: Employee; rows: GapRow[
       {apart.length === 0 ? (
         <p className="empty">You and {first} chose the same level in every competency you rated.</p>
       ) : (
-        <ul className="rows">
-          {apart.map((row) => {
-            const r = ratings[row.competency.id];
-            const higher = (r.self as number) > (r.manager as number);
-            return (
-              <li key={row.competency.id}>
-                <a className="row" href={`#/team/people/${employee.id}/conversation/${row.competency.id}`}>
-                  <span className="row-main">
-                    <strong>{row.competency.name}</strong>
-                    <span className="sub">
-                      {first}: {name(r.self)} · You: {name(r.manager)}
+        <>
+          <ul className="rows">
+            {apart.map((row) => {
+              const r = ratings[row.competency.id];
+              const self = r.self as number;
+              const manager = r.manager as number;
+              const label = `${first}: ${name(self)}, you: ${name(manager)}, agreed: ${name(r.agreed)}`;
+              return (
+                <li key={row.competency.id}>
+                  <a className="row apart" href={`#/team/people/${employee.id}/conversation/${row.competency.id}`}>
+                    <span className="row-main">
+                      <strong>{row.competency.name}</strong>
+                      <span className="views" role="img" aria-label={label} title={label}>
+                        {[0, 1, 2, 3].map((v) => (
+                          <i key={v} className="views-stop" style={{ left: `${(v / 3) * 100}%` }} />
+                        ))}
+                        <i className="views-bar" style={{ left: `${(Math.min(self, manager) / 3) * 100}%`, width: `${(Math.abs(self - manager) / 3) * 100}%` }} />
+                        {r.agreed !== null && <i className="views-agreed" style={{ left: `${(r.agreed / 3) * 100}%` }} />}
+                        <i className="views-self" style={{ left: `${(self / 3) * 100}%` }} />
+                        <i className="views-manager" style={{ left: `${(manager / 3) * 100}%` }} />
+                      </span>
+                      <span className="sub">
+                        {first} rates {Math.abs(self - manager) === 1 ? "one step" : `${Math.abs(self - manager)} steps`} {self > manager ? "higher" : "lower"} · agreed:{" "}
+                        {name(r.agreed)}
+                      </span>
                     </span>
-                    <span className="sub">
-                      Agreed: {name(r.agreed)}
-                      <span className={"chip " + (higher ? "self-higher" : "self-lower")}>{higher ? `${first} higher` : `${first} lower`}</span>
-                    </span>
-                  </span>
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="legend small">
+            <span>
+              <i className="key-self" /> {first}
+            </span>
+            <span>
+              <i className="key-manager" /> You
+            </span>
+            <span>
+              <i className="key-agreed" /> Agreed
+            </span>
+          </p>
+        </>
       )}
     </Card>
   );

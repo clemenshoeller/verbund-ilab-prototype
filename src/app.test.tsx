@@ -273,10 +273,15 @@ describe("differences in view", () => {
     const card = [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Seen differently")!;
     expect(card.querySelector(".card-aside")!.textContent).toBe("1 of 4");
     const link = card.querySelector<HTMLAnchorElement>("a.row")!;
-    expect(link.textContent).toContain("Julia: Practitioner · You: Foundation");
-    expect(link.textContent).toContain("Agreed: Foundation");
-    expect(link.textContent).toContain("Julia higher");
+    expect(link.querySelector(".views")!.getAttribute("aria-label")).toBe("Julia: Practitioner, you: Foundation, agreed: Foundation");
+    expect(link.textContent).toContain("Julia rates one step higher · agreed: Foundation");
     expect(link.getAttribute("href")).toBe("#/team/people/e3/conversation/check-results");
+  });
+
+  it("shows on the team dashboard who has reached the 2030 target per competency", async () => {
+    await start("/team");
+    const cells = [...main().querySelectorAll(".matrix tfoot td")].map((td) => td.textContent);
+    expect(cells).toEqual(["Julia, Michael", "Anna, Stefan", "Nobody yet", "Annaonly one", "–", "–"]);
   });
 
   it("leaves the card out while the manager has rated nothing", async () => {

@@ -18,6 +18,16 @@ export function TeamHome() {
   // Only the competencies someone in this team needs.
   const columns = content.competencies.filter((c) => team.employees.some((e) => (content.families.find((f) => f.id === e.family)?.profile[c.id]?.target ?? 0) > 0));
 
+  // Per competency: who in the team has reached the 2030 target. A skill held by one person is fragile.
+  const holders = columns.map((c) => {
+    const rated = team.employees.flatMap((e) => {
+      const target = content.families.find((f) => f.id === e.family)?.profile[c.id]?.target ?? 0;
+      const agreed = assessments[e.id]?.ratings[c.id]?.agreed ?? null;
+      return target > 0 && agreed !== null ? [{ employee: e, reached: agreed >= target }] : [];
+    });
+    return { id: c.id, rated: rated.length, reached: rated.filter((r) => r.reached).map((r) => r.employee) };
+  });
+
   const headline =
     k.completed === 0 ? "No conversation is completed yet." : k.completed === k.headcount ? "All conversations are done." : `${k.completed} of ${k.headcount} conversations are done.`;
 
@@ -122,6 +132,30 @@ export function TeamHome() {
                 );
               })}
             </tbody>
+            <tfoot>
+              <tr>
+                <th scope="row" title="Members who have reached the 2030 target and can pass it on">
+                  Can help others
+                </th>
+                {holders.map((h) => {
+                  const names = h.reached.map((e) => e.name.split(" ")[0]);
+                  return (
+                    <td key={h.id}>
+                      {h.rated === 0 ? (
+                        <span className="muted">–</span>
+                      ) : names.length === 0 ? (
+                        <span className="muted">Nobody yet</span>
+                      ) : (
+                        <span className="holders">
+                          {names.length > 2 ? `${names.slice(0, 2).join(", ")} +${names.length - 2}` : names.join(", ")}
+                          {names.length === 1 && <span className="holders-one">only one</span>}
+                        </span>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            </tfoot>
           </table>
         </div>
         <div className="card-note">

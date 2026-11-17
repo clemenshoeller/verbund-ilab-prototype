@@ -176,9 +176,19 @@ button.link { padding: 4px; border: 0; background: none; color: var(--muted); fo
 .chip.stage-planned, .chip.status-done { background: var(--blue); border-color: var(--blue); color: var(--white); }
 .chip.status-running { background: var(--blue-20); border-color: var(--blue-20); color: var(--blue-dark); }
 .chip.focus { margin-left: 8px; background: var(--blue-dark); border-color: var(--blue-dark); color: var(--white); font-weight: 700; }
-.row .sub .chip { margin-left: 8px; }
-.chip.self-higher { border-color: var(--brown); color: var(--brown); }
-.chip.self-lower { border-color: var(--blue-40); color: var(--blue-dark); }
+/* Self-check against the manager's view: two dots on the level scale 0–3, a ring for the agreed level. */
+.views { position: relative; display: block; height: 22px; margin: 10px 9px 4px; }
+.views::before { content: ""; position: absolute; left: 0; right: 0; top: 10px; height: 2px; border-radius: 2px; background: var(--line); }
+.views i { position: absolute; top: 11px; transform: translate(-50%, -50%); border-radius: 50%; }
+.views .views-stop { width: 6px; height: 6px; background: var(--blue-20); }
+.views .views-bar { height: 4px; border-radius: 4px; transform: translateY(-50%); background: linear-gradient(90deg, var(--blue-40), var(--blue-20)); }
+.views .views-agreed { width: 22px; height: 22px; border: 2px solid var(--blue-dark); background: var(--white); }
+.views .views-self { width: 12px; height: 12px; background: var(--brown); box-shadow: 0 0 0 2px var(--white); }
+.views .views-manager { width: 12px; height: 12px; background: var(--blue); box-shadow: 0 0 0 2px var(--white); }
+.legend i.key-self, .legend i.key-manager, .legend i.key-agreed { display: inline-block; width: 11px; height: 11px; margin-right: 4px; border-radius: 50%; vertical-align: -1px; }
+.legend i.key-self { background: var(--brown); }
+.legend i.key-manager { background: var(--blue); }
+.legend i.key-agreed { width: 13px; height: 13px; border: 2px solid var(--blue-dark); }
 .kind { display: inline-block; min-width: 68px; padding: 2px 9px; border-radius: 6px; background: var(--blue-05); color: var(--blue-dark); font-size: 0.74rem; font-weight: 700; text-align: center; white-space: nowrap; }
 .draft { display: inline-block; vertical-align: middle; margin-left: 8px; padding: 2px 10px; border: 1px dashed var(--blue-60); border-radius: 99px; font: 700 0.68rem/1.5 var(--body); letter-spacing: 0.06em; text-transform: uppercase; color: var(--blue); }
 .tabs { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -235,6 +245,11 @@ a.row:hover .go { transform: translateX(3px); background: var(--blue-dark); }
 .meter-cell { min-width: 200px; }
 .matrix th { font-weight: 400; white-space: normal; max-width: 120px; line-height: 1.25; }
 .matrix td { white-space: nowrap; }
+.matrix tfoot th, .matrix tfoot td { border-top: 2px solid var(--line); border-bottom: 0; background: var(--page); font-size: 0.8rem; }
+.matrix tfoot th { font-weight: 700; text-align: left; vertical-align: middle; }
+.matrix tfoot td { vertical-align: middle; }
+.holders { font-weight: 700; color: var(--blue-dark); }
+.holders-one { display: block; font-size: 0.72rem; font-weight: 700; color: var(--brown); }
 
 /* ---------- Figures: KPI tiles, meters, heatmap ---------- */
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
