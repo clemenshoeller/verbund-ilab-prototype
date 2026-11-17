@@ -9,6 +9,7 @@ It shows one idea: **one competency conversation per person and year, as part of
 ## Contents
 
 - [What it demonstrates](#what-it-demonstrates)
+- [Open it without installing](#open-it-without-installing)
 - [Run it](#run-it)
 - [Functional, mocked, out of scope](#functional-mocked-out-of-scope)
 - [Architecture](#architecture)
@@ -36,6 +37,15 @@ The start page walks through one person's journey and gives the reasons for the 
 
 Design principles: every page opens with a sentence that states the result; levels are described in behaviour with an example per job family; detail opens on demand; the check serves development only; HR sees groups from five rated employees up.
 
+## Open it without installing
+
+| Way | How |
+|---|---|
+| Link | https://clemenshoeller.github.io/verbund-ilab-prototype/ opens the current version in the browser. Published by GitHub Pages on every push to `main` |
+| One file | `npm run build:single` writes `dist-single/ai-competency-check.html`, about 400 kB. Send it by mail or chat; a double click opens it in the browser, without a server and offline |
+
+Both hold only the built app with the invented data. What someone enters stays in that person's browser.
+
 ## Run it
 
 Requires Node.js 22.12 or newer.
@@ -46,6 +56,7 @@ npm run dev        # http://localhost:5173 (next free port if taken)
 npm test           # 62 tests
 npm run lint       # code and accessibility rules
 npm run build      # production build in dist/
+npm run build:single   # the same as one HTML file in dist-single/
 ```
 
 With Docker. The container listens on port 8080 and runs without root:
@@ -109,8 +120,9 @@ src/
   app.test.tsx         click tests of the whole app
   a11y.test.tsx        accessibility tests with axe-core
 scripts/generate-sample-org.mjs   builds data/org.json
+scripts/build-single.mjs          packs the build into one HTML file
 deploy/nginx.conf, deploy/openshift.yaml
-Dockerfile, .github/workflows/ci.yml, biome.json (lint rules)
+Dockerfile, .github/workflows/ci.yml (checks), .github/workflows/pages.yml (demo link), biome.json (lint rules)
 ```
 
 Data model (details in `src/types.ts` and on the page "Data model and status"): Competency, Job family with its target profile, Team, Employee, Assessment with Ratings (self, manager, agreed, note) and focus areas, Measure, Assignment of a measure to a person.
@@ -143,6 +155,7 @@ Edits made in the app are saved in the browser together with a fingerprint of th
 - In mock mode the app makes no network requests after loading; ratings never leave the browser.
 - Free text is limited to 300 characters and shown as text (React escapes it). The code uses no `innerHTML`, no `eval` and writes nothing to the console.
 - A page that fails shows a plain message without technical detail; if the whole app fails, the message offers to reset the demo data and reload.
+- The demo link is public but asks search engines not to list it (`noindex`). GitHub Pages does not send the security headers named in the next point; they belong to the container.
 - The container runs without root and sends a Content-Security-Policy, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` and `Permissions-Policy` with every response; the nginx version is not shown. The page itself is never cached, the hashed asset files for a year.
 - The git history is scanned for keys, tokens and passwords in CI (gitleaks): none.
 - `npm audit` reports no known vulnerabilities (checked on every push).
@@ -151,18 +164,18 @@ Edits made in the app are saved in the browser together with a fingerprint of th
 
 ## External services and AI
 
-Two external services were used to build the prototype. The app itself loads no hosting, analytics, fonts or other content from third parties.
+Two external services were used to build the prototype; one of them, GitHub, also hosts the demo link. The app itself loads no analytics, fonts or other content from third parties.
 
 | | GitHub | Claude Code (Anthropic) |
 |---|---|---|
-| Used for | Source code in a private repository of a personal account; GitHub Actions for tests and container build | Writing code, placeholder content and documentation, through the desktop app with a personal subscription |
-| What goes there | Source code and invented data | Instructions of the student team, the files of this repository, the team's own project notes, colours and fonts of public VERBUND material |
+| Used for | Source code in a repository of a personal account, public since 17.11.2026 so that the demo link can be offered; GitHub Actions for tests and container build; GitHub Pages serves the built app at the demo link | Writing code, placeholder content and documentation, through the desktop app with a personal subscription |
+| What goes there | Source code and invented data; with Pages also the built app. Visitors of the demo link reach GitHub's servers, which see their IP address | Instructions of the student team, the files of this repository, the team's own project notes, colours and fonts of public VERBUND material |
 | Where data is processed and stored | "GitHub stores data for GitHub.com in the USA" by default; a choice of region exists only for GitHub Enterprise Cloud with data residency [1]. The privacy statement names processing in the US and other countries [2] | Runs locally; prompts, file contents and command output go to Anthropic over TLS [8]. For commercial products the data "is stored in the US" [11]; for personal plans no page states the location beyond "US servers or other countries" in the privacy policy [12] |
-| Used for model training | Stored content of private repositories is not used. Content given as input to AI features (Copilot) may be used unless opted out [3][4]. Copilot was not used for this repository | Personal plans (Free, Pro, Max): used for training when the setting "Help improve our AI models" is on, Claude Code included [8][9]. Commercial plans (Team, Enterprise, API): not used unless the customer opts in [8]. **Which way the setting is on the account used here was not checked** |
+| Used for model training | Stored content of private repositories is not used [3][4]; since 17.11.2026 the repository is public, so that statement no longer covers it, and what the terms say for public repositories was not checked. Content given as input to AI features (Copilot) may be used unless opted out [3][4]. Copilot was not used for this repository | Personal plans (Free, Pro, Max): used for training when the setting "Help improve our AI models" is on, Claude Code included [8][9]. Commercial plans (Team, Enterprise, API): not used unless the customer opts in [8]. **Which way the setting is on the account used here was not checked** |
 | Retention | Actions logs and artifacts 90 days by default, deletable earlier [6] | Personal plans: 30 days with the training setting off, up to 5 years with it on; deleted conversations leave the back end within 30 days [8][10]. Local transcripts lie in plain text under `~/.claude/projects/` [8] |
 | Subprocessors | List published (for example AWS, Google Cloud, Cloudflare) [5] | List published in the Trust Center (for example Google Cloud, AWS, Azure, Cloudflare) [13] |
 | Deletion | The owner can delete the repository; it can be restored for 90 days [6] | Conversations can be deleted; local transcripts with `claude purge` [8] |
-| Access control | Only the owner and invited collaborators see a private repository; two-factor authentication is required for contributors [7] | Bound to the personal account |
+| Access control | Anyone can read the public repository and open the demo link; only the owner and invited collaborators can change it. Two-factor authentication is required for contributors [7] | Bound to the personal account |
 | Transfer and export | Transfer to another owner in the repository settings; `git clone` gives the full history, the ZIP download has no history [6] | Not applicable; the result is the code in the repository |
 
 What follows for the handover:
@@ -215,6 +228,8 @@ Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-
 - **2 accessibility tests** (`src/a11y.test.tsx`, axe-core): no violations on 25 pages, nor with the role list, the search results or a preview open. Colour contrast is excluded because the simulated browser cannot compute it.
 - **21 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as list; the search with arrow keys; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from self-check through the conversation to the changed HR totals; reload and reset; and one test for each finding of the code review.
 
+A second workflow (`.github/workflows/pages.yml`) runs the tests, builds the app and publishes it at the demo link on every push to `main`.
+
 The CI workflow (`.github/workflows/ci.yml`) runs on every push to `main` and on pull requests, in four jobs: lint, tests, build and `npm audit` (fails from severity high); the container build with a start as an arbitrary non-root user, the health endpoint, the security and cache headers and a second build with settings passed in; a rollout of the manifests on a Kubernetes cluster; a scan of the whole git history for secrets (gitleaks). After a transfer to a GitHub organisation the gitleaks action needs a licence key, or has to be replaced by the gitleaks command line.
 
 Manual test: as employee do the self-check; as manager open that person's conversation, agree all levels, choose a focus and a measure, complete it; check that the employee's profile and the HR figures changed; reset the demo data.
@@ -258,7 +273,7 @@ Status against the minimum checklist of the technical guidelines.
 |---|---|---|---|
 | 1 | No real VERBUND data or production credentials | Yes | Data and security |
 | 2 | No secrets hardcoded | Yes; history searched | Configuration and secrets |
-| 3 | Source code complete and accessible | Yes; repository still in a personal account | External services and AI |
+| 3 | Source code complete and accessible | Yes; repository public, still in a personal account | External services and AI |
 | 4 | Can be installed and started from the documentation | Yes | Run it |
 | 5 | Containerised, preferably OpenShift, at least Docker | Docker: yes, checked in CI. Kubernetes: Deployment and Service rolled out in CI under the restricted policy with a random user ID. OpenShift itself: not tried; the Route is untested | Run it |
 | 6 | Configuration through environment variables or separate files | Yes; read at build time, passed to the container build as build arguments | Configuration and secrets |
