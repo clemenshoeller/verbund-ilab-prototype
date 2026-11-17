@@ -200,7 +200,7 @@ describe("the journey of one person", () => {
     click(within(main()).getByRole("button", { name: "Done" }));
     await open("/me");
     expect(main().textContent).toContain("Your self-check is with Elisabeth Brunner.");
-    expect(main().querySelector(".radar-key")!.textContent).toBe("Your self-check2030 target");
+    expect([...main().querySelectorAll(".radar-key li > span")].map((el) => el.firstChild?.textContent)).toEqual(["Your self-check", "2030 target"]);
 
     // Manager: sees the self-check, agrees every level.
     await open("/team/people/e6/conversation");
@@ -250,7 +250,7 @@ describe("the journey of one person", () => {
 });
 
 describe("radar chart and differences in view", () => {
-  const key = () => [...main().querySelectorAll(".radar-key li")].map((li) => li.textContent);
+  const key = () => [...main().querySelectorAll(".radar-key li > span")].map((el) => el.firstChild?.textContent);
 
   it("shows only the target before the self-check and the agreed levels afterwards", async () => {
     await start("/me");
@@ -261,6 +261,33 @@ describe("radar chart and differences in view", () => {
     expect(main().querySelectorAll(".radar .r-area circle")).toHaveLength(4);
     const table = main().querySelector(".radar table")!;
     expect(table.textContent).toContain("Critical review of results");
+  });
+
+  it("opens the competency below when it is clicked in the chart", async () => {
+    await start("/team/people/e3");
+    const details = document.getElementById("comp-check-results") as HTMLDetailsElement;
+    expect(details.open).toBe(false);
+    click(main().querySelectorAll(".radar .r-axis")[1]);
+    expect(details.open).toBe(true);
+  });
+
+  it("gives the focus back without moving the page when the preview closes", async () => {
+    await start("/team/people");
+    const calls: (FocusOptions | undefined)[] = [];
+    const focus = HTMLElement.prototype.focus;
+    HTMLElement.prototype.focus = function (options?: FocusOptions) {
+      calls.push(options);
+      focus.call(this, options);
+    };
+    try {
+      click(within(main()).getByText("Julia Steiner"));
+      fireEvent.keyDown(window, { key: "Escape" });
+      expect(screen.queryByRole("dialog")).toBeNull();
+      expect(calls.length).toBeGreaterThan(1);
+      expect(calls.every((options) => options?.preventScroll)).toBe(true);
+    } finally {
+      HTMLElement.prototype.focus = focus;
+    }
   });
 
   it("lists where the self-check and the manager were apart and leads to that step", async () => {

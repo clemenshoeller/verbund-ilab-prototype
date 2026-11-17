@@ -68,11 +68,11 @@ export function KpiTile({
           <Icon name={icon} />
         </span>
         <span className="tile-label">{label}</span>
-        {delta && <span className="tile-delta">{delta}</span>}
       </span>
       <span className="tile-value">
         {value}
         {unit && <small>{unit}</small>}
+        {delta && <span className="tile-delta">{delta}</span>}
       </span>
       <span className="tile-sub">{sub}</span>
       {spark && spark.length > 1 && <Sparkline values={spark} label={`Trend over ${spark.length} weeks, from ${Math.round(spark[0])} to ${Math.round(spark[spark.length - 1])}`} />}

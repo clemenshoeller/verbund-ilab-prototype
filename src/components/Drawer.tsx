@@ -21,10 +21,11 @@ export function Drawer() {
     // While the preview is open, the page behind it cannot be reached by keyboard or screen reader.
     const behind = [...document.querySelectorAll<HTMLElement>(".app > .side, .app > .main")];
     for (const element of behind) element.inert = true;
-    close.current?.focus();
+    close.current?.focus({ preventScroll: true });
     return () => {
       for (const element of behind) element.inert = false;
-      before?.focus?.();
+      // preventScroll: giving the focus back must not move the page (Safari leaves it on the heading, which sits at the top).
+      before?.focus?.({ preventScroll: true });
     };
   }, [isOpen]);
   if (!drawer) return null;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { getContent, getOrg } from "./api/dataSource";
 import { Drawer } from "./components/Drawer";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -88,10 +88,15 @@ function Shell() {
   const hash = window.location.hash;
   const firstPage = useRef(true);
   // biome-ignore lint/correctness/useExhaustiveDependencies: the address is the trigger, the effect reads the page that was rendered for it
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (firstPage.current) {
       firstPage.current = false;
       return;
+    }
+    try {
+      window.scrollTo(0, 0);
+    } catch {
+      // Not available in every environment (tests); the page still changes.
     }
     document.querySelector<HTMLElement>("main h1")?.focus({ preventScroll: true });
   }, [hash]);

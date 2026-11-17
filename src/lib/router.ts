@@ -9,14 +9,8 @@ function parse(): string[] {
 export function useRoute(): string[] {
   const [route, setRoute] = useState<string[]>(parse);
   useEffect(() => {
-    const onChange = () => {
-      setRoute(parse());
-      try {
-        window.scrollTo(0, 0);
-      } catch {
-        // Not available in every environment (tests); the page still changes.
-      }
-    };
+    // The new page starts at the top; App scrolls after the new page has rendered, so the old one never flashes at the top.
+    const onChange = () => setRoute(parse());
     window.addEventListener("hashchange", onChange);
     return () => window.removeEventListener("hashchange", onChange);
   }, []);

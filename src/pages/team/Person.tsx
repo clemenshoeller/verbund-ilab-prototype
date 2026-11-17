@@ -112,8 +112,12 @@ function Overview({ employee, rows }: { employee: Employee; rows: GapRow[] }) {
           <ProfileRadar
             rows={rows}
             levels={content.levels}
-            levelLabel="Agreed level"
-            self={prepared ? { label: `${first}’s self-check`, values: rows.map((r) => assessment?.ratings[r.competency.id]?.self ?? null) } : undefined}
+            level={{ label: "Agreed level", note: "Result of the conversation" }}
+            self={
+              prepared
+                ? { label: `${first}’s self-check`, note: "Before the conversation", values: rows.map((r) => assessment?.ratings[r.competency.id]?.self ?? null) }
+                : undefined
+            }
             title={`${first}’s profile against the 2030 target`}
           />
           {sorted.map((row) => (

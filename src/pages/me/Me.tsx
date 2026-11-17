@@ -85,7 +85,7 @@ export function MyProfile() {
         <ProfileRadar
           rows={shown}
           levels={content.levels}
-          levelLabel={completed ? "Agreed level" : "Your self-check"}
+          level={completed ? { label: "Agreed level", note: `Agreed with ${team.manager}` } : { label: "Your self-check", note: "Before the conversation" }}
           title={completed ? "Your agreed levels against the 2030 target" : "Your self-check against the 2030 target"}
         />
         {shown.map((row) => (
