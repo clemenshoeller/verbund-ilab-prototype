@@ -1,4 +1,5 @@
 import { CompetencyDetails, GapHeadline } from "../../components/CompetencyDetails";
+import { ProfileRadar } from "../../components/Radar";
 import { StepsLegend } from "../../components/Steps";
 import { Card, PageHead, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
@@ -81,6 +82,12 @@ export function MyProfile() {
         aside={completed ? <GapHeadline rows={rows} /> : `${rows.length} competencies`}
         flush
       >
+        <ProfileRadar
+          rows={shown}
+          levels={content.levels}
+          levelLabel={completed ? "Agreed level" : "Your self-check"}
+          title={completed ? "Your agreed levels against the 2030 target" : "Your self-check against the 2030 target"}
+        />
         {shown.map((row) => (
           <CompetencyDetails
             key={row.competency.id}

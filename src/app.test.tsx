@@ -200,6 +200,7 @@ describe("the journey of one person", () => {
     click(within(main()).getByRole("button", { name: "Done" }));
     await open("/me");
     expect(main().textContent).toContain("Your self-check is with Elisabeth Brunner.");
+    expect(main().querySelector(".radar-key")!.textContent).toBe("Your self-check2030 target");
 
     // Manager: sees the self-check, agrees every level.
     await open("/team/people/e6/conversation");
@@ -245,6 +246,37 @@ describe("the journey of one person", () => {
     click(screen.getByRole("button", { name: /View as/ }));
     click(screen.getByRole("button", { name: /Reset demo data/ }));
     expect((within(main()).getAllByRole("radio")[2] as HTMLInputElement).checked).toBe(false);
+  });
+});
+
+describe("radar chart and differences in view", () => {
+  const key = () => [...main().querySelectorAll(".radar-key li")].map((li) => li.textContent);
+
+  it("shows only the target before the self-check and the agreed levels afterwards", async () => {
+    await start("/me");
+    expect(key()).toEqual(["2030 target"]);
+    expect(main().querySelector(".radar svg .r-area")).toBeNull();
+    await open("/team/people/e3");
+    expect(key()).toEqual(["Agreed level", "2030 target", "Julia’s self-check"]);
+    expect(main().querySelectorAll(".radar .r-area circle")).toHaveLength(4);
+    const table = main().querySelector(".radar table")!;
+    expect(table.textContent).toContain("Critical review of results");
+  });
+
+  it("lists where the self-check and the manager were apart and leads to that step", async () => {
+    await start("/team/people/e3");
+    const card = [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Seen differently")!;
+    expect(card.querySelector(".card-aside")!.textContent).toBe("1 of 4");
+    const link = card.querySelector<HTMLAnchorElement>("a.row")!;
+    expect(link.textContent).toContain("Julia: Practitioner · You: Foundation");
+    expect(link.textContent).toContain("Agreed: Foundation");
+    expect(link.textContent).toContain("Julia higher");
+    expect(link.getAttribute("href")).toBe("#/team/people/e3/conversation/check-results");
+  });
+
+  it("leaves the card out while the manager has rated nothing", async () => {
+    await start("/team/people/e6");
+    expect(main().textContent).not.toContain("Seen differently");
   });
 });
 

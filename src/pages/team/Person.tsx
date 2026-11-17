@@ -1,4 +1,5 @@
 import { CompetencyDetails, GapHeadline } from "../../components/CompetencyDetails";
+import { ProfileRadar } from "../../components/Radar";
 import { StepsLegend } from "../../components/Steps";
 import { Avatar, Card, LinkTabs, NotFound, PageHead, StageChip, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
@@ -108,6 +109,13 @@ function Overview({ employee, rows }: { employee: Employee; rows: GapRow[] }) {
 
       <div className="grid-2-1">
         <Card title="Profile" aside={<GapHeadline rows={rows} />} flush>
+          <ProfileRadar
+            rows={rows}
+            levels={content.levels}
+            levelLabel="Agreed level"
+            self={prepared ? { label: `${first}’s self-check`, values: rows.map((r) => assessment?.ratings[r.competency.id]?.self ?? null) } : undefined}
+            title={`${first}’s profile against the 2030 target`}
+          />
           {sorted.map((row) => (
             <CompetencyDetails
               key={row.competency.id}
@@ -123,39 +131,84 @@ function Overview({ employee, rows }: { employee: Employee; rows: GapRow[] }) {
           </div>
         </Card>
 
-        <Card title="Development plan" aside={completed ? <a href={`#/team/people/${employee.id}/conversation/focus`}>Change</a> : undefined}>
-          {!completed ? (
-            <p className="muted">Focus areas and measures are chosen at the end of the conversation.</p>
-          ) : (
-            <>
-              <p className="plan-label">Focus</p>
-              {focus.length === 0 ? (
-                <p className="muted">No focus chosen.</p>
-              ) : (
-                <ul className="plan">
-                  {focus.map((id) => (
-                    <li key={id}>{content.competencies.find((c) => c.id === id)?.name}</li>
-                  ))}
-                </ul>
-              )}
-              <p className="plan-label">Measures</p>
-              {assigned.length === 0 ? (
-                <p className="muted">No measure agreed yet.</p>
-              ) : (
-                <ul className="plan">
-                  {assigned.map((a) => (
-                    <li key={a.measureId}>
-                      {content.measures.find((m) => m.id === a.measureId)?.title}
-                      <span className={"chip status-" + a.status}>{STATUS_LABEL[a.status]}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </>
-          )}
-        </Card>
+        <div className="stack">
+          <SeenDifferently employee={employee} rows={rows} />
+          <Card title="Development plan" aside={completed ? <a href={`#/team/people/${employee.id}/conversation/focus`}>Change</a> : undefined}>
+            {!completed ? (
+              <p className="muted">Focus areas and measures are chosen at the end of the conversation.</p>
+            ) : (
+              <>
+                <p className="plan-label">Focus</p>
+                {focus.length === 0 ? (
+                  <p className="muted">No focus chosen.</p>
+                ) : (
+                  <ul className="plan">
+                    {focus.map((id) => (
+                      <li key={id}>{content.competencies.find((c) => c.id === id)?.name}</li>
+                    ))}
+                  </ul>
+                )}
+                <p className="plan-label">Measures</p>
+                {assigned.length === 0 ? (
+                  <p className="muted">No measure agreed yet.</p>
+                ) : (
+                  <ul className="plan">
+                    {assigned.map((a) => (
+                      <li key={a.measureId}>
+                        {content.measures.find((m) => m.id === a.measureId)?.title}
+                        <span className={"chip status-" + a.status}>{STATUS_LABEL[a.status]}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
+          </Card>
+        </div>
       </div>
     </>
+  );
+}
+
+/** Competencies where the self-check and the manager's view were apart: worth a second look. */
+function SeenDifferently({ employee, rows }: { employee: Employee; rows: GapRow[] }) {
+  const { content, assessments } = useData();
+  const ratings = assessments[employee.id]?.ratings ?? {};
+  const first = employee.name.split(" ")[0];
+  const rated = rows.filter((r) => ratings[r.competency.id]?.self != null && ratings[r.competency.id]?.manager != null);
+  if (rated.length === 0) return null;
+  const apart = rated.filter((r) => ratings[r.competency.id].self !== ratings[r.competency.id].manager);
+  const name = (value: number | null) => (value === null ? "open" : value === 0 ? "Not yet" : content.levels[value - 1].name);
+
+  return (
+    <Card title="Seen differently" aside={`${apart.length} of ${rated.length}`} flush>
+      {apart.length === 0 ? (
+        <p className="empty">You and {first} chose the same level in every competency you rated.</p>
+      ) : (
+        <ul className="rows">
+          {apart.map((row) => {
+            const r = ratings[row.competency.id];
+            const higher = (r.self as number) > (r.manager as number);
+            return (
+              <li key={row.competency.id}>
+                <a className="row" href={`#/team/people/${employee.id}/conversation/${row.competency.id}`}>
+                  <span className="row-main">
+                    <strong>{row.competency.name}</strong>
+                    <span className="sub">
+                      {first}: {name(r.self)} · You: {name(r.manager)}
+                    </span>
+                    <span className="sub">
+                      Agreed: {name(r.agreed)}
+                      <span className={"chip " + (higher ? "self-higher" : "self-lower")}>{higher ? `${first} higher` : `${first} lower`}</span>
+                    </span>
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </Card>
   );
 }
 
