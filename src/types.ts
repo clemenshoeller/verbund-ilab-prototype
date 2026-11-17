@@ -13,8 +13,6 @@ export interface Competency {
   id: string;
   group: string;
   name: string;
-  /** Label for tight spots such as the axes of the radar chart. */
-  short: string;
   description: string;
   /** Opening question for the competency conversation. */
   question: string;

@@ -33,7 +33,7 @@ Three roles, chosen in the "View as" menu at the top right. The switch is provis
 | Manager | Dashboard, Pipeline, People, record of a person with the guided conversation, Target profiles | Know what to do next; hold the conversation step by step; keep the development plan |
 | HR | Dashboard, Gap analysis, Teams, Job families, Competencies, Measures, Roadmap, Governance | See where the organisation stands today and against 2030, where to act first, how the model is kept current |
 
-A person's profile also shows as a radar chart: agreed level, self-check and 2030 target per competency, on My profile and in the manager's record. The record lists where the self-check and the manager's view were apart, each linked to that step of the conversation. The radar idea comes from Abdullah's prototype "Team skills compass" in the student team.
+The manager's record of a person lists where the self-check and the manager's view were apart, each linked to that step of the conversation. The idea comes from Abdullah's prototype "Team skills compass" in the student team.
 
 The start page walks through one person's journey and gives the reasons for the design, with sources. "Data model and status" lists the records behind the screens.
 
@@ -55,7 +55,7 @@ Requires Node.js 22.12 or newer.
 ```bash
 npm install
 npm run dev        # http://localhost:5173 (next free port if taken)
-npm test           # 67 tests
+npm test           # 65 tests
 npm run lint       # code and accessibility rules
 npm run build      # production build in dist/
 npm run build:single   # the same as one HTML file in dist-single/
@@ -224,11 +224,11 @@ Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-
 
 ## Tests
 
-`npm test` runs 67 tests.
+`npm test` runs 65 tests.
 
 - **39 unit tests**: gaps and status in words, focus areas, totals and trend, heatmap, prioritisation, minimum group size, stages and next steps, loading of saved data, consistency of the content files.
 - **2 accessibility tests** (`src/a11y.test.tsx`, axe-core): no violations on 25 pages, nor with the role list, the search results or a preview open. Colour contrast is excluded because the simulated browser cannot compute it.
-- **26 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as list; the search with arrow keys; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from self-check through the conversation to the changed HR totals; the radar chart (also that a click opens the competency), the list of differences in view, and that closing the preview does not move the page; reload and reset; and one test for each finding of the code review.
+- **24 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as list; the search with arrow keys; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from self-check through the conversation to the changed HR totals; the list of differences in view, and that closing the preview does not move the page; reload and reset; and one test for each finding of the code review.
 
 A second workflow (`.github/workflows/pages.yml`) runs the tests, builds the app and publishes it at the demo link on every push to `main`.
 

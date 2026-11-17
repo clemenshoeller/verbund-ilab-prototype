@@ -33,7 +33,7 @@ export function CompetencyDetails({
   const levelName = (level: number) => content.levels.find((l) => l.value === level)?.name ?? "Not yet";
 
   return (
-    <details className="comp" id={`comp-${row.competency.id}`} open={open}>
+    <details className="comp" open={open}>
       <summary>
         <span className="comp-main">
           <strong>{row.competency.name}</strong>

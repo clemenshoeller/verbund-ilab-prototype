@@ -1,5 +1,4 @@
 import { CompetencyDetails, GapHeadline } from "../../components/CompetencyDetails";
-import { ProfileRadar } from "../../components/Radar";
 import { StepsLegend } from "../../components/Steps";
 import { Avatar, Card, LinkTabs, NotFound, PageHead, StageChip, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
@@ -109,17 +108,6 @@ function Overview({ employee, rows }: { employee: Employee; rows: GapRow[] }) {
 
       <div className="grid-2-1">
         <Card title="Profile" aside={<GapHeadline rows={rows} />} flush>
-          <ProfileRadar
-            rows={rows}
-            levels={content.levels}
-            level={{ label: "Agreed level", note: "Result of the conversation" }}
-            self={
-              prepared
-                ? { label: `${first}’s self-check`, note: "Before the conversation", values: rows.map((r) => assessment?.ratings[r.competency.id]?.self ?? null) }
-                : undefined
-            }
-            title={`${first}’s profile against the 2030 target`}
-          />
           {sorted.map((row) => (
             <CompetencyDetails
               key={row.competency.id}

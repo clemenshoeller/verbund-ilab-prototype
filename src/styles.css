@@ -463,60 +463,6 @@ fieldset.options { margin: 0; padding: 0; border: 0; min-width: 0; }
 .drawer-section p + p { margin-top: 6px; }
 .drawer-foot { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding: 16px 0 20px; background: linear-gradient(to top, var(--white) 78%, rgba(255, 255, 255, 0)); }
 
-/* ---------- Radar chart of a profile ---------- */
-.radar { margin: 0; padding: 18px 22px 16px; border-bottom: 1px solid var(--line); container-type: inline-size; }
-.radar-in { display: grid; gap: 4px 28px; }
-.radar-chart { position: relative; width: 100%; max-width: 500px; margin: 0 auto; }
-.radar svg { display: block; width: 100%; height: auto; overflow: visible; }
-.r-ring { stroke: var(--blue-20); stroke-width: 1; }
-.r-ring-odd { fill: var(--blue-05); }
-.r-ring-even { fill: var(--white); }
-.r-spoke { stroke: var(--blue-20); stroke-width: 1; transition: stroke 0.15s; }
-.r-spoke.on { stroke: var(--blue-60); }
-.r-num { fill: var(--blue-60); font: 700 10px var(--body); }
-.r-num-name { font-weight: 400; letter-spacing: 0.02em; }
-.r-num-short { display: none; }
-.radar-key .sub { display: none; }
-.r-hit { fill: transparent; }
-.r-axis.pick { cursor: pointer; }
-.r-lab { fill: var(--text); font: 600 13px var(--body); transition: fill 0.15s; }
-.r-axis.on .r-lab { fill: var(--blue); }
-.r-series { transform-box: view-box; animation: radar-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; pointer-events: none; }
-.r-area polygon { stroke: var(--blue); stroke-width: 2.5; stroke-linejoin: round; }
-.r-area circle { fill: var(--blue); stroke: var(--white); stroke-width: 2; transition: r 0.15s; }
-.r-area circle.on { r: 6.5; }
-.r-target { animation-name: fade-in; }
-.r-target polygon { fill: none; stroke: var(--blue-dark); stroke-width: 1.6; stroke-dasharray: 6 5; stroke-linejoin: round; }
-.r-target circle { fill: var(--white); stroke: var(--blue-dark); stroke-width: 1.6; }
-.r-self { animation-delay: 0.12s; }
-.r-self polygon { fill: none; stroke: var(--brown); stroke-width: 2; stroke-linejoin: round; }
-.r-self circle { fill: var(--brown); stroke: var(--white); stroke-width: 1.5; }
-.radar-tip { position: absolute; z-index: 2; display: grid; gap: 3px; width: max-content; min-width: 200px; max-width: 240px; padding: 10px 12px; border-radius: 10px; background: var(--white); box-shadow: var(--shadow-up); font-size: 0.8rem; color: var(--muted); pointer-events: none; transform: translate(-50%, calc(-100% - 14px)); animation: fade-in 0.12s both; }
-.radar-tip.below { transform: translate(-50%, 22px); }
-.radar-tip strong { margin-bottom: 2px; color: var(--text); font-size: 0.84rem; }
-.radar-tip span { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-.radar-tip b { margin-left: auto; padding-left: 12px; color: var(--text); }
-.radar figcaption { display: grid; align-content: center; gap: 10px; }
-.radar-key { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 24px; margin: 0; padding: 0; list-style: none; font-size: 0.86rem; color: var(--text); }
-.radar-key li { display: flex; align-items: center; gap: 10px; }
-.radar-key .sub { font-size: 0.78rem; }
-.radar i { flex: none; display: inline-block; width: 22px; height: 0; }
-.radar i.k-area { height: 12px; border: 2px solid var(--blue); border-radius: 4px; background: linear-gradient(rgba(0, 72, 142, 0.34), rgba(0, 72, 142, 0.12)); }
-.radar i.k-target { border-top: 2px dashed var(--blue-dark); }
-.radar i.k-self { border-top: 2px solid var(--brown); }
-.radar-tip i { width: 14px; }
-.radar-tip i.k-area { height: 9px; }
-.radar-hint { color: var(--muted); font-size: 0.8rem; text-align: center; }
-@media (hover: none) { .pointer-only { display: none; } }
-@container (min-width: 560px) {
-  .radar-in { grid-template-columns: minmax(0, 460px) minmax(160px, 1fr); align-items: center; }
-  .radar-chart { margin: 0; }
-  .radar-key { flex-direction: column; gap: 14px; }
-  .radar-key .sub { display: block; }
-  .radar-hint { text-align: left; }
-}
-@keyframes radar-in { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
-
 /* ---------- Confirmations ---------- */
 .toasts { position: fixed; z-index: 60; right: 24px; bottom: 24px; display: grid; gap: 8px; }
 .toast { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 99px; background: var(--blue-dark); color: var(--white); font-size: 0.9rem; box-shadow: var(--shadow-up); animation: toast-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1); }
@@ -582,10 +528,5 @@ fieldset.options { margin: 0; padding: 0; border: 0; min-width: 0; }
   .meter { grid-template-columns: 1fr auto; }
   .meter:not(.bare) .meter-track { grid-column: 1 / -1; grid-row: 2; }
   .row { flex-wrap: wrap; padding: 12px 16px; }
-  .radar { padding: 14px 6px 14px; }
-  .r-lab { font-size: 21px; }
-  .r-num { font-size: 15px; }
-  .r-num-name { display: none; }
-  .r-num-short { display: inline; }
   .timeline li { grid-template-columns: 1fr; gap: 2px; }
 }

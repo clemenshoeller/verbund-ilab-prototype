@@ -36,7 +36,6 @@
       "id": "safe-use",
       "group": "base",
       "name": "Safe and compliant use",
-      "short": "Safe use",
       "description": "Uses approved AI tools within data protection, confidentiality and legal rules.",
       "question": "Which AI tools do you use in your work, and how do you decide what you may enter?",
       "levels": [
@@ -56,7 +55,6 @@
       "id": "check-results",
       "group": "base",
       "name": "Critical review of results",
-      "short": "Checking results",
       "description": "Checks AI output for errors and bias and stays accountable for the result.",
       "question": "Tell me about a case where an AI result was wrong or incomplete. How did you notice?",
       "levels": [
@@ -76,7 +74,6 @@
       "id": "spot-potential",
       "group": "future",
       "name": "Identifying use cases",
-      "short": "Use cases",
       "description": "Recognises tasks in the own area where AI saves time or improves quality.",
       "question": "Where in your work would AI help most? What would it take to try it?",
       "levels": [
@@ -96,7 +93,6 @@
       "id": "build-scale",
       "group": "future",
       "name": "Building and scaling solutions",
-      "short": "Build and scale",
       "description": "Turns a use case into a working solution and makes it reusable.",
       "question": "Have you built or configured an AI solution yourself, for example a prompt template, an agent or an automation?",
       "levels": [
@@ -116,7 +112,6 @@
       "id": "steer-use",
       "group": "lead",
       "name": "Steering AI use in the team",
-      "short": "Steering AI use",
       "description": "Sets goals and rules for AI use in the team and knows the AI levels of its members.",
       "question": "How do you decide where your team uses AI, and how do you follow what comes out of it?",
       "levels": [
@@ -133,7 +128,6 @@
       "id": "guide-change",
       "group": "lead",
       "name": "Guiding the change",
-      "short": "Guiding change",
       "description": "Leads by example, takes up concerns and gives the team time to learn.",
       "question": "What do you do so that all team members, also the hesitant ones, get started with AI?",
       "levels": [
