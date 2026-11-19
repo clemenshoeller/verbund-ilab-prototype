@@ -14,7 +14,7 @@ export function Person({ employeeId, tab = "overview", step }: { employeeId: str
   const { content, team, assessments, assignments } = useData();
   const employee = team.employees.find((e) => e.id === employeeId);
   if (!employee) {
-    return <NotFound what="Person" back="#/team/people" backLabel="People" />;
+    return <NotFound what="Person" back="#/team/people" backLabel="Team" />;
   }
 
   const family = content.families.find((f) => f.id === employee.family)!;
@@ -29,7 +29,7 @@ export function Person({ employeeId, tab = "overview", step }: { employeeId: str
   return (
     <>
       <PageHead
-        crumbs={[{ label: "People", href: "#/team/people" }, { label: employee.name }]}
+        crumbs={[{ label: "Team", href: "#/team/people" }, { label: employee.name }]}
         title={
           <span className="record-title">
             <Avatar name={employee.name} />

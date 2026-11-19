@@ -1,8 +1,23 @@
-import { Avatar, PageHead } from "../../components/Ui";
+import { Icon } from "../../components/Icon";
+import { Avatar, PageHead, ViewToggle } from "../../components/Ui";
 import { useData } from "../../data";
 import { agreedCount, gapRows, totalGap } from "../../lib/gap";
 import { STAGES, selfCheckDone, stageOf } from "../../lib/workflow";
 import { useUi } from "../../ui";
+
+/** The team page shows the same people as a list or as a board by stage. */
+export function TeamToggle({ active }: { active: "list" | "board" }) {
+  return (
+    <ViewToggle
+      label="Show the team as"
+      active={active}
+      options={[
+        { id: "list", label: "List", href: "#/team/people", icon: <Icon name="people" /> },
+        { id: "board", label: "Board", href: "#/team/pipeline", icon: <Icon name="board" /> },
+      ]}
+    />
+  );
+}
 
 /** Board with one column per stage; a card moves to the right as the work on a person progresses. */
 export function Pipeline() {
@@ -24,8 +39,9 @@ export function Pipeline() {
   return (
     <>
       <PageHead
-        title="Pipeline"
-        sub="Every team member moves from the self-check to agreed measures. Click a card for the preview and the next step."
+        title="Team"
+        sub={`${team.info.name}: ${team.employees.length} team members`}
+        actions={<TeamToggle active="board" />}
       />
       <div className="board">
         {STAGES.map((stage) => {

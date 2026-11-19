@@ -4,6 +4,7 @@ import { Drawer } from "./components/Drawer";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { Icon } from "./components/Icon";
 import { Search } from "./components/Search";
+import { SectionContext, type Section } from "./components/Ui";
 import { ViewAs, type View } from "./components/ViewAs";
 import { DataContext, useData, type Data } from "./data";
 import { useRoute } from "./lib/router";
@@ -31,6 +32,8 @@ interface NavItem {
   label: string;
   icon: string;
   badge?: number;
+  /** Further pages that belong to this item, shown as tabs or as another view; the item stays marked on them. */
+  also?: string[];
 }
 
 const isView = (value?: string): value is View => value === "me" || value === "team" || value === "hr";
@@ -128,8 +131,7 @@ function Shell() {
               title: "My team",
               items: [
                 { key: "", label: "Dashboard", icon: "home", badge: open || undefined },
-                { key: "pipeline", label: "Pipeline", icon: "board" },
-                { key: "people", label: "People", icon: "people", badge: team.employees.length },
+                { key: "people", label: "Team", icon: "people", badge: team.employees.length, also: ["pipeline"] },
               ],
             },
             { title: "Reference", items: [{ key: "profiles", label: "Target profiles", icon: "target" }] },
@@ -144,21 +146,38 @@ function Shell() {
               ],
             },
             {
-              title: "Competency model",
+              title: "Model and plan",
               items: [
-                { key: "profiles", label: "Job families", icon: "grid", badge: content.families.length },
-                { key: "competencies", label: "Competencies", icon: "layers", badge: content.competencies.length },
-                { key: "measures", label: "Measures", icon: "measure", badge: content.measures.length },
-              ],
-            },
-            {
-              title: "Plan",
-              items: [
-                { key: "roadmap", label: "Roadmap", icon: "map" },
-                { key: "governance", label: "Governance", icon: "scale" },
+                { key: "profiles", label: "Competency model", icon: "layers", also: ["competencies", "measures"] },
+                { key: "roadmap", label: "Plan", icon: "map", also: ["governance"] },
               ],
             },
           ];
+
+  // HR pages that share one menu item appear as tabs under the page title.
+  const sections: Section[] =
+    view === "hr"
+      ? [
+          {
+            label: "Competency model",
+            active: page,
+            tabs: [
+              { id: "profiles", label: "Job families", href: "#/hr/profiles", count: content.families.length },
+              { id: "competencies", label: "Competencies", href: "#/hr/competencies", count: content.competencies.length },
+              { id: "measures", label: "Measures", href: "#/hr/measures", count: content.measures.length },
+            ],
+          },
+          {
+            label: "Plan",
+            active: page,
+            tabs: [
+              { id: "roadmap", label: "Roadmap", href: "#/hr/roadmap" },
+              { id: "governance", label: "Governance", href: "#/hr/governance" },
+            ],
+          },
+        ]
+      : [];
+  const section = inRole ? (sections.find((s) => s.tabs.some((t) => t.id === page)) ?? null) : null;
 
   return (
     <div className="app">
@@ -175,7 +194,7 @@ function Shell() {
             <div key={group.title} className="nav-group">
               <span className="nav-title">{group.title}</span>
               {group.items.map((item) => {
-                const active = inRole && page === item.key;
+                const active = inRole && (page === item.key || (item.also?.includes(page) ?? false));
                 return (
                   <a key={item.key} href={`#/${view}${item.key ? "/" + item.key : ""}`} className={active ? "on" : ""} aria-current={active ? "page" : undefined}>
                     <Icon name={item.icon} />
@@ -210,6 +229,7 @@ function Shell() {
 
         <main key={window.location.hash}>
           <ErrorBoundary scope="page">
+          <SectionContext.Provider value={section}>
           {extra === "start" ? (
             <Start />
           ) : extra === "about" ? (
@@ -253,6 +273,7 @@ function Shell() {
           ) : (
             <HrHome />
           )}
+          </SectionContext.Provider>
           </ErrorBoundary>
         </main>
       </div>

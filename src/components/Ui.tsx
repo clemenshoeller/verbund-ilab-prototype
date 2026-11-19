@@ -1,7 +1,16 @@
-import type { ReactNode } from "react";
+import { createContext, useContext, type ReactNode } from "react";
 import { stageName, type Stage } from "../lib/workflow";
 
-/** Page title with an optional path back to the list the record belongs to. */
+/** A menu item that holds several pages as tabs, e.g. "Competency model" with job families, competencies and measures. */
+export interface Section {
+  label: string;
+  active: string;
+  tabs: { id: string; label: string; href: string; count?: number }[];
+}
+
+export const SectionContext = createContext<Section | null>(null);
+
+/** Page title with an optional path back to the list the record belongs to. Inside a section the tabs of that section follow the title. */
 export function PageHead({
   crumbs,
   title,
@@ -13,12 +22,17 @@ export function PageHead({
   sub?: ReactNode;
   actions?: ReactNode;
 }) {
+  const section = useContext(SectionContext);
+  // The tabs belong to the overview pages of a section; a single record keeps its own path back.
+  const tabs = section && !crumbs ? section : null;
+  const path = tabs ? [{ label: tabs.label, href: undefined }] : crumbs;
   return (
+    <>
     <div className="page-head">
       <div>
-        {crumbs && (
+        {path && (
           <p className="crumbs">
-            {crumbs.map((crumb, i) => (
+            {path.map((crumb, i) => (
               <span key={crumb.label}>
                 {i > 0 && " / "}
                 {crumb.href ? <a href={crumb.href}>{crumb.label}</a> : crumb.label}
@@ -31,6 +45,22 @@ export function PageHead({
       </div>
       {actions && <div className="head-actions">{actions}</div>}
     </div>
+    {tabs && <LinkTabs tabs={tabs.tabs} active={tabs.active} label={tabs.label} />}
+    </>
+  );
+}
+
+/** Two or more ways to look at the same thing, e.g. the team as a list or as a board. Links, so each view has its own address. */
+export function ViewToggle({ label, options, active }: { label: string; options: { id: string; label: string; href: string; icon?: ReactNode }[]; active: string }) {
+  return (
+    <nav className="toggle" aria-label={label}>
+      {options.map((option) => (
+        <a key={option.id} href={option.href} className={option.id === active ? "on" : ""} aria-current={option.id === active ? "page" : undefined}>
+          {option.icon}
+          {option.label}
+        </a>
+      ))}
+    </nav>
   );
 }
 
@@ -67,9 +97,9 @@ export function StageChip({ stage }: { stage: Stage }) {
 }
 
 /** Tabs that are links, so every tab of a record has its own address. */
-export function LinkTabs({ tabs, active }: { tabs: { id: string; label: string; href: string; count?: number }[]; active: string }) {
+export function LinkTabs({ tabs, active, label }: { tabs: { id: string; label: string; href: string; count?: number }[]; active: string; label?: string }) {
   return (
-    <div className="rtabs" role="tablist">
+    <div className="rtabs" role="tablist" aria-label={label}>
       {tabs.map((tab) => (
         <a key={tab.id} role="tab" href={tab.href} aria-selected={tab.id === active} className={tab.id === active ? "on" : ""}>
           {tab.label}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Avatar, Card, PageHead, StageChip, formatDate } from "../../components/Ui";
+import { TeamToggle } from "./Pipeline";
 import { useData } from "../../data";
 import { gapRows, totalGap } from "../../lib/gap";
 import { queryParam } from "../../lib/router";
@@ -58,7 +59,7 @@ export function People() {
 
   return (
     <>
-      <PageHead title="People" sub={`${team.info.name} · ${all.length} team members`} />
+      <PageHead title="Team" sub={`${team.info.name}: ${all.length} team members`} actions={<TeamToggle active="list" />} />
       <Card flush>
         <div className="filters">
           <input type="search" value={query} placeholder="Filter by name or role" aria-label="Filter by name or role" onChange={(e) => setQuery(e.target.value)} />

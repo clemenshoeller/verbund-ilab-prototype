@@ -362,3 +362,33 @@ describe("findings of the code review", () => {
     expect(document.querySelector<HTMLElement>(".app > .main")!.inert).toBe(false);
   });
 });
+
+describe("menu", () => {
+  const menu = () => within(screen.getByRole("navigation", { name: "Main" }));
+  const labels = () => menu().getAllByRole("link").map((link) => link.textContent?.replace(/\d+$/, "").trim());
+
+  it("shows the manager three items and one team page as list or board", async () => {
+    await start("/team/people");
+    expect(labels()).toEqual(["Dashboard", "Team", "Target profiles"]);
+    const toggle = within(screen.getByRole("navigation", { name: "Show the team as" }));
+    expect(toggle.getByRole("link", { name: "List" }).getAttribute("aria-current")).toBe("page");
+    await open("/team/pipeline");
+    expect(menu().getByRole("link", { name: /Team/ }).getAttribute("aria-current")).toBe("page");
+    expect(within(screen.getByRole("navigation", { name: "Show the team as" })).getByRole("link", { name: "Board" }).getAttribute("aria-current")).toBe("page");
+  });
+
+  it("shows HR five items and the merged pages as tabs", async () => {
+    await start("/hr/competencies");
+    expect(labels()).toEqual(["Dashboard", "Gap analysis", "Teams", "Competency model", "Plan"]);
+    expect(menu().getByRole("link", { name: "Competency model" }).getAttribute("aria-current")).toBe("page");
+    const tabs = within(screen.getByRole("tablist", { name: "Competency model" }));
+    expect(tabs.getAllByRole("tab").map((t) => t.textContent?.replace(/\d+$/, ""))).toEqual(["Job families", "Competencies", "Measures"]);
+    expect(tabs.getByRole("tab", { name: /Competencies/ }).getAttribute("aria-selected")).toBe("true");
+    await open("/hr/governance");
+    expect(menu().getByRole("link", { name: "Plan" }).getAttribute("aria-current")).toBe("page");
+    expect(within(screen.getByRole("tablist", { name: "Plan" })).getByRole("tab", { name: "Governance" }).getAttribute("aria-selected")).toBe("true");
+    // A single record keeps its own path back instead of the tabs.
+    await open("/hr/competencies/safe-use");
+    expect(screen.queryByRole("tablist", { name: "Competency model" })).toBeNull();
+  });
+});

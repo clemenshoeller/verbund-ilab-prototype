@@ -67,7 +67,7 @@ export function TeamHome() {
         />
       </Tiles>
 
-      <Card title="Your next steps" aside={actions.length > 3 ? <a href="#/team/pipeline">All {actions.length} in the pipeline</a> : undefined} flush>
+      <Card title="Your next steps" aside={actions.length > 3 ? <a href="#/team/pipeline">All {actions.length} on the team board</a> : undefined} flush>
         {actions.length === 0 ? (
           <p className="empty">Nothing open. All conversations are completed and measures agreed.</p>
         ) : (

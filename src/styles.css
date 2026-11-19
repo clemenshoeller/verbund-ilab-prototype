@@ -545,3 +545,11 @@ fieldset.options { margin: 0; padding: 0; border: 0; min-width: 0; }
   .row { flex-wrap: wrap; padding: 12px 16px; }
   .timeline li { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* Two views of the same thing (team as list or board): a small segmented switch next to the title. */
+.toggle { display: inline-flex; padding: 3px; border-radius: 99px; background: var(--white); border: 1px solid var(--line); }
+.toggle a { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 99px; color: var(--muted); font-size: 0.86rem; text-decoration: none; transition: background 0.15s, color 0.15s; }
+.toggle a:hover { color: var(--blue); }
+.toggle a.on { background: var(--blue); color: var(--white); font-weight: 700; }
+/* Section tabs sit right under the page title and above the content. */
+.page-head + .rtabs { margin-top: -6px; }
