@@ -9,11 +9,11 @@ export function CompetencyList() {
   const { content, org, assessments } = useData();
   const { openDrawer } = useUi();
   const stats = competencyStats(content, org.employees, assessments);
-  const groupName = (id: string) => content.groups.find((g) => g.id === id)?.name ?? id;
+  const groupOf = (id: string) => content.groups.find((g) => g.id === id);
 
   return (
     <>
-      <PageHead title="Competencies" sub={`${content.competencies.length} AI competencies in ${content.groups.length} groups, each with three levels`} />
+      <PageHead title="Competencies" sub={`${content.competencies.length} AI competencies from VERBUND’s competency model (“Miteinander | AI nutzen”), in ${content.groups.length} groups, each with three levels`} />
       <Card flush>
         <div className="table-wrap">
           <table className="table">
@@ -41,7 +41,10 @@ export function CompetencyList() {
                     </button>
                     <span className="sub">{s.competency.description}</span>
                   </td>
-                  <td>{groupName(s.competency.group)}</td>
+                  <td>
+                    {groupOf(s.competency.group)?.name ?? s.competency.group}
+                    {groupOf(s.competency.group)?.note && <span className="sub">{groupOf(s.competency.group)?.note}</span>}
+                  </td>
                   <td className="num">{s.hidden ? `n<${MIN_GROUP}` : percent(s.belowToday / s.rated)}</td>
                   <td className="num">{s.hidden ? `n<${MIN_GROUP}` : percent(1 - s.belowTarget / s.rated)}</td>
                 </tr>
@@ -49,6 +52,12 @@ export function CompetencyList() {
             </tbody>
           </table>
         </div>
+      </Card>
+      <Card title="Job-family-specific competencies" aside="Next step">
+        <p className="muted">
+          The six AI competencies apply across VERBUND. More specific competencies per job family or role build on them; they follow from our research and
+          interviews and are added here once agreed.
+        </p>
       </Card>
     </>
   );
@@ -67,7 +76,7 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
 
   return (
     <>
-      <PageHead crumbs={[{ label: "Competencies", href: "#/hr/competencies" }, { label: competency.name }]} title={competency.name} sub={`${group.name} · ${competency.description}`} />
+      <PageHead crumbs={[{ label: "Competencies", href: "#/hr/competencies" }, { label: competency.name }]} title={competency.name} sub={`${group.name}: ${competency.description}`} />
 
       <div className="facts">
         <span>
@@ -84,7 +93,33 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
         </span>
       </div>
 
-      <Card title="Definition">
+      {competency.definition && (
+        <Card title="Definition" aside={competency.original ? `VERBUND: ${competency.original}` : undefined}>
+          <p>{competency.definition}</p>
+          {competency.anchors && (
+            <div className="anchors">
+              {(
+                [
+                  ["weak", "Too little"],
+                  ["good", "Good"],
+                  ["overdone", "Too much"],
+                ] as const
+              ).map(([key, label]) => (
+                <div key={key} className={`anchor ${key}`}>
+                  <h3>{label}</h3>
+                  <ul>
+                    {competency.anchors?.[key].map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      )}
+
+      <Card title="Levels in the competency check" aside="Student-team draft">
         <ol className="level-list">
           {content.levels.map((level) => (
             <li key={level.value}>

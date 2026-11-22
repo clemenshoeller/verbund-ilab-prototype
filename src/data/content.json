@@ -1,5 +1,5 @@
 {
-  "_note": "PLACEHOLDER CONTENT. Wording by the student team, not the text of VERBUND's competency model; only the grouping follows the structure shown in the team's jour fixe deck. Final profiles, levels and questions follow the interview data.",
+  "_note": "AI competencies, groups, definitions, behaviour anchors and the reasons why follow VERBUND's internal concept 'Kompetenzmodell goes AI' (15.10.2026, dimension 'Miteinander | AI nutzen'), translated into English by the student team; use approved by Nikolaus Rauschl (as reported on 22.11.2026). The three levels, self-check questions, conversation questions, job examples, target profiles and measures are student-team drafts. Job-family-specific competencies follow from the team's research.",
   "levels": [
     {
       "value": 1,
@@ -20,30 +20,55 @@
   "groups": [
     {
       "id": "base",
-      "name": "Base competencies"
+      "name": "Base competencies",
+      "note": "For everyone: the foundation of any AI use"
     },
     {
       "id": "future",
-      "name": "Future competencies"
+      "name": "Future competencies",
+      "note": "For everyone: where AI creates value"
     },
     {
       "id": "lead",
-      "name": "Leadership competencies"
+      "name": "Leadership competencies",
+      "note": "For managers"
     }
   ],
   "competencies": [
     {
       "id": "safe-use",
       "group": "base",
-      "name": "Safe and compliant use",
-      "description": "Uses approved AI tools within data protection, confidentiality and legal rules.",
+      "name": "Using AI safely",
+      "original": "AI sicher einsetzen",
+      "description": "Uses suitable, approved AI tools competently and responsibly in daily work, within the relevant rules.",
+      "definition": "Using AI safely means applying AI tools competently, thoughtfully and responsibly in one's own daily work. This includes using suitable and approved AI tools that fit the task, critically checking AI-generated results and taking their limits into account. The relevant rules are followed and data and information are handled responsibly. Responsibility for the use and the resulting work stays with the person.",
       "question": "Which AI tools do you use in your work, and how do you decide what you may enter?",
       "levels": [
         "Knows the approved tools and the rules for data and confidentiality.",
         "Applies the rules in daily work without guidance and spots unclear cases.",
         "Advises colleagues on unclear cases and helps to improve the rules."
       ],
-      "why": "Everyone who uses AI at work needs basic AI literacy; the EU AI Act asks companies to take measures for it.",
+      "why": "The foundation of any use: employees must be able to use AI responsibly, safely and in line with legal, ethical and organisational requirements.",
+      "anchors": {
+        "weak": [
+          "Shows little interest in AI applications and their uses.",
+          "Uses AI tools not at all or too little in daily work.",
+          "Gives too little thought to data protection, confidentiality or legal requirements.",
+          "Enters sensitive information into AI systems without thinking."
+        ],
+        "good": [
+          "Uses AI applications regularly in daily work.",
+          "Uses AI tools sensibly to work more productively.",
+          "Observes data protection, security and compliance requirements when using AI.",
+          "Knows the strengths and limits of the AI tools used.",
+          "Decides consciously when AI should be used and when not."
+        ],
+        "overdone": [
+          "Dwells on risks so much that useful applications are prevented.",
+          "Avoids productive AI use out of excessive caution.",
+          "Uses AI tools excessively or with little value for the own work."
+        ]
+      },
       "examples": {
         "A": "Decides which code and data may go into a coding assistant.",
         "B": "Knows that contracts and personal data do not belong in a public chatbot.",
@@ -52,21 +77,21 @@
       },
       "selfCheck": [
         {
-          "question": "When you use AI at work, how do you decide which tools and data you may use?",
+          "question": "How do you use AI tools in your daily work?",
           "answers": [
-            "I am not sure which AI tools are approved or what I may enter.",
-            "I know the approved tools and which data must not go into them.",
-            "I follow the rules without having to look them up and notice when a case is unclear.",
-            "Colleagues come to me with unclear cases, and I suggest improvements to the rules."
+            "I hardly use AI tools in my work so far.",
+            "I use approved AI tools now and then for simple tasks.",
+            "I use AI tools regularly, where they make me more productive.",
+            "I use AI as a matter of course and show colleagues how to use it well."
           ]
         },
         {
-          "question": "What do you do when you are unsure whether you may use AI for a task?",
+          "question": "How do you decide what you may enter, and when AI is the right choice?",
           "answers": [
-            "I have not been in this situation yet.",
-            "I ask someone before I go ahead.",
-            "I check the guideline myself and clarify open points with the right contact.",
-            "I help others to decide such cases and pass recurring questions on."
+            "I am not sure what I may enter into AI tools.",
+            "I know the rules on data protection, confidentiality and security for AI tools.",
+            "I follow the rules without looking them up and decide consciously when to use AI and when not.",
+            "I know the strengths and limits of our tools well, and colleagues ask me about unclear cases."
           ]
         }
       ]
@@ -74,15 +99,38 @@
     {
       "id": "check-results",
       "group": "base",
-      "name": "Critical review of results",
-      "description": "Checks AI output for errors and bias and stays accountable for the result.",
+      "name": "Checking and owning AI results",
+      "original": "AI-Ergebnisse prüfen & verantworten",
+      "description": "Questions AI output critically, judges its quality and plausibility, and stays responsible for how it is used.",
+      "definition": "Checking and owning AI results means questioning AI-generated content critically and judging its quality, plausibility and reliability on a sound basis. This requires enough subject, method and AI knowledge to spot errors, bias or gaps and to judge results in their context. Responsibility for using the results stays with the person.",
       "question": "Tell me about a case where an AI result was wrong or incomplete. How did you notice?",
       "levels": [
         "Knows that AI output can be wrong and checks facts before using it.",
         "Verifies output systematically with sources, plausibility checks or a second person.",
         "Defines quality checks for the team and trains others in them."
       ],
-      "why": "AI output can sound right and be wrong. Whoever uses it stays responsible for the result.",
+      "why": "AI produces suggestions, not truth. Judging results critically, placing them in context and taking responsibility for their use becomes a key skill of professional work.",
+      "anchors": {
+        "weak": [
+          "Takes over AI-generated content without checking it.",
+          "Does not question sources, assumptions or results enough.",
+          "Finds it hard to spot errors, bias or hallucinations.",
+          "Does not disclose AI-generated results, or not enough.",
+          "Lacks the basic knowledge needed to check AI results properly."
+        ],
+        "good": [
+          "Checks AI results critically for plausibility, quality and relevance.",
+          "Has a routine and checks for verifying AI results.",
+          "Discloses AI-generated results as such where needed.",
+          "Takes responsibility for using AI-generated content.",
+          "Uses own expertise to place AI results in context."
+        ],
+        "overdone": [
+          "Questions AI results to a degree that strongly limits productivity and benefit.",
+          "Gets lost in detailed checks without visible value.",
+          "Distrusts AI results on principle, whatever their quality."
+        ]
+      },
       "examples": {
         "A": "Reviews and tests generated code before it is merged.",
         "B": "Checks figures and sources of an AI-drafted report against the original data.",
@@ -94,18 +142,18 @@
           "question": "How do you check an AI result before you use it?",
           "answers": [
             "I mostly use AI results as they are.",
-            "I check the facts that matter before I use a result.",
-            "I check results routinely, for example against sources or with a second person.",
-            "I have defined checks that my team uses, and I show others how to apply them."
+            "I check whether the result is plausible and whether the facts that matter are right.",
+            "I have my own checks for AI results and use my expertise to judge them.",
+            "I have set up checks that others use, and I show them how to judge AI results."
           ]
         },
         {
-          "question": "What happens when an AI result is wrong or one-sided?",
+          "question": "How do you handle responsibility for AI-generated content?",
           "answers": [
-            "I would probably not notice it.",
-            "I notice obvious errors and correct them.",
-            "I find less obvious errors and bias too, and I know where AI tends to fail in my work.",
-            "I collect typical errors and share them so that others can avoid them."
+            "I have not thought about this yet.",
+            "I know that I am responsible for what I pass on, even if AI wrote it.",
+            "I disclose AI-generated content where it matters and stand by what I use.",
+            "I help my team agree on when and how AI content is disclosed."
           ]
         }
       ]
@@ -113,15 +161,40 @@
     {
       "id": "spot-potential",
       "group": "future",
-      "name": "Identifying use cases",
-      "description": "Recognises tasks in the own area where AI saves time or improves quality.",
+      "name": "Recognising and shaping AI potential",
+      "original": "AI-Potenziale erkennen & gestalten",
+      "description": "Looks at tasks and processes for where AI creates real value, assesses the potential and develops concrete ideas.",
+      "definition": "Recognising and shaping AI potential means looking systematically at tasks, processes and challenges for where AI can create concrete value. This includes identifying and assessing potential and developing concrete ideas and approaches for using AI effectively in one's own work environment.",
       "question": "Where in your work would AI help most? What would it take to try it?",
       "levels": [
         "Can name tasks in the own job that AI could support.",
         "Describes a use case with benefit, data needed and risks.",
         "Prioritises use cases for the unit and brings them into the decision process."
       ],
-      "why": "The best ideas for using AI come from the people who know the work.",
+      "why": "Value does not come from technology alone but from using it sensibly. Employees need to see where AI really helps, then assess these ideas and develop them further.",
+      "anchors": {
+        "weak": [
+          "Develops hardly any own ideas or use cases for AI.",
+          "Looks at AI options in isolation instead of thinking along processes, roles, data and existing solutions.",
+          "Thinks of AI as single functions rather than new or fundamentally changed solutions.",
+          "Sees AI mainly as a technical topic, without its effects on ways of working, collaboration or value creation."
+        ],
+        "good": [
+          "Recognises and names tasks, processes and challenges where AI can create concrete value.",
+          "Thinks in processes and can improve them with AI.",
+          "Considers AI actively in improvements, changes and innovation.",
+          "Assesses AI potential for cost and benefit, feasibility and relevant conditions.",
+          "Develops concrete ideas and approaches from the potential found.",
+          "Connects business needs with what AI can do and turns them into sensible scenarios.",
+          "Follows new AI developments and transfers relevant options to the own work environment."
+        ],
+        "overdone": [
+          "Tries to find an AI solution for every problem, even without visible benefit.",
+          "Overestimates what AI can do and underestimates limits, risks or prerequisites.",
+          "Pursues AI ideas too quickly, without checking benefit, cost, feasibility and impact.",
+          "Overlooks simpler, proven or more economical alternatives."
+        ]
+      },
       "examples": {
         "A": "Sees where tests, documentation or monitoring can be supported by AI.",
         "B": "Spots recurring reports or enquiries that an assistant could prepare.",
@@ -130,12 +203,12 @@
       },
       "selfCheck": [
         {
-          "question": "Can you name tasks in your job where AI would help?",
+          "question": "Where in your work could AI create real value?",
           "answers": [
-            "I cannot name one yet.",
-            "I can name some tasks AI could support.",
-            "I can describe a use case with its benefit, the data it needs and its risks.",
-            "I compare use cases for our unit and bring the best ones into the decision process."
+            "I cannot name a task yet.",
+            "I can name some tasks in my job where AI could help.",
+            "I look at whole processes and can say where AI adds value and what it would take.",
+            "I bring AI into improvement and innovation work in our unit as a matter of course."
           ]
         },
         {
@@ -143,8 +216,8 @@
           "answers": [
             "I have not had an idea like this yet.",
             "I mention it to my manager or my team.",
-            "I try it out on a small scale and share what I learned.",
-            "I make sure good ideas are assessed and followed up across the unit."
+            "I turn it into a concrete proposal with benefit, effort and feasibility.",
+            "I follow new AI developments and translate them into use cases for our area."
           ]
         }
       ]
@@ -152,15 +225,36 @@
     {
       "id": "build-scale",
       "group": "future",
-      "name": "Building and scaling solutions",
-      "description": "Turns a use case into a working solution and makes it reusable.",
+      "name": "Realising and scaling AI use cases",
+      "original": "AI-Anwendungsfälle realisieren & skalieren",
+      "description": "Turns AI potential into working solutions, alone or with technical experts, and spreads what works.",
+      "definition": "Realising and scaling AI use cases means turning AI potential into concrete solutions and integrating them effectively into processes and workflows. This includes combining suitable tools and technologies, implementing solutions oneself or with others, and extending successful applications systematically to further areas.",
       "question": "Have you built or configured an AI solution yourself, for example a prompt template, an agent or an automation?",
       "levels": [
         "Uses templates and solutions that others have built.",
         "Builds simple solutions for the own work and shares them.",
         "Develops solutions for several teams and takes care of operation and quality."
       ],
-      "why": "A use case only pays off once it runs and others can reuse it.",
+      "why": "The full value of AI comes from consistent use in broader scenarios. What counts is realising use cases with AI, through own technical skill or together with others, making successful solutions visible, passing them on and spreading them in the organisation.",
+      "anchors": {
+        "weak": [
+          "Does not share successful AI applications, prompts or approaches, or too little.",
+          "Documents experience, lessons and good practice too little for others to build on.",
+          "Thinks of AI mainly within the own area and misses chances to transfer it to other areas."
+        ],
+        "good": [
+          "Implements AI use cases independently or together with technical experts.",
+          "Chooses suitable AI tools and technologies and combines them for the use case.",
+          "Tests and improves AI solutions step by step until they reliably help in daily work.",
+          "Makes successful AI solutions reusable and transfers them to further tasks or areas.",
+          "Supports others in adopting, adapting and developing successful AI solutions."
+        ],
+        "overdone": [
+          "Tries to standardise or spread AI solutions before they are tested enough.",
+          "Scales successful applications to other areas too quickly, without their specific needs.",
+          "Promotes spreading AI solutions more than their actual benefit and lasting effect."
+        ]
+      },
       "examples": {
         "A": "Builds an agent or a pipeline and looks after operation and quality.",
         "B": "Sets up a prompt template for a recurring report and shares it.",
@@ -169,21 +263,21 @@
       },
       "selfCheck": [
         {
-          "question": "Have you built an AI solution yourself, for example a prompt template, an agent or an automation?",
+          "question": "Have you put an AI use case into practice?",
           "answers": [
-            "No, I have not used one so far.",
-            "I use templates and solutions others have built.",
-            "I build simple solutions for my own work and share them.",
-            "I develop solutions for several teams and take care of their operation and quality."
+            "Not yet.",
+            "I use AI solutions and templates that others have built.",
+            "I have built a solution, myself or with technical experts, and improved it until it worked reliably.",
+            "I choose and combine tools for use cases across several teams."
           ]
         },
         {
           "question": "How do others benefit from what you build?",
           "answers": [
             "I have not built anything to share yet.",
-            "I sometimes pass a good prompt or tip on.",
+            "I pass on a good prompt or tip now and then.",
             "I document my solutions so that colleagues can reuse them.",
-            "My solutions run for other teams, and I keep them up to date."
+            "I help other teams to adopt and adapt our solutions."
           ]
         }
       ]
@@ -191,35 +285,63 @@
     {
       "id": "steer-use",
       "group": "lead",
-      "name": "Steering AI use in the team",
-      "description": "Sets goals and rules for AI use in the team and knows the AI levels of its members.",
+      "name": "Steering AI use",
+      "original": "AI-Einsatz steuern",
+      "description": "Gives direction and priorities for AI in the own area and creates the conditions for effective, responsible use.",
+      "definition": "Steering AI use means giving orientation and priorities for the use of AI and creating the conditions for effective and responsible use. Managers decide where and for what AI is used, provide suitable resources and make sure that benefit, impact, chances and risks are considered. They set clear conditions and responsibilities and steer the use and development of AI in their area.",
       "question": "How do you decide where your team uses AI, and how do you follow what comes out of it?",
       "levels": [
         "Knows where the team already uses AI.",
         "Sets goals and priorities for AI use and reviews results regularly.",
         "Aligns AI use with the unit's strategy and with data, process and project needs."
       ],
-      "why": "Managers decide where AI is used and answer for the results.",
+      "why": "The value of AI comes from using it on purpose. Managers have to decide where AI creates real value, which risks to consider and which priorities to set.",
+      "anchors": {
+        "weak": [
+          "Hardly takes up AI topics in the own area and sets no visible priorities.",
+          "Sees relevant uses and potential of AI for the own area only partly.",
+          "Hardly considers the effects, chances and risks of AI in decisions and plans.",
+          "Gives little orientation on where, for what and under which conditions AI should be used.",
+          "Creates hardly any conditions for effective AI use.",
+          "Encourages neither learning nor experimenting in the team."
+        ],
+        "good": [
+          "Develops a target picture for AI use in the own area.",
+          "Builds the AI knowledge needed, alone or in the team, to judge and drive developments.",
+          "Makes room for learning, trying out and sharing experience.",
+          "Builds AI competencies in the team.",
+          "Gives orientation on chances, risks and expectations.",
+          "Supports employees in integrating AI sensibly into their work.",
+          "Works out sensible cost-benefit considerations for AI with the team.",
+          "Develops a positive and realistic picture of how people and AI will work together."
+        ],
+        "overdone": [
+          "Goes for technically demanding AI solutions even where simpler ones would fit better.",
+          "Pushes new AI technologies without weighing benefit, maturity and feasibility.",
+          "Uses AI solutions without considering data quality, infrastructure, security or integration.",
+          "Focuses on technical possibilities and neglects business, organisational or economic needs."
+        ]
+      },
       "examples": {
         "M": "Sets two or three AI goals for the team and reviews them every quarter."
       },
       "selfCheck": [
         {
-          "question": "How well do you know where your team uses AI?",
+          "question": "How do you steer AI use in your area?",
           "answers": [
-            "I do not really know yet.",
+            "AI is not yet a topic I set priorities for.",
             "I know where my team already uses AI.",
-            "I have set goals and priorities for AI use and review the results regularly.",
-            "I align our AI use with the unit's strategy and with data, process and project needs."
+            "I have a target picture and priorities for AI in my area and review the results.",
+            "I align AI use with the unit's strategy and with data, infrastructure and security needs."
           ]
         },
         {
-          "question": "How do you see the AI skills of your team members?",
+          "question": "What do you do so that your team can use AI well?",
           "answers": [
-            "I have no picture of them yet.",
-            "I have a rough picture from daily work.",
-            "I know each person's level and plan development with them.",
-            "I use the team's levels to plan staffing and development across the unit."
+            "Nothing specific yet.",
+            "I point the team to trainings and the rules.",
+            "I make room for learning and trying out, and weigh benefit and cost with the team.",
+            "I build my team's AI skills systematically and share our approach with other managers."
           ]
         }
       ]
@@ -227,35 +349,65 @@
     {
       "id": "guide-change",
       "group": "lead",
-      "name": "Guiding the change",
-      "description": "Leads by example, takes up concerns and gives the team time to learn.",
+      "name": "Guiding the AI change",
+      "original": "AI-Wandel begleiten",
+      "description": "Shapes how AI changes work in the team: gives orientation, takes up concerns and makes room to learn.",
+      "definition": "Guiding the AI change means shaping the changes AI brings to work and collaboration actively and deliberately. Managers give orientation, make goals and effects understandable and involve employees in the change. They take up uncertainty and resistance, make room for learning and experimenting and support their teams in building new skills. They encourage sharing experience and make sure new ways of working take root step by step.",
       "question": "What do you do so that all team members, also the hesitant ones, get started with AI?",
       "levels": [
         "Uses AI visibly in the own work and talks about it.",
         "Plans learning time, addresses concerns and uses role models in the team.",
         "Builds a learning culture across teams and develops other managers."
       ],
-      "why": "Teams follow what managers do, not what they announce.",
+      "why": "AI is not only a technology rollout but a deep change of work, roles and collaboration. Managers have to give orientation, build acceptance and guide the change actively.",
+      "anchors": {
+        "weak": [
+          "Avoids talking about the effects of AI on the team, tasks or collaboration.",
+          "Gives little orientation on chances, risks and expectations around AI.",
+          "Leaves uncertainty, concerns or resistance unaddressed.",
+          "Does too little for learning, sharing and experimenting with AI.",
+          "Gives employees too little support with new requirements and ways of working.",
+          "Recognises support and development needs around AI too late."
+        ],
+        "good": [
+          "Gives orientation in phases of AI-driven change.",
+          "Makes the reasons, goals and effects of AI initiatives understandable.",
+          "Addresses chances, risks and uncertainties of the AI transformation openly.",
+          "Takes concerns and resistance seriously and deals with them constructively.",
+          "Encourages a positive, learning-oriented attitude to change.",
+          "Supports teams in trying out and developing new ways of working.",
+          "Supports teams in integrating AI successfully into their daily work.",
+          "Builds acceptance, participation and co-design rather than mere instruction.",
+          "Spots support needs early and sets targeted measures to guide the change."
+        ],
+        "overdone": [
+          "Pushes AI changes too fast or too hard, without regard for the team's capacity.",
+          "Focuses so much on AI that other team and leadership tasks suffer.",
+          "Demands readiness for change without giving enough time to learn and adapt.",
+          "Overestimates the team's readiness or ability to take on new ways of working at once.",
+          "Is so enthusiastic about AI that risks, limits or justified concerns get too little attention."
+        ]
+      },
       "examples": {
         "M": "Blocks learning time and shows the own use of AI in team meetings."
       },
       "selfCheck": [
         {
-          "question": "How visible is your own use of AI to your team?",
+          "question": "How do you talk with your team about what AI changes?",
           "answers": [
-            "I hardly use AI myself yet.",
-            "I use AI in my own work and talk about it.",
-            "I show the team concrete examples and invite them to try things.",
-            "Other managers use my examples and approach in their teams."
+            "We have not talked about it yet.",
+            "I explain the reasons and goals of AI initiatives when asked.",
+            "I openly address chances, risks and uncertainties and involve the team in decisions.",
+            "Other managers use my way of guiding the change in their teams."
           ]
         },
         {
-          "question": "What do you do for team members who are hesitant about AI?",
+          "question": "What do you do when team members are unsure or hesitant about AI?",
           "answers": [
             "I have not done anything specific yet.",
             "I listen to their concerns.",
-            "I plan learning time, address concerns and pair them with role models.",
-            "I help build a learning culture across teams and coach other managers in it."
+            "I take concerns seriously, give time to learn and pair people with role models.",
+            "I spot support needs early and set targeted measures across teams."
           ]
         }
       ]

@@ -298,13 +298,13 @@ describe("differences in view", () => {
 describe("findings of the code review", () => {
   it("never shows HR a figure that rests on one or two managers of a team", async () => {
     await start("/hr/teams/t2");
-    expect(main().textContent).not.toMatch(/Steering AI use in the team\s*\d+ of \d+/);
-    expect(main().textContent).toContain("Not shown, fewer than 5 rated: Steering AI use in the team, Guiding the change.");
+    expect(main().textContent).not.toMatch(/Steering AI use\s*\d+ of \d+/);
+    expect(main().textContent).toContain("Not shown, fewer than 5 rated: Steering AI use, Guiding the AI change.");
     await open("/hr/teams");
     click(within(main()).getByRole("button", { name: "Data & Analytics" }));
     const dialog = screen.getByRole("dialog");
     expect(dialog.textContent).toContain("Not shown, fewer than 5 rated");
-    expect(dialog.textContent).not.toMatch(/Guiding the change\s*\d+ of \d+/);
+    expect(dialog.textContent).not.toMatch(/Guiding the AI change\s*\d+ of \d+/);
   });
 
   it("survives broken saved data", async () => {
@@ -335,11 +335,11 @@ describe("findings of the code review", () => {
     const options = () => [...main().querySelectorAll<HTMLButtonElement>(".options .option")];
     expect(options().filter((o) => o.getAttribute("aria-pressed") === "true")).toHaveLength(2);
     expect(options()[2].disabled).toBe(true);
-    // Raise "Critical review of results" to its target: it is no gap any more and no focus either.
+    // Raise "Checking and owning AI results" to its target: it is no gap any more and no focus either.
     await open("/team/people/e3/conversation/check-results");
     click([...main().querySelectorAll<HTMLInputElement>(".pickcell.agreed input")][3]);
     await open("/team/people/e3/conversation/focus");
-    expect(options().map((o) => o.textContent)).not.toContain(expect.stringContaining("Critical review"));
+    expect(options().map((o) => o.textContent)).not.toContain(expect.stringContaining("Checking and owning"));
     expect(options().filter((o) => o.getAttribute("aria-pressed") === "true")).toHaveLength(1);
     expect(options().every((o) => !o.disabled)).toBe(true);
   });
@@ -395,5 +395,19 @@ describe("menu", () => {
     // A single record keeps its own path back instead of the tabs.
     await open("/hr/competencies/safe-use");
     expect(screen.queryByRole("tablist", { name: "Competency model" })).toBeNull();
+  });
+});
+
+describe("VERBUND's competency model", () => {
+  it("shows the definition and the behaviour anchors of a competency for HR", async () => {
+    await start("/hr/competencies/safe-use");
+    expect(main().textContent).toContain("VERBUND: AI sicher einsetzen");
+    const anchors = [...main().querySelectorAll(".anchor h3")].map((h) => h.textContent);
+    expect(anchors).toEqual(["Too little", "Good", "Too much"]);
+  });
+
+  it("names the job-family-specific competencies as the next step", async () => {
+    await start("/hr/competencies");
+    expect(main().textContent).toContain("Job-family-specific competencies");
   });
 });

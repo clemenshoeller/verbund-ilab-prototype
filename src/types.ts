@@ -7,19 +7,27 @@ export interface Level {
 export interface Group {
   id: string;
   name: string;
+  /** Who the group is for, e.g. "For managers". */
+  note?: string;
 }
 
 export interface Competency {
   id: string;
   group: string;
   name: string;
+  /** Name in VERBUND's competency model (German). */
+  original?: string;
   description: string;
+  /** Full definition from VERBUND's competency model, translated. */
+  definition?: string;
   /** Opening question for the competency conversation. */
   question: string;
   /** One descriptor per level, index 0 = level 1. */
   levels: string[];
   /** One sentence on why the competency matters. */
   why: string;
+  /** Behaviour anchors from VERBUND's competency model: too little, good, too much. */
+  anchors?: { weak: string[]; good: string[]; overdone: string[] };
   /** What it looks like in daily work, per job family id. */
   examples: Record<string, string>;
   /** Questions of the employee self-check; answers in I-form, index 0 = not yet, 1 to 3 = levels. */
