@@ -7,7 +7,7 @@ import { go } from "../../lib/router";
 import { useUi } from "../../ui";
 
 const HORIZONS: { id: Horizon; label: string; what: string }[] = [
-  { id: "baseline", label: "Today’s level", what: "today’s level" },
+  { id: "baseline", label: "Today’s level", what: "today’s expectation" },
   { id: "target", label: "2030 target", what: "the 2030 target" },
 ];
 
@@ -20,10 +20,10 @@ export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
 
   return (
     <>
-      <PageHead title="Gap analysis" sub="Agreed levels against the target profiles. Click a cell or a row for the detail." />
+      <PageHead title="Gap analysis" sub="Agreed levels against the target profiles: the darker the cell, the more people are there. Click a cell or a row for the detail." />
 
       <Card
-        title={`Share of rated employees below ${horizon.what}`}
+        title={`Share of rated employees who already reach ${horizon.what}`}
         aside={
           <span className="tabs" role="tablist" aria-label="Horizon">
             {HORIZONS.map((h) => (

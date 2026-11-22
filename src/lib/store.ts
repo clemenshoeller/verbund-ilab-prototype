@@ -98,7 +98,7 @@ export function useStore(seed: State) {
 
   /** Self-check of the employee before the talk: fills the self-rating without starting the conversation. */
   const setSelf = useCallback(
-    (employeeId: string, competencyId: string, patch: { self?: number; selfNote?: string }) => {
+    (employeeId: string, competencyId: string, patch: { self?: number | null; selfNote?: string; selfAnswers?: (number | null)[] }) => {
       change((prev) => {
         const current = prev.assessments[employeeId] ?? { status: "open" as const, date: null, ratings: {} };
         const rating = { ...emptyRating, ...current.ratings[competencyId], ...patch };

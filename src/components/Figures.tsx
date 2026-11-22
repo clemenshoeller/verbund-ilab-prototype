@@ -17,7 +17,7 @@ export function KpiRow({ children }: { children: ReactNode }) {
   return <section className="kpis">{children}</section>;
 }
 
-/** One hue, light to dark: the larger the share, the darker the cell. */
+/** One hue, light to dark: the more people reach the level, the darker the cell. */
 const STEPS = [
   { upTo: 0, cls: "s0", label: "0%" },
   { upTo: 0.249, cls: "s1", label: "1–24%" },
@@ -37,9 +37,9 @@ export function ShareCell({ cell, what, onOpen }: { cell: Cell | null; what: str
       </td>
     );
   return (
-    <td className={`cell ${stepOf(cell.share).cls}` + (onOpen ? " openable" : "")}>
-      <button type="button" title={`${what}: ${cell.below} of ${cell.assessed} rated employees below, ${cell.missingLevels} steps missing in total. Click for details.`} onClick={onOpen}>
-        {Math.round(cell.share * 100)}%
+    <td className={`cell ${stepOf(1 - cell.share).cls}` + (onOpen ? " openable" : "")}>
+      <button type="button" title={`${what}: ${cell.reached} of ${cell.assessed} rated employees reach it, ${cell.missingLevels} steps missing in total. Click for details.`} onClick={onOpen}>
+        {Math.round((1 - cell.share) * 100)}%
       </button>
     </td>
   );

@@ -192,7 +192,7 @@ describe("preview", () => {
     const cell = main().querySelector<HTMLButtonElement>(".cell.openable button")!;
     click(cell);
     const dialog = screen.getByRole("dialog");
-    expect(within(dialog).getByText(/rated employees are below the 2030 target/)).toBeTruthy();
+    expect(within(dialog).getByText(/rated employees already reach the 2030 target/)).toBeTruthy();
     expect(dialog.textContent).not.toMatch(/Anna Berger|Julia Steiner|Stefan Huber/);
     click(screen.getByRole("button", { name: "Close preview" }));
     expect(screen.queryByRole("dialog")).toBeNull();
@@ -205,12 +205,17 @@ describe("the journey of one person", () => {
     const before = main().querySelector("h1")!.textContent!;
     expect(before).toContain("33 of 63");
 
-    // Employee: self-check, one competency per screen.
+    // Employee: self-check, one competency per screen, answers in I-form.
     await open("/me/check/1");
     for (const pick of [1, 2, 1, 0]) {
       const next = within(main()).getByRole("button", { name: /Next|See my answers/ }) as HTMLButtonElement;
       expect(next.disabled).toBe(true);
-      click(within(main()).getAllByRole("radio")[pick]);
+      // Two questions per competency, four answers each; Next opens once both are answered.
+      const radios = within(main()).getAllByRole("radio");
+      expect(radios).toHaveLength(8);
+      click(radios[pick]);
+      expect(next.disabled).toBe(true);
+      click(radios[4 + pick]);
       expect(next.disabled).toBe(false);
       click(next);
       await open(window.location.hash.slice(1));

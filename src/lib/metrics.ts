@@ -79,6 +79,8 @@ export interface Cell {
   below: number;
   /** below / assessed, 0 to 1. */
   share: number;
+  /** People at or above the chosen horizon (assessed - below). */
+  reached: number;
   /** Sum of missing levels to the chosen horizon. */
   missingLevels: number;
   /** True if the group is too small to be shown. */
@@ -110,6 +112,7 @@ export function familyGrid(content: Content, employees: Employee[], assessments:
         assessed: own.length,
         below,
         share: own.length ? below / own.length : 0,
+        reached: own.length - below,
         missingLevels: own.reduce((sum, p) => sum + missing(p, horizon), 0),
         hidden: tooFew(own.length),
       };

@@ -49,7 +49,27 @@
         "B": "Knows that contracts and personal data do not belong in a public chatbot.",
         "D": "Uses only released tools for plant data and maintenance reports.",
         "M": "Makes sure the team knows the rules and where to ask."
-      }
+      },
+      "selfCheck": [
+        {
+          "question": "When you use AI at work, how do you decide which tools and data you may use?",
+          "answers": [
+            "I am not sure which AI tools are approved or what I may enter.",
+            "I know the approved tools and which data must not go into them.",
+            "I follow the rules without having to look them up and notice when a case is unclear.",
+            "Colleagues come to me with unclear cases, and I suggest improvements to the rules."
+          ]
+        },
+        {
+          "question": "What do you do when you are unsure whether you may use AI for a task?",
+          "answers": [
+            "I have not been in this situation yet.",
+            "I ask someone before I go ahead.",
+            "I check the guideline myself and clarify open points with the right contact.",
+            "I help others to decide such cases and pass recurring questions on."
+          ]
+        }
+      ]
     },
     {
       "id": "check-results",
@@ -68,7 +88,27 @@
         "B": "Checks figures and sources of an AI-drafted report against the original data.",
         "D": "Compares an AI fault diagnosis with measurements and own experience.",
         "M": "Asks how a result was checked before deciding on it."
-      }
+      },
+      "selfCheck": [
+        {
+          "question": "How do you check an AI result before you use it?",
+          "answers": [
+            "I mostly use AI results as they are.",
+            "I check the facts that matter before I use a result.",
+            "I check results routinely, for example against sources or with a second person.",
+            "I have defined checks that my team uses, and I show others how to apply them."
+          ]
+        },
+        {
+          "question": "What happens when an AI result is wrong or one-sided?",
+          "answers": [
+            "I would probably not notice it.",
+            "I notice obvious errors and correct them.",
+            "I find less obvious errors and bias too, and I know where AI tends to fail in my work.",
+            "I collect typical errors and share them so that others can avoid them."
+          ]
+        }
+      ]
     },
     {
       "id": "spot-potential",
@@ -87,7 +127,27 @@
         "B": "Spots recurring reports or enquiries that an assistant could prepare.",
         "D": "Suggests where inspection data could point to maintenance needs earlier.",
         "M": "Collects ideas from the team and brings the best ones forward."
-      }
+      },
+      "selfCheck": [
+        {
+          "question": "Can you name tasks in your job where AI would help?",
+          "answers": [
+            "I cannot name one yet.",
+            "I can name some tasks AI could support.",
+            "I can describe a use case with its benefit, the data it needs and its risks.",
+            "I compare use cases for our unit and bring the best ones into the decision process."
+          ]
+        },
+        {
+          "question": "What do you do with an idea for using AI?",
+          "answers": [
+            "I have not had an idea like this yet.",
+            "I mention it to my manager or my team.",
+            "I try it out on a small scale and share what I learned.",
+            "I make sure good ideas are assessed and followed up across the unit."
+          ]
+        }
+      ]
     },
     {
       "id": "build-scale",
@@ -106,7 +166,27 @@
         "B": "Sets up a prompt template for a recurring report and shares it.",
         "D": "Configures an assistant for standard maintenance documentation.",
         "M": "Makes sure a working solution is handed over and reused in other teams."
-      }
+      },
+      "selfCheck": [
+        {
+          "question": "Have you built an AI solution yourself, for example a prompt template, an agent or an automation?",
+          "answers": [
+            "No, I have not used one so far.",
+            "I use templates and solutions others have built.",
+            "I build simple solutions for my own work and share them.",
+            "I develop solutions for several teams and take care of their operation and quality."
+          ]
+        },
+        {
+          "question": "How do others benefit from what you build?",
+          "answers": [
+            "I have not built anything to share yet.",
+            "I sometimes pass a good prompt or tip on.",
+            "I document my solutions so that colleagues can reuse them.",
+            "My solutions run for other teams, and I keep them up to date."
+          ]
+        }
+      ]
     },
     {
       "id": "steer-use",
@@ -122,7 +202,27 @@
       "why": "Managers decide where AI is used and answer for the results.",
       "examples": {
         "M": "Sets two or three AI goals for the team and reviews them every quarter."
-      }
+      },
+      "selfCheck": [
+        {
+          "question": "How well do you know where your team uses AI?",
+          "answers": [
+            "I do not really know yet.",
+            "I know where my team already uses AI.",
+            "I have set goals and priorities for AI use and review the results regularly.",
+            "I align our AI use with the unit's strategy and with data, process and project needs."
+          ]
+        },
+        {
+          "question": "How do you see the AI skills of your team members?",
+          "answers": [
+            "I have no picture of them yet.",
+            "I have a rough picture from daily work.",
+            "I know each person's level and plan development with them.",
+            "I use the team's levels to plan staffing and development across the unit."
+          ]
+        }
+      ]
     },
     {
       "id": "guide-change",
@@ -138,7 +238,27 @@
       "why": "Teams follow what managers do, not what they announce.",
       "examples": {
         "M": "Blocks learning time and shows the own use of AI in team meetings."
-      }
+      },
+      "selfCheck": [
+        {
+          "question": "How visible is your own use of AI to your team?",
+          "answers": [
+            "I hardly use AI myself yet.",
+            "I use AI in my own work and talk about it.",
+            "I show the team concrete examples and invite them to try things.",
+            "Other managers use my examples and approach in their teams."
+          ]
+        },
+        {
+          "question": "What do you do for team members who are hesitant about AI?",
+          "answers": [
+            "I have not done anything specific yet.",
+            "I listen to their concerns.",
+            "I plan learning time, address concerns and pair them with role models.",
+            "I help build a learning culture across teams and coach other managers in it."
+          ]
+        }
+      ]
     }
   ],
   "families": [

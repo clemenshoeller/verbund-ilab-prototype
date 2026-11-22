@@ -2,10 +2,11 @@ import { Steps } from "../../components/Steps";
 import { PageHead } from "../../components/Ui";
 import { useData } from "../../data";
 import { go } from "../../lib/router";
+import { selfLevel } from "../../lib/workflow";
 import { useUi } from "../../ui";
 import { useMe } from "./Me";
 
-/** Self-check before the talk: one competency per screen, answered by picking the description that fits. */
+/** Self-check before the talk: one competency per screen, a few questions each, answered in I-form. */
 export function SelfCheck({ step }: { step?: string }) {
   const { content, setSelf } = useData();
   const { toast } = useUi();
@@ -49,7 +50,18 @@ export function SelfCheck({ step }: { step?: string }) {
   const row = rows[index - 1];
   const { competency } = row;
   const self = assessment?.ratings[competency.id]?.self ?? null;
-  const options = [{ value: 0, name: "Not yet", text: "I have not worked with this so far." }, ...content.levels.map((l) => ({ value: l.value, name: l.name, text: competency.levels[l.value - 1] }))];
+  const rating = assessment?.ratings[competency.id];
+  // Questions from the content; a competency without its own falls back to picking a level description.
+  const questions = competency.selfCheck?.length
+    ? competency.selfCheck
+    : [{ question: "Which description fits you best today?", answers: ["I have not worked with this so far.", ...competency.levels] }];
+  // Earlier answers; a level set before the questions existed fills every question.
+  const answers = questions.map((_, i) => rating?.selfAnswers?.[i] ?? (rating?.selfAnswers ? null : self));
+  const answer = (question: number, value: number) => {
+    const next = answers.map((a, i) => (i === question ? value : a));
+    setSelf(employee.id, competency.id, { selfAnswers: next, self: selfLevel(next, questions.length) });
+  };
+  const level = selfLevel(answers, questions.length);
 
   return (
     <>
@@ -80,26 +92,27 @@ export function SelfCheck({ step }: { step?: string }) {
             {competency.examples[family.id]}
           </p>
         )}
-        <h2>Which description fits you best today?</h2>
-        <fieldset className="options">
-          <legend className="sr-only">{competency.name}: which description fits you best today?</legend>
-          {options.map((option) => (
-            <label key={option.value} className={"option" + (self === option.value ? " on" : "")}>
-              <input
-                type="radio"
-                className="sr-only"
-                name={`self-${competency.id}`}
-                checked={self === option.value}
-                onChange={() => setSelf(employee.id, competency.id, { self: option.value })}
-              />
-              <span className="option-mark">{option.value}</span>
-              <span className="option-text">
-                <strong>{option.name}</strong>
-                <span className="sub">{option.text}</span>
-              </span>
-            </label>
-          ))}
-        </fieldset>
+        {questions.map((q, qi) => (
+          <fieldset key={q.question} className="options">
+            <legend className="self-q">
+              {questions.length > 1 && <span className="ask-label">Question {qi + 1} of {questions.length}</span>}
+              {q.question}
+            </legend>
+            {q.answers.map((text, value) => (
+              <label key={text} className={`option${answers[qi] === value ? " on" : ""}`}>
+                <input type="radio" className="sr-only" name={`self-${competency.id}-${qi}`} checked={answers[qi] === value} onChange={() => answer(qi, value)} />
+                <span className="option-mark">{value}</span>
+                <span className="option-text">{text}</span>
+              </label>
+            ))}
+          </fieldset>
+        ))}
+        {level !== null && (
+          <p className="self-result">
+            Your self-assessment: <strong>{level === 0 ? "Not yet" : content.levels[level - 1].name}</strong>
+            <span className="muted"> (average of your answers, rounded down)</span>
+          </p>
+        )}
         <label className="note">
           <span>An example from your work (optional). It makes the conversation easier.</span>
           <textarea
@@ -117,7 +130,7 @@ export function SelfCheck({ step }: { step?: string }) {
         <a className="btn ghost" href={index === 1 ? "#/me" : `#/me/check/${index - 1}`}>
           Back
         </a>
-        <button type="button" className="btn" disabled={self === null} onClick={() => go(`/me/check/${index + 1}`)}>
+        <button type="button" className="btn" disabled={level === null} onClick={() => go(`/me/check/${index + 1}`)}>
           {index === rows.length ? "See my answers" : "Next"}
         </button>
       </div>

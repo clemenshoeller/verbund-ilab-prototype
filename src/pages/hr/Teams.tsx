@@ -89,7 +89,7 @@ export function TeamRecord({ teamId }: { teamId: string }) {
         <Kpi label="With measures" value={visible ? withMeasures : "–"} sub={visible ? "have a development plan" : `fewer than ${MIN_GROUP} rated`} />
       </KpiRow>
 
-      <Card title="Below the 2030 target, by competency" aside="rated employees below target">
+      <Card title="Reaching the 2030 target, by competency" aside="rated employees at target">
         {visible ? (
           <CompetencyMeters stats={stats} />
         ) : (

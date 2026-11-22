@@ -22,6 +22,17 @@ export function stageOf(content: Content, employee: Employee, assessment?: Asses
 }
 
 /** True once the employee has rated themself in every competency of the profile. */
+/**
+ * Self-assessed level from the answers to a competency's questions: the average, rounded down,
+ * so the self-check never rounds anyone up. Null until every question is answered.
+ */
+export function selfLevel(answers: (number | null)[], questions: number): number | null {
+  if (questions === 0 || answers.length < questions) return null;
+  const given = answers.slice(0, questions);
+  if (given.some((a) => a == null)) return null;
+  return Math.floor((given as number[]).reduce((sum, a) => sum + a, 0) / questions);
+}
+
 export function selfCheckDone(content: Content, employee: Employee, assessment?: Assessment): boolean {
   const family = content.families.find((f) => f.id === employee.family)!;
   const rows = gapRows(content, family, assessment);

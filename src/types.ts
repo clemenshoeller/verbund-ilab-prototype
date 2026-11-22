@@ -22,6 +22,13 @@ export interface Competency {
   why: string;
   /** What it looks like in daily work, per job family id. */
   examples: Record<string, string>;
+  /** Questions of the employee self-check; answers in I-form, index 0 = not yet, 1 to 3 = levels. */
+  selfCheck?: SelfQuestion[];
+}
+
+export interface SelfQuestion {
+  question: string;
+  answers: string[];
 }
 
 export interface ProfileEntry {
@@ -96,6 +103,8 @@ export interface Rating {
   note: string;
   /** Example from the own work the employee gave in the self-check. */
   selfNote?: string;
+  /** Answer per self-check question (0 = not yet, 1 to 3 = level); `self` follows from them. */
+  selfAnswers?: (number | null)[];
 }
 
 export type AssessmentStatus = "open" | "in-progress" | "completed";

@@ -3,7 +3,7 @@ import type { Content } from "../types";
 import { useUi } from "../ui";
 import { ShareCell } from "./Figures";
 
-/** Heatmap job family by competency: share of rated employees below the chosen horizon. */
+/** Heatmap job family by competency: share of rated employees who reach the chosen horizon. */
 export function FamilyHeat({ content, grid, what }: { content: Content; grid: GridRow[]; what: string }) {
   const { openDrawer } = useUi();
   return (

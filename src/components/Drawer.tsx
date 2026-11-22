@@ -209,7 +209,7 @@ function TeamPreview({ id }: { id: string }) {
         <Fact label="Fit for today" value={visible ? `${k.readyToday} of ${k.completed}` : `n<${MIN_GROUP}`} />
         <Fact label="With measures" value={visible ? withMeasures : `n<${MIN_GROUP}`} />
       </div>
-      <Section title="Below the 2030 target, by competency">
+      <Section title="Reaching the 2030 target, by competency">
         {visible ? (
           <CompetencyMeters stats={stats} />
         ) : (
@@ -248,9 +248,9 @@ function CompetencyPreview({ id }: { id: string }) {
       <div className="facts stacked">
         <Fact label="Rated" value={stat.rated} />
         <Fact label="Below today’s expectation" value={stat.hidden ? `n<${MIN_GROUP}` : percent(stat.belowToday / stat.rated)} />
-        <Fact label="Below 2030 target" value={stat.hidden ? `n<${MIN_GROUP}` : percent(stat.belowTarget / stat.rated)} />
+        <Fact label="Reach the 2030 target" value={stat.hidden ? `n<${MIN_GROUP}` : percent(1 - stat.belowTarget / stat.rated)} />
       </div>
-      <Section title="Below the 2030 target, by job family">
+      <Section title="Reaching the 2030 target, by job family">
         <div className="meters">
           {grid.map((row) => {
             const cell = row.cells[id]!;
@@ -259,7 +259,7 @@ function CompetencyPreview({ id }: { id: string }) {
                 {row.family.name}: fewer than {MIN_GROUP} rated
               </p>
             ) : (
-              <Meter key={row.family.id} name={row.family.name} value={cell.below} of={cell.assessed} />
+              <Meter key={row.family.id} name={row.family.name} value={cell.reached} of={cell.assessed} />
             );
           })}
         </div>
@@ -313,7 +313,7 @@ function CellPreview({ familyId, competencyId }: { familyId: string; competencyI
       ) : (
         <>
           <p className="drawer-lead">
-            {target.below} of {target.assessed} rated employees are below the 2030 target, {today.below} of them also below today’s expectation.
+            {target.reached} of {target.assessed} rated employees already reach the 2030 target. {today.below === 0 ? "Everyone meets today’s expectation." : `${today.below} are still below today’s expectation.`}
           </p>
           <div className="facts stacked">
             <Fact label="Expected today" value={levelName(entry.baseline)} />

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import contentJson from "../data/content.json";
 import orgJson from "../data/org.json";
 import type { Content, Org } from "../types";
-import { measureUptake, nextActions, stageOf } from "./workflow";
+import { measureUptake, nextActions, selfLevel, stageOf } from "./workflow";
 
 const content = contentJson as unknown as Content;
 const org = orgJson as unknown as Org;
@@ -46,5 +46,19 @@ describe("measureUptake", () => {
   it("only points to measures that exist", () => {
     const known = new Set(content.measures.map((m) => m.id));
     for (const list of Object.values(org.assignments)) expect(list.every((a) => known.has(a.measureId))).toBe(true);
+  });
+});
+
+describe("selfLevel", () => {
+  it("averages the answers and rounds down", () => {
+    expect(selfLevel([2, 3], 2)).toBe(2);
+    expect(selfLevel([1, 2], 2)).toBe(1);
+    expect(selfLevel([0, 0], 2)).toBe(0);
+    expect(selfLevel([3, 3], 2)).toBe(3);
+  });
+  it("waits until every question is answered", () => {
+    expect(selfLevel([2], 2)).toBeNull();
+    expect(selfLevel([2, null], 2)).toBeNull();
+    expect(selfLevel([], 0)).toBeNull();
   });
 });

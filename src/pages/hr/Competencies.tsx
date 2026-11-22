@@ -22,7 +22,7 @@ export function CompetencyList() {
                 <th>Competency</th>
                 <th>Group</th>
                 <th className="num">Below today’s expectation</th>
-                <th className="num">Below 2030 target</th>
+                <th className="num">Reach 2030 target</th>
               </tr>
             </thead>
             <tbody>
@@ -43,7 +43,7 @@ export function CompetencyList() {
                   </td>
                   <td>{groupName(s.competency.group)}</td>
                   <td className="num">{s.hidden ? `n<${MIN_GROUP}` : percent(s.belowToday / s.rated)}</td>
-                  <td className="num">{s.hidden ? `n<${MIN_GROUP}` : percent(s.belowTarget / s.rated)}</td>
+                  <td className="num">{s.hidden ? `n<${MIN_GROUP}` : percent(1 - s.belowTarget / s.rated)}</td>
                 </tr>
               ))}
             </tbody>
@@ -79,8 +79,8 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
           <strong>{stat.hidden ? `n<${MIN_GROUP}` : percent(stat.belowToday / stat.rated)}</strong>
         </span>
         <span>
-          <em>Below 2030 target</em>
-          <strong>{stat.hidden ? `n<${MIN_GROUP}` : percent(stat.belowTarget / stat.rated)}</strong>
+          <em>Reach 2030 target</em>
+          <strong>{stat.hidden ? `n<${MIN_GROUP}` : percent(1 - stat.belowTarget / stat.rated)}</strong>
         </span>
       </div>
 
@@ -110,7 +110,7 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
                 <th>Today</th>
                 <th>Target 2030</th>
                 <th className="num">Rated</th>
-                <th className="num">Below 2030 target</th>
+                <th className="num">Reach 2030 target</th>
               </tr>
             </thead>
             <tbody>
@@ -132,7 +132,7 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
                       <LevelBar value={entry.target} />
                     </td>
                     <td className="num">{cell.assessed}</td>
-                    <td className="num">{cell.hidden ? `n<${MIN_GROUP}` : `${cell.below} (${percent(cell.share)})`}</td>
+                    <td className="num">{cell.hidden ? `n<${MIN_GROUP}` : `${cell.reached} (${percent(1 - cell.share)})`}</td>
                   </tr>
                 );
               })}
