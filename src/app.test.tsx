@@ -192,7 +192,7 @@ describe("preview", () => {
     const cell = main().querySelector<HTMLButtonElement>(".cell.openable button")!;
     click(cell);
     const dialog = screen.getByRole("dialog");
-    expect(within(dialog).getByText(/rated employees already reach the 2030 target/)).toBeTruthy();
+    expect(within(dialog).getByText(/rated employees meet today’s expectation, \d+ already reach the 2030 target/)).toBeTruthy();
     expect(dialog.textContent).not.toMatch(/Anna Berger|Julia Steiner|Stefan Huber/);
     click(screen.getByRole("button", { name: "Close preview" }));
     expect(screen.queryByRole("dialog")).toBeNull();

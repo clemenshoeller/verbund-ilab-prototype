@@ -21,7 +21,7 @@ export function CompetencyList() {
               <tr>
                 <th>Competency</th>
                 <th>Group</th>
-                <th className="num">Below today’s expectation</th>
+                <th className="num">Meet today’s expectation</th>
                 <th className="num">Reach 2030 target</th>
               </tr>
             </thead>
@@ -45,7 +45,7 @@ export function CompetencyList() {
                     {groupOf(s.competency.group)?.name ?? s.competency.group}
                     {groupOf(s.competency.group)?.note && <span className="sub">{groupOf(s.competency.group)?.note}</span>}
                   </td>
-                  <td className="num">{s.hidden ? `n<${MIN_GROUP}` : percent(s.belowToday / s.rated)}</td>
+                  <td className="num">{s.hidden ? `n<${MIN_GROUP}` : percent(1 - s.belowToday / s.rated)}</td>
                   <td className="num">{s.hidden ? `n<${MIN_GROUP}` : percent(1 - s.belowTarget / s.rated)}</td>
                 </tr>
               ))}
@@ -84,8 +84,8 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
           <strong>{stat.rated}</strong>
         </span>
         <span>
-          <em>Below today’s expectation</em>
-          <strong>{stat.hidden ? `n<${MIN_GROUP}` : percent(stat.belowToday / stat.rated)}</strong>
+          <em>Meet today’s expectation</em>
+          <strong>{stat.hidden ? `n<${MIN_GROUP}` : percent(1 - stat.belowToday / stat.rated)}</strong>
         </span>
         <span>
           <em>Reach 2030 target</em>

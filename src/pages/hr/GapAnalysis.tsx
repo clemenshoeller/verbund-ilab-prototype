@@ -6,9 +6,19 @@ import { familyGrid, priorities, type Horizon } from "../../lib/metrics";
 import { go } from "../../lib/router";
 import { useUi } from "../../ui";
 
-const HORIZONS: { id: Horizon; label: string; what: string }[] = [
-  { id: "baseline", label: "Today’s level", what: "today’s expectation" },
-  { id: "target", label: "2030 target", what: "the 2030 target" },
+const HORIZONS: { id: Horizon; label: string; what: string; reads: string }[] = [
+  {
+    id: "baseline",
+    label: "Expected today",
+    what: "today’s expectation",
+    reads: "What the job needs now. Most people should be here; a light cell needs action this year.",
+  },
+  {
+    id: "target",
+    label: "Target 2030",
+    what: "the 2030 target",
+    reads: "What the job will need in 2030. Low shares are expected today: the distance is the development path to 2030, not a deficit.",
+  },
 ];
 
 export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
@@ -35,6 +45,7 @@ export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
         }
         flush
       >
+        <p className="muted small card-note top">{horizon.reads}</p>
         <FamilyHeat content={content} grid={grid} what={horizon.what} />
         <ShareLegend />
       </Card>

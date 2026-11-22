@@ -247,7 +247,7 @@ function CompetencyPreview({ id }: { id: string }) {
       <p className="drawer-lead">{competency.why}</p>
       <div className="facts stacked">
         <Fact label="Rated" value={stat.rated} />
-        <Fact label="Below today’s expectation" value={stat.hidden ? `n<${MIN_GROUP}` : percent(stat.belowToday / stat.rated)} />
+        <Fact label="Meet today’s expectation" value={stat.hidden ? `n<${MIN_GROUP}` : percent(1 - stat.belowToday / stat.rated)} />
         <Fact label="Reach the 2030 target" value={stat.hidden ? `n<${MIN_GROUP}` : percent(1 - stat.belowTarget / stat.rated)} />
       </div>
       <Section title="Reaching the 2030 target, by job family">
@@ -313,7 +313,7 @@ function CellPreview({ familyId, competencyId }: { familyId: string; competencyI
       ) : (
         <>
           <p className="drawer-lead">
-            {target.reached} of {target.assessed} rated employees already reach the 2030 target. {today.below === 0 ? "Everyone meets today’s expectation." : `${today.below} are still below today’s expectation.`}
+            {today.reached} of {today.assessed} rated employees meet today’s expectation, {target.reached} already reach the 2030 target.
           </p>
           <div className="facts stacked">
             <Fact label="Expected today" value={levelName(entry.baseline)} />
