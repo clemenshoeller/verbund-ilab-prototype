@@ -30,8 +30,8 @@ Three roles, chosen in the "View as" menu at the top right. The switch is provis
 | Role | Pages | What they are for |
 |---|---|---|
 | Employee | My profile, Self-check, My data | Prepare the talk in five minutes; see the agreed levels and the plan; see what is stored and who sees it |
-| Manager | Dashboard, Pipeline, People, record of a person with the guided conversation, Target profiles | Know what to do next; hold the conversation step by step; keep the development plan |
-| HR | Dashboard, Gap analysis, Teams, Job families, Competencies, Measures, Roadmap, Governance | See where the organisation stands today and against 2030, where to act first, how the model is kept current |
+| Manager | Dashboard, Team (as list or board), record of a person with the guided conversation, Target profiles | Know what to do next; hold the conversation step by step; keep the development plan |
+| HR | Dashboard, Gap analysis, Teams, Competency model (tabs: job families, competencies, measures), Plan (tabs: roadmap, governance) | See where the organisation stands today and against 2030, where to act first, how the model is kept current |
 
 The manager's record of a person shows where the self-check and the manager's view were apart, on the level scale and linked to that step of the conversation; the team dashboard shows per competency who has reached the 2030 target and can help others, and flags a skill held by only one person. Both ideas come from Abdullah's prototype "Team skills compass" in the student team.
 
@@ -55,7 +55,7 @@ Requires Node.js 22.12 or newer.
 ```bash
 npm install
 npm run dev        # http://localhost:5173 (next free port if taken)
-npm test           # 66 tests
+npm test           # 72 tests
 npm run lint       # code and accessibility rules
 npm run build      # production build in dist/
 npm run build:single   # the same as one HTML file in dist-single/
@@ -187,7 +187,7 @@ What follows for the handover:
 - Whether the team's notes from talks with VERBUND may be processed in an externally hosted AI service is to be confirmed with VERBUND. No VERBUND credentials, systems or data sets were entered.
 - The training setting of the Claude account should be checked and, if it is on, switched off for further work on the project (claude.ai → Settings → Privacy).
 
-**Use of AI.** All code, the placeholder content and this documentation were written with Claude Code on instructions of the student team. Reviewed by: type check, lint with accessibility rules, 62 automated tests including an accessibility check with axe-core, dependency audit, a scan of the git history for secrets, click-throughs in the browser at desktop and phone width, and a second, independent review pass by an AI agent that had not written the code (see below). A line-by-line review by a human developer has not taken place.
+**Use of AI.** All code, the placeholder content and this documentation were written with Claude Code on instructions of the student team. Reviewed by: type check, lint with accessibility rules, 72 automated tests including an accessibility check with axe-core, dependency audit, a scan of the git history for secrets, click-throughs in the browser at desktop and phone width, and a second, independent review pass by an AI agent that had not written the code (see below). A line-by-line review by a human developer has not taken place.
 
 **Findings of the independent AI review (16.11.2026), all fixed and covered by tests:** the HR role showed figures that rested on one or two managers of a team; broken saved data could blank the app with no way back; saved edits could shadow new sample data; editing a note reopened a completed conversation; focus areas could lock after a level was raised; organisation-wide figures had no minimum group size; settings could not be passed to the container build. Accessibility: focus was lost on every page change, search results could not be reached by keyboard, the preview was not really modal, clickable rows were not announced as controls, the role menu had no keyboard support. Not acted on: the number of nginx worker processes under a small memory limit, judged a low risk.
 
@@ -225,11 +225,11 @@ Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-
 
 ## Tests
 
-`npm test` runs 66 tests.
+`npm test` runs 72 tests.
 
-- **39 unit tests**: gaps and status in words, focus areas, totals and trend, heatmap, prioritisation, minimum group size, stages and next steps, loading of saved data, consistency of the content files.
+- **41 unit tests**: gaps and status in words, focus areas, totals and trend, heatmap, prioritisation, minimum group size, stages and next steps, loading of saved data, consistency of the content files.
 - **2 accessibility tests** (`src/a11y.test.tsx`, axe-core): no violations on 25 pages, nor with the role list, the search results or a preview open. Colour contrast is excluded because the simulated browser cannot compute it.
-- **25 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as list; the search with arrow keys; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from self-check through the conversation to the changed HR totals; the list of differences in view, who on the team can help others, and that closing the preview does not move the page; reload and reset; and one test for each finding of the code review.
+- **29 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as list; the search with arrow keys; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from self-check through the conversation to the changed HR totals; the list of differences in view, who on the team can help others, and that closing the preview does not move the page; the slimmed menus of manager and HR with their tabs; the definition and behaviour anchors of a competency for HR; reload and reset; and one test for each finding of the code review.
 
 A second workflow (`.github/workflows/pages.yml`) runs the tests, builds the app and publishes it at the demo link on every push to `main`.
 
@@ -250,7 +250,7 @@ Manual test: as employee do the self-check; as manager open that person's conver
 ## Known limitations
 
 - No backend, no login; data stays in one browser and does not sync between users.
-- Content is not validated against VERBUND's competency model or the project's interview results.
+- The six AI competencies follow VERBUND's competency model; levels, questions, target profiles and measures are student-team drafts and will follow the target profiles of the project, which are not final yet.
 - The sample ratings are random around today's level, so the figures show how the screens work and are no finding.
 - Gaps are ordered by urgency and size; strategic relevance is not weighted.
 - Click and accessibility tests run in a simulated browser; there are no tests in real browsers, no visual regression tests and no check of colour contrast.
