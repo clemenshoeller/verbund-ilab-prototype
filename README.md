@@ -90,7 +90,7 @@ Edit `content.json`, save, and the running app updates. `org.json` is generated:
 | Key figures, trend, heatmap, prioritised gaps, use of measures | Functional; calculated from the ratings (`src/lib/metrics.ts`) |
 | Switch between employee, manager and HR | **Provisional**: chosen by hand |
 | Backend and database | **Mocked**: `src/api/dataSource.ts` returns two JSON files |
-| AI competencies: names, groups, definitions, behaviour anchors, reasons | From VERBUND's internal concept "Kompetenzmodell goes AI" (15.10.2026, dimension "Miteinander \| AI nutzen"), translated by the student team; use in the prototype and this repository approved by Nikolaus Rauschl (reported 22.11.2026) |
+| AI competencies: names, groups, definitions, behaviour anchors, reasons | From VERBUND's internal concept "Kompetenzmodell goes AI" (15.10.2026, dimension "Miteinander \| AI nutzen"), translated by the student team; use in the prototype and this repository approved by VERBUND (22.11.2026) |
 | Levels, self-check and conversation questions, job examples, target profiles, measures | **Placeholder** worded by the student team; job-family-specific competencies follow from the team's research |
 | Roadmap and governance | **Draft** texts, a first proposal of the student team |
 | Employees, teams, ratings | **Synthetic**, generated with a fixed seed; all persons are invented |
