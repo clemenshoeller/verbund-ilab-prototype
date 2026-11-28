@@ -1,4 +1,5 @@
 import type { Assessments, Competency, Content, Employee, Family, Measure, Org, TeamInfo } from "../types";
+import { progress } from "./scoring";
 
 /** "baseline" = the level expected today, "target" = the level expected in 2030. */
 export type Horizon = "baseline" | "target";
@@ -52,6 +53,8 @@ export interface Kpis {
   belowTodayPeople: number;
   /** Assessed people who meet today's expectation in every competency of their profile. */
   readyToday: number;
+  /** Share of the levels the 2030 profiles ask for that are already reached, 0 to 1; null without ratings. */
+  progress: number | null;
 }
 
 export function kpis(content: Content, employees: Employee[], assessments: Assessments): Kpis {
@@ -69,6 +72,7 @@ export function kpis(content: Content, employees: Employee[], assessments: Asses
     atTargetShare: pairs.length ? atTarget / pairs.length : null,
     belowTodayPeople: belowToday.size,
     readyToday: new Set(pairs.map((p) => p.employeeId)).size - belowToday.size,
+    progress: progress(pairs),
   };
 }
 
@@ -233,4 +237,83 @@ export function kpiHistory(content: Content, employees: Employee[], assessments:
     history.push(kpis(content, employees, until));
   }
   return history;
+}
+
+export interface UnitRow {
+  team: TeamInfo;
+  headcount: number;
+  assessed: number;
+  /** Per competency; null = nobody in the unit has it in the profile. */
+  cells: Record<string, Cell | null>;
+}
+
+/** Job unit (team) by competency, for the chosen horizon: the skills dashboard per unit. */
+export function teamGrid(content: Content, org: Org, assessments: Assessments, horizon: Horizon): UnitRow[] {
+  const families = new Map(content.families.map((f) => [f.id, f]));
+  return org.teams.map((team) => {
+    const members = org.employees.filter((e) => e.team === team.id);
+    const pairs = ratedPairs(content, members, assessments);
+    const cells: Record<string, Cell | null> = {};
+    for (const competency of content.competencies) {
+      if (!members.some((e) => (families.get(e.family)?.profile[competency.id]?.target ?? 0) > 0)) {
+        cells[competency.id] = null;
+        continue;
+      }
+      const own = pairs.filter((p) => p.competencyId === competency.id);
+      const below = own.filter((p) => missing(p, horizon) > 0).length;
+      cells[competency.id] = {
+        assessed: own.length,
+        below,
+        share: own.length ? below / own.length : 0,
+        reached: own.length - below,
+        missingLevels: own.reduce((sum, p) => sum + missing(p, horizon), 0),
+        hidden: tooFew(own.length),
+      };
+    }
+    return { team, headcount: members.length, assessed: members.filter((e) => isCompleted(assessments, e.id)).length, cells };
+  });
+}
+
+export interface RoleRow {
+  role: string;
+  family: Family;
+  /** Number of units the role exists in. */
+  units: number;
+  headcount: number;
+  assessed: number;
+  /** Share of the 2030 profile reached by the assessed holders; null when hidden or not assessed. */
+  progress: number | null;
+  /** True if too few holders are assessed for a figure to be shown. */
+  hidden: boolean;
+}
+
+/**
+ * Every role with the number of people who hold it, for succession planning: a role held by one
+ * person is a risk when that person leaves. Headcount comes from the master data and is always shown;
+ * anything that rests on ratings follows the minimum group size.
+ */
+export function roleOverview(content: Content, org: Org, assessments: Assessments): RoleRow[] {
+  const groups = new Map<string, Employee[]>();
+  for (const employee of org.employees) {
+    const key = `${employee.family}|${employee.role}`;
+    groups.set(key, [...(groups.get(key) ?? []), employee]);
+  }
+  const rows: RoleRow[] = [];
+  for (const holders of groups.values()) {
+    const family = content.families.find((f) => f.id === holders[0].family);
+    if (!family) continue;
+    const assessed = holders.filter((e) => isCompleted(assessments, e.id)).length;
+    const hidden = tooFew(assessed);
+    rows.push({
+      role: holders[0].role,
+      family,
+      units: new Set(holders.map((e) => e.team)).size,
+      headcount: holders.length,
+      assessed,
+      progress: hidden ? null : progress(ratedPairs(content, holders, assessments)),
+      hidden,
+    });
+  }
+  const order = content.families.map((f) => f.id);
+  return rows.sort((a, b) => order.indexOf(a.family.id) - order.indexOf(b.family.id) || b.headcount - a.headcount || a.role.localeCompare(b.role));
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { useData } from "../data";
 import { activeFocus, gapRows, standingText, summarise } from "../lib/gap";
 import { MIN_GROUP, competencyStats, familyGrid, kpis, measureReach, percent, tooFew } from "../lib/metrics";
-import { measureUptake, selfCheckDone, stageOf } from "../lib/workflow";
+import { measureUptake, selfCheckShared, stageOf } from "../lib/workflow";
 import { useUi, type DrawerSpec } from "../ui";
 import { Meter } from "./Figures";
 import { CompetencyMeters } from "./HiddenStats";
@@ -121,9 +121,9 @@ function PersonPreview({ id }: { id: string }) {
           ? summarise(first, rows)
           : assessment?.status === "in-progress"
             ? `The conversation with ${first} is running.`
-            : selfCheckDone(content, employee, assessment)
+            : selfCheckShared(content, employee, assessment)
               ? `${first} has done the self-check and is ready for the conversation.`
-              : `${first} has not done the self-check yet.`}
+              : `${first} has not shared a self-check yet.`}
       </p>
 
       <Section title="Profile">

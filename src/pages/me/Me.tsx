@@ -1,11 +1,14 @@
 import { CompetencyDetails, GapHeadline } from "../../components/CompetencyDetails";
+import { CourseLinks, TaskTable } from "../../components/Learning";
 import { StepsLegend } from "../../components/Steps";
 import { Card, PageHead, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
 import { activeFocus, gapRows } from "../../lib/gap";
 import { go } from "../../lib/router";
 import { MIN_GROUP } from "../../lib/metrics";
-import { selfCheckDone } from "../../lib/workflow";
+import { progress, selfCheckItems, selfCheckMinutes } from "../../lib/scoring";
+import { selfCheckDone, selfShared } from "../../lib/workflow";
+import { useUi } from "../../ui";
 
 /** The demo employee, with the data every page of the employee role needs. */
 export function useMe() {
@@ -24,13 +27,19 @@ export function useMe() {
     measures: assignments[employee.id] ?? [],
     completed: assessment?.status === "completed",
     prepared: selfCheckDone(content, employee, assessment),
+    /** False while the employee keeps the self-check private. */
+    shared: selfShared(assessment),
   };
 }
 
 export function MyProfile() {
-  const { content } = useData();
-  const { employee, family, team, assessment, rows, measures, completed, prepared } = useMe();
+  const { content, shareSelf } = useData();
+  const { toast } = useUi();
+  const { employee, family, team, assessment, rows, measures, completed, prepared, shared } = useMe();
   const first = employee.name.split(" ")[0];
+  const items = selfCheckItems(content, family);
+  const written = items.filter((item) => item.kind === "task").length;
+  const reached = progress(rows);
   // Before the conversation the profile shows the own self-check, afterwards the agreed levels.
   const shown = completed ? rows : rows.map((row) => ({ ...row, agreed: assessment?.ratings[row.competency.id]?.self ?? null, gap: null }));
   const focus = activeFocus(rows, assessment?.focus);
@@ -45,28 +54,57 @@ export function MyProfile() {
             <div>
               <p className="eyebrow">Agreed on {formatDate(assessment?.date)}</p>
               <h2>Your levels are agreed with {team.manager}.</h2>
-              <p>They stay valid until next year’s conversation. You can see below what you are working on.</p>
+              <p>
+                {reached !== null && `You have reached ${Math.round(reached * 100)}% of your 2030 profile. `}They stay valid until next year’s conversation. You can
+                see below what you are working on.
+              </p>
             </div>
           </>
-        ) : prepared ? (
+        ) : prepared && shared ? (
           <>
             <div>
               <p className="eyebrow">Your next step</p>
               <h2>Your self-check is with {team.manager}.</h2>
               <p>You will go through it together in your yearly appraisal talk and agree on one level per competency.</p>
             </div>
-            <a className="btn ghost" href="#/me/check">
-              Change my self-check
+            <a className="btn ghost" href="#/me/check/result">
+              See my result
             </a>
+          </>
+        ) : prepared ? (
+          <>
+            <div>
+              <p className="eyebrow">Your self-check is done</p>
+              <h2>The result is yours. Share it when you are ready.</h2>
+              <p>
+                {team.manager} sees it only if you share it. Sharing makes the competency conversation shorter; you agree on the final levels
+                together either way.
+              </p>
+            </div>
+            <div className="head-actions">
+              <a className="btn ghost" href="#/me/check/result">
+                See my result
+              </a>
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  shareSelf(employee.id, true);
+                  toast(`Self-check shared with ${team.manager}`);
+                }}
+              >
+                Share with {team.manager}
+              </button>
+            </div>
           </>
         ) : (
           <>
             <div>
-              <p className="eyebrow">Your next step · about 5 minutes</p>
-              <h2>Prepare for your competency conversation.</h2>
+              <p className="eyebrow">Your next step · about {selfCheckMinutes(items)} minutes</p>
+              <h2>Find out where you stand, with cases and tasks from your work.</h2>
               <p>
-                Pick the description that fits you best in {rows.length} competencies. Only you and {team.manager} see your answers; they are not
-                used for pay or appraisal.
+                {items.length - written} short cases and {written} written tasks in {rows.length} competencies. The result is yours: you get ideas for your development right away, and{" "}
+                {team.manager} sees it only if you share it. It is not used for pay or appraisal.
               </p>
             </div>
             <button type="button" className="btn" onClick={() => go("/me/check")}>
@@ -117,6 +155,7 @@ export function MyProfile() {
                       <span className="row-main">
                         <strong>{measure.title}</strong>
                         <span className="sub">{measure.description}</span>
+                        <CourseLinks courses={measure.courses} />
                       </span>
                       <span className={"chip status-" + a.status}>{a.status === "planned" ? "Planned" : a.status === "running" ? "Running" : "Done"}</span>
                     </li>
@@ -127,6 +166,13 @@ export function MyProfile() {
           )}
         </Card>
       )}
+
+      {family.tasks && (
+        <Card title="How your job changes until 2030" aside={`${family.tasks.length} common tasks in ${family.name}`} flush>
+          <TaskTable content={content} family={family} needs={false} />
+          <p className="muted small card-note">Your target profile follows from these tasks: each competency is needed at the level the most demanding task asks for.</p>
+        </Card>
+      )}
     </>
   );
 }
@@ -135,7 +181,7 @@ export function MyData() {
   const { team, employee } = useMe();
   const rowsWho = [
     { who: "You", sees: "Everything that is stored about you: self-check, agreed levels, notes, measures." },
-    { who: `Your manager (${team.manager})`, sees: "The same, for the members of the own team only." },
+    { who: `Your manager (${team.manager})`, sees: "Agreed levels, notes and measures, for the members of the own team only. Your self-check only if you share it." },
     { who: "HR and the digital unit", sees: `Totals per job family and team. Groups with fewer than ${MIN_GROUP} rated employees are not shown. No names.` },
     { who: "Everyone else", sees: "Nothing." },
   ];
@@ -153,10 +199,11 @@ export function MyData() {
         </Card>
         <Card title="What is stored">
           <ul className="rules">
-            <li>Your self-check and the level agreed per competency.</li>
+            <li>Your answers to the cases of the self-check, the level that follows from them, and what you wrote in the written tasks.</li>
+            <li>The level agreed per competency in the conversation.</li>
             <li>Notes from the conversation, if you and your manager write any.</li>
             <li>Measures agreed with you and their status.</li>
-            <li>No test results, no usage data from AI tools.</li>
+            <li>No usage data from AI tools, no results from other tests.</li>
           </ul>
         </Card>
       </div>

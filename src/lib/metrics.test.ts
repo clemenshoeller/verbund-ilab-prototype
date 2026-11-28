@@ -2,12 +2,12 @@ import { describe, expect, it } from "vitest";
 import contentJson from "../data/content.json";
 import orgJson from "../data/org.json";
 import type { Assessment, Assessments, Content, Employee, Org } from "../types";
-import { MIN_GROUP, competencyStats, familyGrid, kpiHistory, kpis, measureReach, priorities, ratedPairs, teamCoverage } from "./metrics";
+import { MIN_GROUP, competencyStats, familyGrid, kpiHistory, kpis, measureReach, priorities, ratedPairs, roleOverview, teamCoverage, teamGrid } from "./metrics";
 
 const content = contentJson as unknown as Content;
 const org = orgJson as unknown as Org;
 
-/** Family D: targets 2, 2, 2, 1 and baselines 1, 1, 1, 0 for the four non-leadership competencies. */
+/** Family D: targets 2, 2, 2, 1 and baselines 1, 1, 1, 0 for the four AI competencies; the general competencies stay unrated here. */
 const IDS = ["safe-use", "check-results", "spot-potential", "build-scale"];
 function person(id: string, levels: number[], status: Assessment["status"] = "completed") {
   const employee: Employee = { id, name: id, role: "Tester", family: "D", team: "x" };
@@ -41,6 +41,10 @@ describe("kpis", () => {
     expect(result.atTargetShare).toBeCloseTo(7 / 12);
     expect(result.belowTodayPeople).toBe(1);
     expect(result.readyToday).toBe(2);
+  });
+  it("computes the share of the 2030 profiles that is reached", () => {
+    // a: 7 of 7 levels, b: 3 of 7, c: 5 of 7.
+    expect(result.progress).toBeCloseTo(15 / 21);
   });
   it("returns no share without ratings", () => {
     expect(kpis(content, employees, {}).atTargetShare).toBeNull();
@@ -147,5 +151,28 @@ describe("minimum group size for HR", () => {
     expect(lead.rated).toBeLessThan(MIN_GROUP);
     expect(lead.hidden).toBe(true);
     expect(stats.find((s) => s.competency.id === "safe-use")!.hidden).toBe(false);
+  });
+});
+
+describe("skills by unit and roles", () => {
+  it("has a row per unit and hides what rests on fewer than five people", () => {
+    const grid = teamGrid(content, org, org.assessments, "target");
+    expect(grid).toHaveLength(org.teams.length);
+    for (const row of grid) {
+      for (const cell of Object.values(row.cells)) if (cell) expect(cell.hidden).toBe(cell.assessed < MIN_GROUP);
+    }
+    // One or two managers per unit: the leadership competencies are never shown per unit.
+    expect(grid.every((row) => row.cells["steer-use"] === null || row.cells["steer-use"].hidden)).toBe(true);
+    expect(grid.some((row) => row.cells["data-work"] && !row.cells["data-work"].hidden)).toBe(true);
+  });
+  it("lists every role once with all its holders and no rating figure for small groups", () => {
+    const rows = roleOverview(content, org, org.assessments);
+    expect(rows.reduce((sum, row) => sum + row.headcount, 0)).toBe(org.employees.length);
+    expect(new Set(rows.map((row) => row.family.id + row.role)).size).toBe(rows.length);
+    for (const row of rows) {
+      expect(row.hidden).toBe(row.assessed < MIN_GROUP);
+      if (row.hidden) expect(row.progress).toBeNull();
+    }
+    expect(rows.some((row) => row.headcount === 1)).toBe(true);
   });
 });

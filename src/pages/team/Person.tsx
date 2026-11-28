@@ -3,7 +3,7 @@ import { StepsLegend } from "../../components/Steps";
 import { Avatar, Card, LinkTabs, NotFound, PageHead, StageChip, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
 import { activeFocus, gapRows, standing, summarise, type GapRow } from "../../lib/gap";
-import { selfCheckDone, stageOf } from "../../lib/workflow";
+import { selfCheckDone, selfShared, stageOf } from "../../lib/workflow";
 import type { Employee } from "../../types";
 import { Conversation } from "./Conversation";
 
@@ -99,9 +99,11 @@ function Overview({ employee, rows }: { employee: Employee; rows: GapRow[] }) {
               ? summarise(first, rows)
               : assessment?.status === "in-progress"
                 ? `The conversation with ${first} is running.`
-                : prepared
+                : prepared && selfShared(assessment)
                   ? `${first} has done the self-check and is ready for the conversation.`
-                  : `${first} has not done the self-check yet.`}
+                  : prepared
+                    ? `${first} has done the self-check and keeps the result private.`
+                    : `${first} has not done the self-check yet.`}
           </h2>
         </div>
       </section>
@@ -167,6 +169,7 @@ function SeenDifferently({ employee, rows }: { employee: Employee; rows: GapRow[
   const { content, assessments } = useData();
   const ratings = assessments[employee.id]?.ratings ?? {};
   const first = employee.name.split(" ")[0];
+  if (!selfShared(assessments[employee.id])) return null;
   const rated = rows.filter((r) => ratings[r.competency.id]?.self != null && ratings[r.competency.id]?.manager != null);
   if (rated.length === 0) return null;
   const apart = rated.filter((r) => ratings[r.competency.id].self !== ratings[r.competency.id].manager);

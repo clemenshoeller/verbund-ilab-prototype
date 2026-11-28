@@ -29,7 +29,8 @@ describe("profiles", () => {
     const ids = (id: string) => profileCompetencies(content, family(id)).map((c) => c.id);
     expect(ids("M")).toContain("steer-use");
     expect(ids("A")).not.toContain("steer-use");
-    expect(ids("B")).toHaveLength(4);
+    expect(ids("B")).toHaveLength(7);
+    expect(ids("B")).toContain("data-work");
   });
   it("only references competencies that exist, with targets at or above baseline", () => {
     const known = new Set(content.competencies.map((c) => c.id));
@@ -46,9 +47,9 @@ describe("profiles", () => {
 describe("gapRows", () => {
   it("computes the gaps of a completed sample assessment", () => {
     const rows = gapRows(content, family("B"), org.assessments["e3"]);
-    expect(rows.map((r) => r.gap)).toEqual([0, 2, 1, 1]);
-    expect(totalGap(rows)).toBe(4);
-    expect(agreedCount(rows)).toBe(4);
+    expect(rows.map((r) => r.gap)).toEqual([0, 2, 1, 1, 0, 1, 1]);
+    expect(totalGap(rows)).toBe(6);
+    expect(agreedCount(rows)).toBe(7);
   });
   it("leaves gaps open without an assessment", () => {
     const rows = gapRows(content, family("D"), undefined);
@@ -70,9 +71,9 @@ describe("sample data", () => {
 });
 
 describe("standing in words", () => {
-  const rows = gapRows(content, family("B"), org.assessments["e3"]); // agreed 2, 1, 1, 0 against targets 2, 3, 2, 1
+  const rows = gapRows(content, family("B"), org.assessments["e3"]); // agreed 2, 1, 1, 0, 2, 1, 1 against targets 2, 3, 2, 1, 2, 2, 2
   it("names each state", () => {
-    expect(rows.map(standing)).toEqual(["reached", "steps", "steps", "steps"]);
+    expect(rows.map(standing)).toEqual(["reached", "steps", "steps", "steps", "reached", "steps", "steps"]);
     expect(standingText(rows[1])).toBe("2 steps to the 2030 target");
     expect(standingText(rows[2])).toBe("1 step to the 2030 target");
   });
@@ -83,14 +84,14 @@ describe("standing in words", () => {
   });
   it("summarises a person in two sentences", () => {
     expect(summarise("Julia", rows)).toBe(
-      "Julia meets today\u2019s expectations in all 4 competencies. For 2030, 4 steps are still to go in 3 of 4 competencies, most in \u201cChecking and owning AI results\u201d.",
+      "Julia meets today\u2019s expectations in all 7 competencies. For 2030, 6 steps are still to go in 5 of 7 competencies, most in \u201cChecking and owning AI results\u201d.",
     );
     expect(summarise("Katharina", gapRows(content, family("D"), undefined))).toBe("Katharina has no agreed levels yet.");
   });
 });
 
 describe("activeFocus", () => {
-  const rows = gapRows(content, family("B"), org.assessments["e3"]); // gaps 0, 2, 1, 1
+  const rows = gapRows(content, family("B"), org.assessments["e3"]); // gaps 0, 2, 1, 1, 0, 1, 1
   it("keeps a focus only while its gap is open", () => {
     expect(activeFocus(rows, ["safe-use", "check-results"])).toEqual(["check-results"]);
     expect(activeFocus(rows, undefined)).toEqual([]);

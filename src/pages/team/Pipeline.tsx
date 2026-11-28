@@ -2,7 +2,7 @@ import { Icon } from "../../components/Icon";
 import { Avatar, PageHead, ViewToggle } from "../../components/Ui";
 import { useData } from "../../data";
 import { agreedCount, gapRows, totalGap } from "../../lib/gap";
-import { STAGES, selfCheckDone, stageOf } from "../../lib/workflow";
+import { STAGES, selfCheckShared, stageOf } from "../../lib/workflow";
 import { useUi } from "../../ui";
 
 /** The team page shows the same people as a list or as a board by stage. */
@@ -56,7 +56,7 @@ export function Pipeline() {
               {inStage.length === 0 && <p className="empty">No one here</p>}
               {inStage.map(({ employee, family, rows, measures }) => {
                 const gap = totalGap(rows);
-                const prepared = selfCheckDone(content, employee, assessments[employee.id]);
+                const prepared = selfCheckShared(content, employee, assessments[employee.id]);
                 return (
                   <button key={employee.id} type="button" className="kcard" onClick={() => openDrawer({ type: "person", id: employee.id })}>
                     <span className="kcard-head">
@@ -68,7 +68,7 @@ export function Pipeline() {
                     </span>
                     <span className="chip">{family.name}</span>
                     <span className="kcard-foot">
-                      {stage.id === "open" && (prepared ? "Self-check is in · ready to talk" : "Self-check not done yet")}
+                      {stage.id === "open" && (prepared ? "Self-check is in · ready to talk" : "Self-check not shared yet")}
                       {stage.id === "talking" && `${agreedCount(rows)} of ${rows.length} agreed`}
                       {stage.id === "agreed" && `${gap} steps to 2030 · agree measures`}
                       {stage.id === "planned" && (gap ? `${gap} steps to 2030 · ${measures} ${measures === 1 ? "measure" : "measures"}` : "2030 profile reached")}

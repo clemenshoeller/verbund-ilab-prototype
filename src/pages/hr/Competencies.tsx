@@ -10,10 +10,11 @@ export function CompetencyList() {
   const { openDrawer } = useUi();
   const stats = competencyStats(content, org.employees, assessments);
   const groupOf = (id: string) => content.groups.find((g) => g.id === id);
+  const general = content.competencies.filter((c) => c.group === "general").length;
 
   return (
     <>
-      <PageHead title="Competencies" sub={`${content.competencies.length} AI competencies from VERBUND’s competency model (“Miteinander | AI nutzen”), in ${content.groups.length} groups, each with three levels`} />
+      <PageHead title="Competencies" sub={`${content.competencies.length - general} AI competencies from VERBUND’s competency model (“Miteinander | AI nutzen”) and ${general} general competencies, each with three levels`} />
       <Card flush>
         <div className="table-wrap">
           <table className="table">
@@ -53,10 +54,11 @@ export function CompetencyList() {
           </table>
         </div>
       </Card>
-      <Card title="Job-family-specific competencies" aside="Next step">
+      <Card title="General competencies" aside="Student-team draft">
         <p className="muted">
-          The six AI competencies apply across VERBUND. More specific competencies per job family or role build on them; they follow from our research and
-          interviews and are added here once agreed.
+          The six AI competencies come from VERBUND’s competency model. Its general competencies were not available to the team; the {general} here follow from our
+          interviews and desk research and stand in for them. What is specific to a job family sits in its tasks: see{" "}
+          <a href="#/hr/tasks">Gap analysis, Changing tasks</a>.
         </p>
       </Card>
     </>
@@ -135,6 +137,71 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
           {competency.question}
         </blockquote>
       </Card>
+
+      {competency.cases && (
+        <Card title="Cases and tasks in the self-check" aside={`${competency.cases.length} cases, ${competency.tasks?.length ?? 0} written · student-team draft`} flush>
+          {competency.cases.map((task) => (
+            <details key={task.id} className="comp">
+              <summary>
+                <span className="comp-main">
+                  <strong>{task.title}</strong>
+                  <span className="sub">
+                    {task.families ? `For ${task.families.map((id) => content.families.find((f) => f.id === id)?.name ?? id).join(", ")}` : "For every job family"} · about{" "}
+                    {task.minutes} min
+                  </span>
+                </span>
+                <span />
+                <span />
+              </summary>
+              <div className="comp-body">
+                <p>{task.situation}</p>
+                <ol className="level-list">
+                  {[...task.options]
+                    .sort((a, b) => a.level - b.level)
+                    .map((option) => (
+                      <li key={option.text}>
+                        <span className="lvl">{option.level}</span>
+                        <span>{option.text}</span>
+                      </li>
+                    ))}
+                </ol>
+              </div>
+            </details>
+          ))}
+          {(competency.tasks ?? []).map((task) => (
+            <details key={task.id} className="comp">
+              <summary>
+                <span className="comp-main">
+                  <strong>{task.title}</strong>
+                  <span className="sub">
+                    Written task · {task.families ? `for ${task.families.map((id) => content.families.find((f) => f.id === id)?.name ?? id).join(", ")}` : "for every job family"} ·
+                    about {task.minutes} min
+                  </span>
+                </span>
+                <span />
+                <span />
+              </summary>
+              <div className="comp-body">
+                <p>
+                  {task.task} {task.prompts.join(" ")}
+                </p>
+                <p className="plan-label">What the manager looks for</p>
+                <ol className="level-list">
+                  {task.lookFor.map((line, i) => (
+                    <li key={line}>
+                      <span className="lvl">{i + 1}</span>
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </details>
+          ))}
+          <p className="muted small card-note">
+            A written task is not rated by the tool: the manager reads it in the conversation. In the cases, employees see the answers in mixed order and without the level. The level of a competency is the highest one reached in at least two thirds of its cases.
+          </p>
+        </Card>
+      )}
 
       <Card title="Required level by job family" flush>
         <div className="table-wrap">

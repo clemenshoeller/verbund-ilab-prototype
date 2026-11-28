@@ -21,22 +21,19 @@ export function stageOf(content: Content, employee: Employee, assessment?: Asses
   return gap === 0 || assigned.length > 0 ? "planned" : "agreed";
 }
 
-/** True once the employee has rated themself in every competency of the profile. */
-/**
- * Self-assessed level from the answers to a competency's questions: the average, rounded down,
- * so the self-check never rounds anyone up. Null until every question is answered.
- */
-export function selfLevel(answers: (number | null)[], questions: number): number | null {
-  if (questions === 0 || answers.length < questions) return null;
-  const given = answers.slice(0, questions);
-  if (given.some((a) => a == null)) return null;
-  return Math.floor((given as number[]).reduce((sum, a) => sum + a, 0) / questions);
-}
-
+/** True once the employee has a self-check level in every competency of the profile. */
 export function selfCheckDone(content: Content, employee: Employee, assessment?: Assessment): boolean {
   const family = content.families.find((f) => f.id === employee.family)!;
   const rows = gapRows(content, family, assessment);
   return rows.length > 0 && rows.every((row) => assessment?.ratings[row.competency.id]?.self != null);
+}
+
+/** The self-check belongs to the employee; a manager sees it unless the employee keeps it private. */
+export const selfShared = (assessment?: Assessment) => assessment?.selfShared !== false;
+
+/** True once the self-check is done and the manager may see it. */
+export function selfCheckShared(content: Content, employee: Employee, assessment?: Assessment): boolean {
+  return selfShared(assessment) && selfCheckDone(content, employee, assessment);
 }
 
 export interface NextAction {
@@ -81,7 +78,7 @@ export function nextActions(content: Content, employees: Employee[], assessments
         employee,
         stage,
         label: "Start the conversation",
-        detail: selfCheckDone(content, employee, assessment) ? "Self-check is in" : "Self-check not done yet",
+        detail: selfCheckShared(content, employee, assessment) ? "Self-check is in" : "Self-check not shared yet",
         href: `#/team/people/${employee.id}/conversation`,
       });
     }

@@ -1,7 +1,9 @@
 import { KpiTile, Tiles, change } from "../../components/KpiTile";
+import { SimNote } from "../../components/Learning";
 import { Card, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
 import { MIN_GROUP, kpiHistory, kpis, priorities, teamCoverage, tooFew } from "../../lib/metrics";
+import { pathTo2030 } from "../../lib/scoring";
 import { useUi } from "../../ui";
 
 const pct = (part: number, whole: number) => (whole ? Math.round((part / whole) * 100) : 0);
@@ -38,7 +40,7 @@ export function HrHome() {
 
   return (
     <>
-      <PageHead title={`${k.readyToday} of ${k.completed} assessed employees meet today’s AI expectations.`} sub="Totals from the completed conversations. No single persons." />
+      <PageHead title={`${k.readyToday} of ${k.completed} assessed employees meet today’s expectations.`} sub="Totals from the completed conversations. No single persons." />
 
       <Tiles>
         <KpiTile
@@ -72,6 +74,31 @@ export function HrHome() {
           href="#/hr/teams"
         />
       </Tiles>
+
+      <Card title="Path to the 2030 profiles" aside={`${Math.round((k.progress ?? 0) * 100)}% of the required levels reached`}>
+        <div className="meters path">
+          {pathTo2030(k.progress ?? 0).map((point) => {
+            const value = Math.round((point.measured ?? point.planned) * 100);
+            return (
+              <div key={point.year} className="meter">
+                <span className="meter-name">
+                  {point.year}
+                  <span className="sub">{point.measured !== null ? "measured in the conversations" : point.year === 2030 ? "target state" : "planned"}</span>
+                </span>
+                <span className="meter-track" role="img" aria-label={`${value} percent`}>
+                  <span className={"meter-fill" + (point.measured === null ? " planned" : "")} style={{ width: `${value}%` }} />
+                </span>
+                <span className="meter-figure">{value}%</span>
+              </div>
+            );
+          })}
+        </div>
+        <p className="muted small path-note">
+          The 2030 profiles are set in advance from the tasks of each job family, so they are 100%. Every yearly round of conversations adds a measured point; the
+          plan shows equal steps from the first measurement to 2030. A level above the target does not count extra.
+        </p>
+      </Card>
+      <SimNote />
 
       <div className="grid-1-1">
         <Card title="Largest gaps" aside={<a href="#/hr/gaps">Gap analysis</a>} flush>

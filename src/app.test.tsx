@@ -2,6 +2,11 @@
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { App } from "./App";
+import contentJson from "./data/content.json";
+import { selfCheckItems } from "./lib/scoring";
+import type { Content } from "./types";
+
+const content = contentJson as unknown as Content;
 
 /** Click tests of the whole app: every page opens, the role menu, the preview, and the main journey. */
 
@@ -33,12 +38,14 @@ afterEach(() => {
 describe("pages", () => {
   const pages = [
     "/", "/guide", "/about",
-    "/me", "/me/check/1", "/me/check/5", "/me/data",
+    "/me", "/me/check", "/me/check/1", "/me/check/3", "/me/check/13", "/me/check/99", "/me/check/result", "/me/data",
     "/team", "/team/pipeline", "/team/people", "/team/people?stage=agreed", "/team/profiles/D",
     "/team/people/e3", "/team/people/e3/conversation", "/team/people/e3/conversation/check-results",
     "/team/people/e3/conversation/focus", "/team/people/e3/conversation/summary", "/team/people/e3/activity",
     "/team/people/unknown",
-    "/hr", "/hr/gaps", "/hr/gaps/baseline", "/hr/teams", "/hr/teams/t8", "/hr/teams/unknown",
+    "/hr", "/hr/gaps", "/hr/gaps/baseline", "/hr/tasks", "/hr/tasks/D", "/hr/personas", "/hr/personas/M",
+    "/hr/teams", "/hr/teams/t8", "/hr/teams/unknown", "/hr/skills", "/hr/skills/target", "/hr/roles", "/hr/roles/A",
+    "/hr/upload", "/hr/upload/D",
     "/hr/profiles/M", "/hr/competencies", "/hr/competencies/safe-use", "/hr/competencies/unknown",
     "/hr/measures", "/hr/measures/recruiting", "/hr/roadmap", "/hr/governance",
   ];
@@ -203,32 +210,92 @@ describe("the journey of one person", () => {
   it("goes from the self-check through the conversation to the totals for HR", async () => {
     await start("/hr");
     const before = main().querySelector("h1")!.textContent!;
-    expect(before).toContain("33 of 63");
+    expect(before).toContain("20 of 63");
 
-    // Employee: self-check, one competency per screen, answers in I-form.
+    // Employee: self-check with cases to choose from and tasks to write up, one per screen.
+    const items = selfCheckItems(content, content.families.find((f) => f.id === "D")!);
+    expect(items.map((item) => item.kind).join(" ")).toBe("case case task case case task case task case task case case case");
+    const shown: Record<string, number[]> = {
+      "safe-use": [1, 1],
+      "check-results": [3, 1], // two cases: both have to show a level
+      "spot-potential": [1],
+      "build-scale": [0],
+      "data-work": [1],
+      "adapt-learn": [1],
+      "process-solve": [2],
+    };
+    const wrote = "The tool suggested a bearing. I compared it with the vibration data and the last inspection and found a loose mounting instead.";
+    await open("/me/check");
+    expect(main().textContent).toContain("9 cases and 4 written tasks from your work in 7 competencies. About 36 minutes");
     await open("/me/check/1");
-    for (const pick of [1, 2, 1, 0]) {
-      const next = within(main()).getByRole("button", { name: /Next|See my answers/ }) as HTMLButtonElement;
+    for (const item of items) {
+      const next = within(main()).getByRole("button", { name: /^Next$|See my result/ }) as HTMLButtonElement;
       expect(next.disabled).toBe(true);
-      // Two questions per competency, four answers each; Next opens once both are answered.
-      const radios = within(main()).getAllByRole("radio");
-      expect(radios).toHaveLength(8);
-      click(radios[pick]);
-      expect(next.disabled).toBe(true);
-      click(radios[4 + pick]);
+      // The level an answer shows, or a text is worth, is never visible to the employee.
+      expect(main().textContent).not.toMatch(/Foundation|Practitioner|Advanced/);
+      if (item.kind === "case") {
+        const radios = within(main()).getAllByRole("radio");
+        expect(radios).toHaveLength(4);
+        click(radios[item.task.options.findIndex((o) => o.level === shown[item.competency.id][item.index])]);
+      } else if (item.competency.id === "build-scale") {
+        // Nothing to tell yet: the task can be left without an example.
+        click(within(main()).getByRole("button", { name: "I have no example yet" }));
+        await open(window.location.hash.slice(1));
+        continue;
+      } else {
+        expect(within(main()).queryAllByRole("radio")).toHaveLength(0);
+        const box = within(main()).getByRole("textbox", { name: "Your answer" });
+        // One character is enough to go on; an empty or blank answer is not.
+        fireEvent.change(box, { target: { value: "  " } });
+        expect(next.disabled).toBe(true);
+        fireEvent.change(box, { target: { value: "x" } });
+        expect(next.disabled).toBe(false);
+        fireEvent.change(box, { target: { value: wrote } });
+      }
       expect(next.disabled).toBe(false);
       click(next);
       await open(window.location.hash.slice(1));
     }
-    expect(main().querySelector("h1")!.textContent).toBe("That is your self-check");
-    click(within(main()).getByRole("button", { name: "Done" }));
+    // The result is the employee's own: levels from the cases, how far to 2030, and ideas with links to courses.
+    expect(main().querySelector("h1")!.textContent).toBe("Your self-check result");
+    expect(main().textContent).toContain("You have reached 50% of your 2030 profile.");
+    expect(main().textContent).toContain("You wrote 3 of 4 tasks; they are not rated here.");
+    expect(main().textContent).toContain("Foundation · 2 cases, answers 2 levels apart · written task: written");
+    expect(main().textContent).toContain("Not yet · 1 case · written task: no example yet");
+    const course = within(main()).getByRole("link", { name: /Elements of AI/ });
+    expect(course.getAttribute("href")).toBe("https://www.elementsofai.com/");
+    expect(course.getAttribute("target")).toBe("_blank");
+
+    // Until it is shared, the manager does not see it.
+    await open("/team/people/e6/conversation");
+    expect(main().textContent).toContain("Katharina has done the self-check and keeps the result private.");
+    await open("/team/people/e6/conversation/check-results");
+    expect(main().querySelectorAll(".pickcell.self")).toHaveLength(0);
+    expect(main().textContent).not.toContain("From the self-check");
+    expect(main().querySelector(".sample")).toBeNull();
+    expect(main().textContent).not.toContain("loose mounting");
+
+    await open("/me/check/result");
+    click(within(main()).getByRole("button", { name: "Share with Elisabeth Brunner" }));
+    expect(screen.getByRole("status").textContent).toContain("Self-check shared with Elisabeth Brunner");
     await open("/me");
     expect(main().textContent).toContain("Your self-check is with Elisabeth Brunner.");
 
-    // Manager: sees the self-check, agrees every level.
+    // Manager: sees the self-check with the evidence behind it, agrees every level.
     await open("/team/people/e6/conversation");
-    expect(main().textContent).toContain("Katharina has done the self-check");
-    const levels = { "safe-use": 1, "check-results": 1, "spot-potential": 1, "build-scale": 0 };
+    expect(main().textContent).toContain("Katharina has done the self-check and shared it.");
+    await open("/team/people/e6/conversation/check-results");
+    expect(main().textContent).toContain("From the self-check: Foundation (2 cases, answers 2 levels apart). The answers were far apart");
+    // The written task is the work sample the manager reads and rates, with what to look for per level.
+    const sample = main().querySelector(".sample")!;
+    expect(sample.querySelector(".sample-text")!.textContent).toBe(wrote);
+    expect(sample.textContent).toContain("An AI result you used.");
+    expect([...sample.querySelectorAll(".level-list li")]).toHaveLength(3);
+    await open("/team/people/e6/conversation/build-scale");
+    expect(main().querySelector(".sample")!.textContent).toContain("Katharina gave no example for this task.");
+    await open("/team/people/e6/conversation/data-work");
+    expect(main().querySelector(".sample")).toBeNull();
+    const levels = { "safe-use": 1, "check-results": 1, "spot-potential": 1, "build-scale": 0, "data-work": 1, "adapt-learn": 1, "process-solve": 2 };
     for (const [id, level] of Object.entries(levels)) {
       await open(`/team/people/e6/conversation/${id}`);
       const radios = (column: string) => [...main().querySelectorAll<HTMLInputElement>(`.pickcell.${column} input`)];
@@ -251,13 +318,13 @@ describe("the journey of one person", () => {
     click(within(main()).getByRole("button", { name: "Complete the conversation" }));
     await open(window.location.hash.slice(1));
     expect(window.location.hash).toBe("#/team/people/e6");
-    expect(main().textContent).toContain("Katharina meets today’s expectations in all 4 competencies.");
+    expect(main().textContent).toContain("Katharina meets today’s expectations in all 7 competencies.");
 
     // The employee sees the agreed levels, HR sees one more person.
     await open("/me");
     expect(main().textContent).toContain("Your levels are agreed with Elisabeth Brunner.");
     await open("/hr");
-    expect(main().querySelector("h1")!.textContent).toContain("34 of 64");
+    expect(main().querySelector("h1")!.textContent).toContain("21 of 64");
   });
 
   it("keeps the changes after a reload and forgets them after a reset", async () => {
@@ -276,7 +343,7 @@ describe("differences in view", () => {
   it("lists where the self-check and the manager were apart and leads to that step", async () => {
     await start("/team/people/e3");
     const card = [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Seen differently")!;
-    expect(card.querySelector(".card-aside")!.textContent).toBe("1 of 4");
+    expect(card.querySelector(".card-aside")!.textContent).toBe("1 of 7");
     const link = card.querySelector<HTMLAnchorElement>("a.row")!;
     expect(link.querySelector(".views")!.getAttribute("aria-label")).toBe("Julia: Practitioner, you: Foundation, agreed: Foundation");
     expect(link.textContent).toContain("Julia rates one step higher · agreed: Foundation");
@@ -286,7 +353,7 @@ describe("differences in view", () => {
   it("shows on the team dashboard who has reached the 2030 target per competency", async () => {
     await start("/team");
     const cells = [...main().querySelectorAll(".matrix tfoot td")].map((td) => td.textContent);
-    expect(cells).toEqual(["Julia, Michael", "Anna, Stefan", "Nobody yet", "Annaonly one", "–", "–"]);
+    expect(cells).toEqual(["Julia, Michael", "Anna, Stefan", "Nobody yet", "Annaonly one", "–", "–", "Anna, Julia", "Nobody yet", "Stefanonly one"]);
   });
 
   it("leaves the card out while the manager has rated nothing", async () => {
@@ -387,7 +454,7 @@ describe("menu", () => {
     expect(labels()).toEqual(["Dashboard", "Gap analysis", "Teams", "Competency model", "Plan"]);
     expect(menu().getByRole("link", { name: "Competency model" }).getAttribute("aria-current")).toBe("page");
     const tabs = within(screen.getByRole("tablist", { name: "Competency model" }));
-    expect(tabs.getAllByRole("tab").map((t) => t.textContent?.replace(/\d+$/, ""))).toEqual(["Job families", "Competencies", "Measures"]);
+    expect(tabs.getAllByRole("tab").map((t) => t.textContent?.replace(/\d+$/, ""))).toEqual(["Job families", "Competencies", "Measures", "Upload"]);
     expect(tabs.getByRole("tab", { name: /Competencies/ }).getAttribute("aria-selected")).toBe("true");
     await open("/hr/governance");
     expect(menu().getByRole("link", { name: "Plan" }).getAttribute("aria-current")).toBe("page");
@@ -406,8 +473,152 @@ describe("VERBUND's competency model", () => {
     expect(anchors).toEqual(["Too little", "Good", "Too much"]);
   });
 
-  it("names the job-family-specific competencies as the next step", async () => {
+  it("marks the general competencies as a draft of the team and shows the cases behind a competency", async () => {
     await start("/hr/competencies");
-    expect(main().textContent).toContain("Job-family-specific competencies");
+    expect(main().textContent).toContain("6 AI competencies from VERBUND’s competency model");
+    expect(main().textContent).toContain("3 general competencies");
+    expect(main().textContent).toContain("Its general competencies were not available to the team");
+    await open("/hr/competencies/check-results");
+    const card = [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Cases and tasks in the self-check")!;
+    expect(card.querySelectorAll("details")).toHaveLength(6);
+    expect(card.textContent).toContain("For Engineering & Technicians");
+    expect(card.textContent).toContain("Written task · for every job family");
+    expect(card.textContent).toContain("What the manager looks for");
+  });
+});
+
+describe("after the jour fixe of 24.11.2026", () => {
+  const names = /Anna Berger|Julia Steiner|Stefan Huber|Katharina Moser|Markus Leitner/;
+
+  it("fills the self-check as a persona and shows the result without sharing it", async () => {
+    await start("/me/check");
+    click(within(main()).getByRole("button", { name: "Answer as beginner" }));
+    await open(window.location.hash.slice(1));
+    expect(window.location.hash).toBe("#/me/check/result");
+    expect(main().textContent).toContain("You have reached 21% of your 2030 profile.");
+    expect(within(main()).getByRole("button", { name: "Share with Elisabeth Brunner" })).toBeTruthy();
+    await open("/me");
+    expect(main().textContent).toContain("The result is yours. Share it when you are ready.");
+    await open("/team/pipeline");
+    const card = [...main().querySelectorAll(".kcard")].find((c) => c.textContent!.includes("Katharina Moser"))!;
+    expect(card.querySelector(".kcard-foot")!.textContent).toBe("Self-check not shared yet");
+  });
+
+  it("shows the manager the written work sample of a shared self-check", async () => {
+    await start("/team/people/e2/conversation/check-results");
+    const sample = main().querySelector(".sample")!;
+    expect(sample.textContent).toContain("Work sample from Markus’s self-check · read it and rate it in your column");
+    expect(sample.querySelector(".sample-text")!.textContent).toContain("migration script");
+    // Reading it is the manager's job: nothing is rated before the manager chooses a level.
+    expect([...main().querySelectorAll<HTMLInputElement>(".pickcell.manager input")].some((input) => input.checked)).toBe(false);
+  });
+
+  it("keeps the place on the page when a tab inside it is switched", async () => {
+    await start("/hr/gaps");
+    const calls: number[][] = [];
+    window.scrollTo = ((x: number, y: number) => {
+      calls.push([x, y]);
+    }) as unknown as typeof window.scrollTo;
+    Object.defineProperty(window, "scrollY", { value: 420, configurable: true });
+    try {
+      const tab = within(main()).getByRole("tab", { name: "Expected today" });
+      tab.focus();
+      click(tab);
+      await open(window.location.hash.slice(1));
+      expect(window.location.hash).toBe("#/hr/gaps/baseline");
+      expect(calls).toEqual([[0, 420]]);
+      const now = within(main()).getByRole("tab", { name: "Expected today" });
+      expect(now.getAttribute("aria-selected")).toBe("true");
+      expect(document.activeElement).toBe(now);
+      // Moving to another page still starts at the top, with the heading in focus.
+      await open("/hr/teams");
+      expect(calls[calls.length - 1]).toEqual([0, 0]);
+      expect(document.activeElement).toBe(main().querySelector("h1"));
+    } finally {
+      Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
+    }
+  });
+
+  it("shows the employee how the own job changes until 2030", async () => {
+    await start("/me");
+    expect(main().textContent).toContain("How your job changes until 2030");
+    expect(main().textContent).toContain("Inspection and maintenance");
+  });
+
+  it("shows HR how the tasks of a job family change and which profile follows", async () => {
+    await start("/hr/tasks/B");
+    const tabs = within(screen.getByRole("tablist", { name: "Gap analysis" }));
+    expect(tabs.getAllByRole("tab").map((t) => t.textContent)).toEqual(["Competency gaps", "Changing tasks", "Personas"]);
+    expect(tabs.getByRole("tab", { name: "Changing tasks" }).getAttribute("aria-selected")).toBe("true");
+    expect(screen.getByRole("link", { name: "Gap analysis" }).getAttribute("aria-current")).toBe("page");
+    expect(main().textContent).toContain("Reporting and closing");
+    expect(main().textContent).toContain("Largely automated");
+    expect(main().textContent).toContain("Working with data");
+    const profile = [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Target profile that follows from the tasks")!;
+    expect(profile.querySelectorAll("tbody tr")).toHaveLength(7);
+    expect(profile.textContent).toContain("Reporting and closing · Research, texts and drafts");
+  });
+
+  it("shows three personas per job family as a simulation", async () => {
+    await start("/hr/personas/D");
+    const cards = [...main().querySelectorAll(".personas .card")];
+    expect(cards.map((c) => c.querySelector("h2")!.textContent)).toEqual(["Beginner", "Advanced", "Expert"]);
+    expect(cards.map((c) => c.querySelector(".persona-figure strong")!.textContent)).toEqual(["21%", "57%", "100%"]);
+    expect(main().textContent).toContain("Simulated.");
+    expect(cards[2].textContent).toContain("None needed");
+    expect(cards[0].querySelector(".courses a")).not.toBeNull();
+  });
+
+  it("shows all skills per job unit and the roles, never a person", async () => {
+    await start("/hr/skills");
+    expect(main().querySelectorAll(".heat tbody tr")).toHaveLength(9);
+    expect(main().querySelectorAll(".heat thead th")).toHaveLength(10);
+    expect(main().textContent).not.toMatch(names);
+    click(main().querySelector<HTMLButtonElement>(".cell.openable button")!);
+    expect(within(screen.getByRole("dialog")).getByRole("link", { name: "Open the team" })).toBeTruthy();
+    fireEvent.keyDown(window, { key: "Escape" });
+    await open("/hr/roles/D");
+    expect(main().textContent).toContain("One holder");
+    expect(main().textContent).toContain("Maintenance Technician");
+    expect(main().textContent).not.toMatch(names);
+    expect(within(screen.getByRole("tablist", { name: "Teams" })).getByRole("tab", { name: "Roles" }).getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("adapts a job profile from an uploaded job description and takes it back on reset", async () => {
+    await start("/team/profiles/D");
+    const line = () => [...main().querySelectorAll("details.comp")].find((d) => d.textContent!.includes("Checking and owning AI results"))!.querySelector(".sub")!.textContent;
+    expect(line()).toBe("Today: Foundation · 2030: Practitioner");
+
+    await open("/hr/upload/D");
+    const read = within(main()).getByRole("button", { name: "Read the tasks" }) as HTMLButtonElement;
+    expect(read.disabled).toBe(true);
+    click(within(main()).getByRole("button", { name: "Use an example" }));
+    expect(read.disabled).toBe(false);
+    click(read);
+    expect(main().textContent).toContain("targets raised");
+    expect(main().textContent).toContain("not part of this family’s profile: Guiding the AI change");
+    click(within(main()).getByRole("button", { name: "Apply to the job profile" }));
+    expect(screen.getByRole("status").textContent).toContain("Profile of Engineering & Technicians updated");
+
+    await open("/hr/tasks/D");
+    expect(main().textContent).toContain("From the job description “Senior Maintenance Engineer, hydropower (invented example)”");
+    await open("/team/profiles/D");
+    expect(line()).toBe("Today: Foundation · 2030: Advanced");
+
+    click(screen.getByRole("button", { name: /View as/ }));
+    click(screen.getByRole("button", { name: /Reset demo data/ }));
+    expect(line()).toBe("Today: Foundation · 2030: Practitioner");
+  });
+
+  it("shows HR the path to 2030 and where a measure starts", async () => {
+    await start("/hr");
+    const path = [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Path to the 2030 profiles")!;
+    const figures = [...path.querySelectorAll(".meter-figure")].map((f) => f.textContent);
+    expect(figures).toHaveLength(5);
+    expect(figures[4]).toBe("100%");
+    expect(main().textContent).toContain("Simulated.");
+    await open("/hr/measures");
+    expect(within(main()).getByRole("link", { name: /AI Fluency: Framework & Foundations/ }).getAttribute("href")).toContain("https://");
+    expect(main().textContent).toContain("catalogue entry assumed");
   });
 });

@@ -4,8 +4,9 @@ import { useData } from "../../data";
 import { useState } from "react";
 import { activeFocus, agreedCount, standing, standingText, summarise, type GapRow } from "../../lib/gap";
 import { go } from "../../lib/router";
+import { answerLevels, casesFor, evidenceText, recommendMeasures, spread, tasksFor } from "../../lib/scoring";
 import { MAX_FOCUS } from "../../lib/store";
-import { selfCheckDone } from "../../lib/workflow";
+import { selfCheckDone, selfShared } from "../../lib/workflow";
 import { useUi } from "../../ui";
 import type { AssignmentStatus, Employee, Family } from "../../types";
 
@@ -47,7 +48,7 @@ export function Conversation({ employee, family, rows, step }: { employee: Emplo
 
       <div className="flow-body">
         {current === "start" && <Start employee={employee} family={family} rows={rows} first={first} />}
-        {current === "focus" && <Focus employee={employee} rows={rows} first={first} />}
+        {current === "focus" && <Focus employee={employee} family={family} rows={rows} first={first} />}
         {current === "summary" && <Summary employee={employee} rows={rows} first={first} />}
         {!["start", "focus", "summary"].includes(current) && <Rate employee={employee} family={family} row={rows.find((r) => r.competency.id === current)!} first={first} position={index} total={rows.length} />}
 
@@ -72,7 +73,8 @@ export function Conversation({ employee, family, rows, step }: { employee: Emplo
 
 function Start({ employee, family, rows, first }: { employee: Employee; family: Family; rows: GapRow[]; first: string }) {
   const { content, assessments } = useData();
-  const prepared = selfCheckDone(content, employee, assessments[employee.id]);
+  const done = selfCheckDone(content, employee, assessments[employee.id]);
+  const prepared = done && selfShared(assessments[employee.id]);
   return (
     <section className="card question">
       <p className="eyebrow">Competency conversation · part of the yearly appraisal talk · about 20 minutes</p>
@@ -90,8 +92,10 @@ function Start({ employee, family, rows, first }: { employee: Employee; family: 
       </ul>
       <p className={"callout" + (prepared ? " ok" : "")}>
         {prepared
-          ? `${first} has done the self-check. You see the answers in each step.`
-          : `${first} has not done the self-check yet. You can still start; ${first} answers in the conversation.`}
+          ? `${first} has done the self-check and shared it. You see the result in each step.`
+          : done
+            ? `${first} has done the self-check and keeps the result private. You can still start; ask for examples in each step.`
+            : `${first} has not done the self-check yet. You can still start; ${first} answers in the conversation.`}
       </p>
       <p className="muted small">
         Profile: {family.name} · {rows.length} competencies
@@ -106,15 +110,21 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
   const rating = assessments[employee.id]?.ratings[competency.id];
   const group = content.groups.find((g) => g.id === competency.group)!;
   const options = [{ value: 0, name: "Not yet", text: "Has not worked with this so far." }, ...content.levels.map((l) => ({ value: l.value, name: l.name, text: competency.levels[l.value - 1] }))];
+  // A self-check the employee keeps private is not shown; the column for it disappears.
+  const shared = selfShared(assessments[employee.id]);
   const columns: { key: "self" | "manager" | "agreed"; label: string }[] = [
-    { key: "self", label: first },
+    ...(shared ? [{ key: "self" as const, label: first }] : []),
     { key: "manager", label: "You" },
     { key: "agreed", label: "Agreed" },
   ];
   // Open if there is a note already; typing or clearing it does not close it.
   const [noteOpen, setNoteOpen] = useState(Boolean(rating?.note));
-  const same = rating?.self != null && rating.self === rating.manager;
-  const differ = rating?.self != null && rating?.manager != null && rating.self !== rating.manager;
+  const same = shared && rating?.self != null && rating.self === rating.manager;
+  const differ = shared && rating?.self != null && rating?.manager != null && rating.self !== rating.manager;
+  // What the self-check level rests on: the cases the employee answered.
+  const caseLevels = shared && rating?.selfAnswers ? answerLevels(casesFor(competency, family.id), rating.selfAnswers) : [];
+  // The written task of the self-check: the manager reads it and says which level it shows.
+  const written = shared && rating?.selfTask !== undefined ? tasksFor(competency, family.id)[0] : undefined;
 
   return (
     <section className="card question">
@@ -135,10 +145,43 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
           </p>
         )}
       </div>
-      {rating?.selfNote && (
+      {shared && rating?.selfNote && (
         <p className="callout">
           <strong>{first}’s example:</strong> “{rating.selfNote}”
         </p>
+      )}
+      {caseLevels.length > 0 && rating?.self != null && (
+        <p className="callout">
+          <strong>From the self-check:</strong> {options[rating.self].name} ({evidenceText(caseLevels)}).
+          {spread(caseLevels) >= 2 && ` The answers were far apart: ask ${first} for an example before you agree.`}
+        </p>
+      )}
+
+      {written && (
+        <section className="sample" aria-label={`Work sample of ${first}`}>
+          <p className="ask-label">Work sample from {first}’s self-check · read it and rate it in your column</p>
+          <p className="sample-task">
+            <strong>{written.title}.</strong> {written.task} {written.prompts.join(" ")}
+          </p>
+          {rating?.selfTask?.trim() ? (
+            <blockquote className="sample-text">{rating.selfTask}</blockquote>
+          ) : (
+            <p className="muted">{first} gave no example for this task. Ask for one in the conversation.</p>
+          )}
+          <details className="more">
+            <summary>What to look for</summary>
+            <ol className="level-list">
+              {written.lookFor.map((line, i) => (
+                <li key={line}>
+                  <span className="lvl">{i + 1}</span>
+                  <span>
+                    <strong>{content.levels[i]?.name}</strong> {line}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </details>
+        </section>
       )}
 
       <table className="rate">
@@ -204,17 +247,19 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
   );
 }
 
-function Focus({ employee, rows, first }: { employee: Employee; rows: GapRow[]; first: string }) {
+function Focus({ employee, family, rows, first }: { employee: Employee; family: Family; rows: GapRow[]; first: string }) {
   const { content, assessments, assignments, setFocus, assign, setAssignmentStatus, unassign } = useData();
   const { toast } = useUi();
   // A focus whose gap was closed afterwards is dropped, so it can never block a new choice.
   const focus = activeFocus(rows, assessments[employee.id]?.focus);
   const assigned = assignments[employee.id] ?? [];
   const open = rows.filter((r) => (r.gap ?? 0) > 0).sort((a, b) => Number(standing(b) === "below") - Number(standing(a) === "below") || (b.gap ?? 0) - (a.gap ?? 0));
-  const perPerson = new Set(content.measureTypes.filter((t) => t.perPerson).map((t) => t.id));
   const typeName = (id: string) => content.measureTypes.find((t) => t.id === id)?.name ?? id;
   const toggle = (id: string) => setFocus(employee.id, focus.includes(id) ? focus.filter((f) => f !== id) : [...focus, id]);
-  const suggestions = content.measures.filter((m) => perPerson.has(m.type) && !assigned.some((a) => a.measureId === m.id) && m.competencies.some((c) => focus.includes(c)));
+  // Best fit first: measures for this job family that build a focus area, ordered by the levels they can close.
+  const suggestions = recommendMeasures(content, family, rows, focus)
+    .filter((rec) => !assigned.some((a) => a.measureId === rec.measure.id) && rec.measure.competencies.some((c) => focus.includes(c)))
+    .map((rec) => rec.measure);
 
   if (agreedCount(rows) < rows.length) {
     return (

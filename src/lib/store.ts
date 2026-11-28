@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Assessments, AssignmentStatus, Assignments, Rating } from "../types";
+import type { Assessments, AssignmentStatus, Assignments, Rating, TaskChange, Uploads } from "../types";
 
 /** Demo state lives in the browser only. "Reset demo data" deletes it. */
 export const STORAGE_KEY = "ai-competency-check.state.v5";
@@ -7,13 +7,18 @@ export const STORAGE_KEY = "ai-competency-check.state.v5";
 /** How many competencies a person works on at a time. Guidance suggests one or two, three at most. */
 export const MAX_FOCUS = 2;
 
-interface State {
+interface Seed {
   assessments: Assessments;
   assignments: Assignments;
 }
 
+interface State extends Seed {
+  /** Tasks from uploaded job descriptions, by job family. */
+  uploads: Uploads;
+}
+
 /** Short fingerprint of the sample data, so saved edits are dropped when the data underneath changes. */
-function fingerprint(seed: State): string {
+function fingerprint(seed: Seed): string {
   const text = JSON.stringify(seed);
   let hash = 5381;
   for (let i = 0; i < text.length; i++) hash = ((hash << 5) + hash + text.charCodeAt(i)) | 0;
@@ -29,16 +34,21 @@ export function readSaved(raw: string | null, seedPrint: string): State | null {
     const saved: unknown = JSON.parse(raw);
     if (!isRecord(saved) || saved.seed !== seedPrint) return null;
     const { assessments, assignments } = saved;
-    if (!isRecord(assessments) || !isRecord(assignments)) return null;
+    // Saved states from before the upload existed have no uploads.
+    const uploads = saved.uploads ?? {};
+    if (!isRecord(assessments) || !isRecord(assignments) || !isRecord(uploads)) return null;
     const assessmentsOk = Object.values(assessments).every((a) => isRecord(a) && typeof a.status === "string" && isRecord(a.ratings));
     const assignmentsOk = Object.values(assignments).every((list) => Array.isArray(list) && list.every((a) => isRecord(a) && typeof a.measureId === "string"));
-    return assessmentsOk && assignmentsOk ? ({ assessments, assignments } as unknown as State) : null;
+    const uploadsOk = Object.values(uploads).every((list) => Array.isArray(list) && list.every((t) => isRecord(t) && typeof t.task === "string" && isRecord(t.needs2030)));
+    return assessmentsOk && assignmentsOk && uploadsOk ? ({ assessments, assignments, uploads } as unknown as State) : null;
   } catch {
     return null;
   }
 }
 
-function load(seed: State, seedPrint: string): { state: State; fromStorage: boolean } {
+const fresh = (seed: Seed): State => ({ ...structuredClone(seed), uploads: {} });
+
+function load(seed: Seed, seedPrint: string): { state: State; fromStorage: boolean } {
   try {
     const saved = readSaved(localStorage.getItem(STORAGE_KEY), seedPrint);
     if (saved) return { state: saved, fromStorage: true };
@@ -47,13 +57,13 @@ function load(seed: State, seedPrint: string): { state: State; fromStorage: bool
   } catch {
     // Storage blocked: the demo still works until the page is reloaded.
   }
-  return { state: structuredClone(seed), fromStorage: false };
+  return { state: fresh(seed), fromStorage: false };
 }
 
 const emptyRating: Rating = { self: null, manager: null, agreed: null, note: "" };
 const today = () => new Date().toISOString().slice(0, 10);
 
-export function useStore(seed: State) {
+export function useStore(seed: Seed) {
   const [seedPrint] = useState(() => fingerprint(seed));
   const [initial] = useState(() => load(seed, seedPrint));
   const [state, setState] = useState<State>(initial.state);
@@ -96,14 +106,48 @@ export function useStore(seed: State) {
     [change],
   );
 
-  /** Self-check of the employee before the talk: fills the self-rating without starting the conversation. */
+  /**
+   * Self-check of the employee: fills the self-rating without starting the conversation.
+   * A self-check that starts here is private until the employee shares it.
+   */
   const setSelf = useCallback(
-    (employeeId: string, competencyId: string, patch: { self?: number | null; selfNote?: string; selfAnswers?: (number | null)[] }) => {
+    (employeeId: string, competencyId: string, patch: { self?: number | null; selfNote?: string; selfAnswers?: (number | null)[]; selfTask?: string }) => {
       change((prev) => {
-        const current = prev.assessments[employeeId] ?? { status: "open" as const, date: null, ratings: {} };
+        const current = prev.assessments[employeeId] ?? { status: "open" as const, date: null, ratings: {}, selfShared: false };
         const rating = { ...emptyRating, ...current.ratings[competencyId], ...patch };
         return { ...prev, assessments: { ...prev.assessments, [employeeId]: { ...current, ratings: { ...current.ratings, [competencyId]: rating } } } };
       });
+    },
+    [change],
+  );
+
+  /** The employee shares the self-check with the manager, or takes it back. */
+  const shareSelf = useCallback(
+    (employeeId: string, shared: boolean) => {
+      change((prev) => {
+        const current = prev.assessments[employeeId];
+        if (!current) return prev;
+        return { ...prev, assessments: { ...prev.assessments, [employeeId]: { ...current, selfShared: shared } } };
+      });
+    },
+    [change],
+  );
+
+  /** HR applies the tasks read from a job description to a job family. */
+  const addUpload = useCallback(
+    (familyId: string, tasks: TaskChange[]) => {
+      change((prev) => {
+        const existing = prev.uploads[familyId] ?? [];
+        const added = tasks.map((task, i) => ({ ...task, id: `${familyId}-upload-${existing.length + i + 1}` }));
+        return { ...prev, uploads: { ...prev.uploads, [familyId]: [...existing, ...added] } };
+      });
+    },
+    [change],
+  );
+
+  const clearUploads = useCallback(
+    (familyId: string) => {
+      change((prev) => ({ ...prev, uploads: { ...prev.uploads, [familyId]: [] } }));
     },
     [change],
   );
@@ -171,10 +215,10 @@ export function useStore(seed: State) {
       // Nothing stored, nothing to remove.
     }
     setDirty(false);
-    setState(structuredClone(seed));
+    setState(fresh(seed));
   }, [seed]);
 
-  return { ...state, setRating, setSelf, setFocus, complete, assign, setAssignmentStatus, unassign, reset };
+  return { ...state, setRating, setSelf, shareSelf, setFocus, complete, assign, setAssignmentStatus, unassign, addUpload, clearUploads, reset };
 }
 
 export type Store = ReturnType<typeof useStore>;

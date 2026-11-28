@@ -2,7 +2,9 @@
 
 Clickable prototype from the WU Industry Lab project "Closing the AI Talent Gap in the Energy Industry" with VERBUND (deliverable D5).
 
-It shows one idea: **one competency conversation per person and year, as part of the yearly appraisal talk, and what the company learns from all of them.** An employee prepares with a self-check, manager and employee agree on a level per AI competency against the target profile of the job family, choose at most two focus areas and a measure, and HR sees the totals without seeing a single person.
+It shows one idea: **one competency conversation per person and year, as part of the yearly appraisal talk, and what the company learns from all of them.** An employee does a self-check with cases and written tasks from the job, manager and employee agree on a level per competency against the target profile of the job family, choose at most two focus areas and a measure, and HR sees the totals without seeing a single person.
+
+The logic behind it, from the research to a figure in the tool: findings from interviews and desk research → the common tasks of a job family today and in 2030 → the level each task needs per competency → the target profile (the highest level any task asks for, set in advance) → the gap to the level agreed in the conversation → measures that build the competencies with the largest gaps.
 
 > A prototype with invented data; the AI competencies follow VERBUND's competency model, the rest of the content is placeholder. Not approved for productive use (see [From prototype to productive use](#from-prototype-to-productive-use)).
 
@@ -29,9 +31,25 @@ Three roles, chosen in the "View as" menu at the top right. The switch is provis
 
 | Role | Pages | What they are for |
 |---|---|---|
-| Employee | My profile, Self-check, My data | Prepare the talk in five minutes; see the agreed levels and the plan; see what is stored and who sees it |
-| Manager | Dashboard, Team (as list or board), record of a person with the guided conversation, Target profiles | Know what to do next; hold the conversation step by step; keep the development plan |
-| HR | Dashboard, Gap analysis, Teams, Competency model (tabs: job families, competencies, measures), Plan (tabs: roadmap, governance) | See where the organisation stands today and against 2030, where to act first, how the model is kept current |
+| Employee | My profile, Self-check, My data | Find out where one stands with 9 to 11 short cases and 3 to 4 written tasks from the job (36 minutes, never more than 40); get an own result with ideas and course links; decide whether to share it; see the agreed levels, the plan and how the own job changes until 2030; see what is stored and who sees it |
+| Manager | Dashboard, Team (as list or board), record of a person with the guided conversation, Target profiles | Know what to do next; hold the conversation step by step, read the written work sample of the employee and rate it; keep the development plan |
+| HR | Dashboard, Gap analysis (tabs: competency gaps, changing tasks, personas), Teams (tabs: teams, skills by unit, roles), Competency model (tabs: job families, competencies, measures, upload), Plan (tabs: roadmap, governance) | See where the organisation stands today and how much of the 2030 profiles is reached, how tasks change, where to act first, which roles rest on one person, how the model is kept current |
+
+What came in after the jour fixe with VERBUND of 24.11.2026 and the feedback of 27.11.2026:
+
+| Wish | In the prototype |
+|---|---|
+| A deeper assessment, case-based instead of a self-rating, 40 minutes at most | The self-check mixes two kinds of steps. A case is a situation from the job and four ways to handle it, one per level, in mixed order and without the level shown; some are written per job family. The level of a competency is the highest one reached in at least two thirds of its cases (`src/lib/scoring.ts`). A written task asks what the person really did ("Take an AI result you used ... how did you check it?"); nothing rates the text automatically. In the conversation the manager sees it as a work sample with what to look for per level, and rates it. A test keeps every family under 40 minutes |
+| The self-check can stay with the employee | The result is shown to the employee at once and is private. The manager sees it only after "Share with ..."; the conversation works either way |
+| Measures only as a hint and a link, no e-learning inside | Every training measure names where to start: entries of VERBUND's own catalogue (assumed to exist) and links to public courses and videos. They appear in the self-check result, in the profile and in the list of measures |
+| Use the measures the team worked out | The measures follow the interviews: starter training before licences, review of AI output, use cases from the own job, leaders go first, champions and AI café, planned time to try, upskilling before hiring |
+| Gap analysis beyond AI: how tasks change, AI and general competencies | "Changing tasks" shows per job family the common tasks today and in 2030 and what they need; three general competencies are part of the profiles, the self-check and all figures |
+| The target state is set in advance and tracked | The target profile is calculated from the tasks (a test checks it). The HR dashboard shows the share of the 2030 profiles that is reached and the planned path to 2030; employee and personas show the same share |
+| No current-state data: personas | "Personas" shows a beginner, an advanced user and an expert per job family with their gaps and fitting measures, marked as simulated. The same personas can fill the self-check in a demo |
+| Skills dashboard per job unit, overview of all roles | "Skills by unit" (unit by competency) and "Roles" (holders per role, roles held by one person, required profile) |
+| HR uploads job descriptions, profiles adapt | "Upload": paste a job description or choose a text file, review the tasks and levels read from it, apply. The target profile of the family is raised where the text asks for more. Mocked with keyword rules |
+| A stronger logic behind the front end | The rules are functions with tests: level from cases, target from tasks, share of the 2030 profile, ranking of measures, upload analysis |
+| Findings must feed the logic of the tool | The chain from findings to measures is shown on "Changing tasks"; tasks, levels and measures sit in one content file |
 
 The manager's record of a person shows where the self-check and the manager's view were apart, on the level scale and linked to that step of the conversation; the team dashboard shows per competency who has reached the 2030 target and can help others, and flags a skill held by only one person. Both ideas come from Abdullah's prototype "Team skills compass" in the student team.
 
@@ -44,7 +62,7 @@ Design principles: every page opens with a sentence that states the result; leve
 | Way | How |
 |---|---|
 | Link | https://clemenshoeller.github.io/verbund-ilab-prototype/ opens the current version in the browser. Published by GitHub Pages on every push to `main` |
-| One file | `npm run build:single` writes `dist-single/ai-competency-check.html`, about 400 kB. Send it by mail or chat; a double click opens it in the browser, without a server and offline |
+| One file | `npm run build:single` writes `dist-single/ai-competency-check.html`, about 500 kB. Send it by mail or chat; a double click opens it in the browser, without a server and offline |
 
 Both hold only the built app with the invented data. What someone enters stays in that person's browser.
 
@@ -55,7 +73,7 @@ Requires Node.js 22.12 or newer.
 ```bash
 npm install
 npm run dev        # http://localhost:5173 (next free port if taken)
-npm test           # 72 tests
+npm test           # 115 tests
 npm run lint       # code and accessibility rules
 npm run build      # production build in dist/
 npm run build:single   # the same as one HTML file in dist-single/
@@ -76,24 +94,27 @@ On OpenShift: `deploy/openshift.yaml` holds a Deployment, a Service and a Route.
 
 | File | Contains |
 |---|---|
-| `src/data/content.json` | Levels, competencies, questions, examples, job families, target profiles, measures, roadmap, governance |
+| `src/data/content.json` | Levels, competencies with their cases, questions and examples, job families with their tasks, target profiles and personas, measures with course links, roadmap, governance |
 | `src/data/org.json` | Sample organisation: 9 teams, 85 invented employees, their ratings and agreed measures |
 
-Edit `content.json`, save, and the running app updates. `org.json` is generated: change `scripts/generate-sample-org.mjs` and run `npm run sample-data` (same seed, same file). `npm test` checks that profiles and measures only point to existing competencies and levels.
+Edit `content.json`, save, and the running app updates. `org.json` is generated: change `scripts/generate-sample-org.mjs` and run `npm run sample-data` (same seed, same file). `npm test` checks that profiles and measures only point to existing competencies and levels, that every target profile equals what its tasks need, that every case has one answer per level, that every written task says what to look for at each level, and that no self-check takes more than 40 minutes.
 
 ## Functional, mocked, out of scope
 
 | Part | State |
 |---|---|
 | Navigation, search, lists with filters and sorting, records, preview panel, pipeline | Functional |
-| Self-check, guided conversation, focus areas, measures with status | Functional; saved in the browser only (`localStorage`), deleted by "Reset demo data" |
-| Key figures, trend, heatmap, prioritised gaps, use of measures | Functional; calculated from the ratings (`src/lib/metrics.ts`) |
+| Self-check with cases and written tasks, own result, sharing, guided conversation with the written work sample, focus areas, measures with status | Functional; saved in the browser only (`localStorage`), deleted by "Reset demo data" |
+| Key figures, trend, heatmap, prioritised gaps, use of measures, share of the 2030 profile, skills by unit, roles | Functional; calculated from the ratings (`src/lib/metrics.ts`, `src/lib/scoring.ts`) |
+| Tasks today and in 2030, target profiles that follow from them, personas | Functional; the tasks, levels and personas are a draft from the team's research |
+| Course links | Functional; links to public courses and videos as examples. Entries of VERBUND's own catalogue are **assumed** |
+| Upload of a job description | **Mocked**: keyword rules in the browser stand in for a language model (`src/lib/jobprofile.ts`); text files only; nothing leaves the browser |
 | Switch between employee, manager and HR | **Provisional**: chosen by hand |
 | Backend and database | **Mocked**: `src/api/dataSource.ts` returns two JSON files |
 | AI competencies: names, groups, definitions, behaviour anchors, reasons | From VERBUND's internal concept "Kompetenzmodell goes AI" (15.10.2026, dimension "Miteinander \| AI nutzen"), translated by the student team; use in the prototype and this repository approved by VERBUND (22.11.2026) |
-| Levels, self-check and conversation questions, job examples, target profiles, measures | **Placeholder** worded by the student team; job-family-specific competencies follow from the team's research |
+| Levels, cases, written tasks, conversation questions, job examples, general competencies, tasks, target profiles, personas, measures | **Draft** by the student team from its interviews and desk research. VERBUND's own general competencies were not available to the team; three general competencies stand in for them |
 | Roadmap and governance | **Draft** texts, a first proposal of the student team |
-| Employees, teams, ratings | **Synthetic**, generated with a fixed seed; all persons are invented |
+| Employees, teams, ratings | **Simulated**, generated with a fixed seed; all persons are invented. Every figure shows how the analysis works and is no finding about VERBUND |
 | Login, roles, access control | **Out of scope** |
 | Saving on a server, several users, correction of own data | **Out of scope** |
 | Connection to HR systems, learning systems or any VERBUND system | **Out of scope** |
@@ -112,11 +133,13 @@ src/
   lib/gap.ts           gaps and status of one person
   lib/metrics.ts       totals, trend, heatmap, priorities
   lib/workflow.ts      stages, next steps, use of measures
-  lib/store.ts         ratings and measures in the browser
+  lib/scoring.ts       level from the cases, share of the 2030 profile, path to 2030, ranking of measures
+  lib/jobprofile.ts    target profile from tasks; reading a job description (mocked)
+  lib/store.ts         ratings, measures and uploads in the browser
   lib/router.ts        hash routing, needs no server rules
   pages/me/            employee: Me, SelfCheck
   pages/team/          manager: Home, Pipeline, People, Person, Conversation
-  pages/hr/            HR: Home, GapAnalysis, Teams, Competencies, Plans
+  pages/hr/            HR: Home, GapAnalysis, JobChange (tasks, personas), Teams, Units (skills, roles), Competencies, Upload, Plans
   pages/               Start, Profiles, About
   components/          search, View-as menu, preview drawer, KPI tile, level path, icons, ...
   styles.css           one stylesheet with the design tokens at the top
@@ -128,7 +151,7 @@ deploy/nginx.conf, deploy/openshift.yaml
 Dockerfile, .github/workflows/ci.yml (checks), .github/workflows/pages.yml (demo link), biome.json (lint rules)
 ```
 
-Data model (details in `src/types.ts` and on the page "Data model and status"): Competency, Job family with its target profile, Team, Employee, Assessment with Ratings (self, manager, agreed, note) and focus areas, Measure, Assignment of a measure to a person.
+Data model (details in `src/types.ts` and on the page "Data model and status"): Competency with its cases, Job family with its tasks, target profile and personas, Team, Employee, Assessment with Ratings (answers to the cases, self-check level, text of the written task, manager, agreed, note), focus areas and whether the self-check is shared, Measure with course links, Assignment of a measure to a person.
 
 ### Deviation from the preferred stack
 
@@ -155,7 +178,7 @@ Edits made in the app are saved in the browser together with a fingerprint of th
 ## Data and security
 
 - No real VERBUND data, accounts, systems or interfaces. No personal data of real persons.
-- In mock mode the app makes no network requests after loading; ratings never leave the browser.
+- In mock mode the app makes no network requests after loading; ratings never leave the browser. Course links open the provider's page in a new tab when clicked; an uploaded job description is read in the browser and sent nowhere.
 - Free text is limited to 300 characters and shown as text (React escapes it). The code uses no `innerHTML`, no `eval` and writes nothing to the console.
 - A page that fails shows a plain message without technical detail; if the whole app fails, the message offers to reset the demo data and reload.
 - The demo link is public but asks search engines not to list it (`noindex`). GitHub Pages does not send the security headers named in the next point; they belong to the container.
@@ -187,7 +210,7 @@ What follows for the handover:
 - Whether the team's notes from talks with VERBUND may be processed in an externally hosted AI service is to be confirmed with VERBUND. No VERBUND credentials, systems or data sets were entered.
 - The training setting of the Claude account should be checked and, if it is on, switched off for further work on the project (claude.ai → Settings → Privacy).
 
-**Use of AI.** All code, the placeholder content and this documentation were written with Claude Code on instructions of the student team. Reviewed by: type check, lint with accessibility rules, 72 automated tests including an accessibility check with axe-core, dependency audit, a scan of the git history for secrets, click-throughs in the browser at desktop and phone width, and a second, independent review pass by an AI agent that had not written the code (see below). A line-by-line review by a human developer has not taken place.
+**Use of AI.** All code, the placeholder content and this documentation were written with Claude Code on instructions of the student team. Reviewed by: type check, lint with accessibility rules, 115 automated tests including an accessibility check with axe-core, dependency audit, a scan of the git history for secrets, click-throughs in the browser at desktop and phone width, and a second, independent review pass by an AI agent that had not written the code (see below). A line-by-line review by a human developer has not taken place.
 
 **Findings of the independent AI review (16.11.2026), all fixed and covered by tests:** the HR role showed figures that rested on one or two managers of a team; broken saved data could blank the app with no way back; saved edits could shadow new sample data; editing a note reopened a completed conversation; focus areas could lock after a level was raised; organisation-wide figures had no minimum group size; settings could not be passed to the container build. Accessibility: focus was lost on every page change, search results could not be reached by keyboard, the preview was not really modal, clickable rows were not announced as controls, the role menu had no keyboard support. Not acted on: the number of nginx worker processes under a small memory limit, judged a low risk.
 
@@ -225,22 +248,25 @@ Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-
 
 ## Tests
 
-`npm test` runs 72 tests.
+`npm test` runs 115 tests.
 
-- **41 unit tests**: gaps and status in words, focus areas, totals and trend, heatmap, prioritisation, minimum group size, stages and next steps, loading of saved data, consistency of the content files.
-- **2 accessibility tests** (`src/a11y.test.tsx`, axe-core): no violations on 25 pages, nor with the role list, the search results or a preview open. Colour contrast is excluded because the simulated browser cannot compute it.
-- **29 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as list; the search with arrow keys; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from self-check through the conversation to the changed HR totals; the list of differences in view, who on the team can help others, and that closing the preview does not move the page; the slimmed menus of manager and HR with their tabs; the definition and behaviour anchors of a competency for HR; reload and reset; and one test for each finding of the code review.
+- **75 unit tests**: gaps and status in words, focus areas, totals and trend, heatmap, prioritisation, minimum group size, stages and next steps, loading of saved data, consistency of the content files; since 28.11.2026 also the level from the cases, the written tasks and what to look for in them, the time limit of the self-check, the target profile from the tasks, the share of the 2030 profile and the path to 2030, the personas, the ranking of measures, skills by unit and roles, and the reading of job descriptions in English and German.
+- **2 accessibility tests** (`src/a11y.test.tsx`, axe-core): no violations on 33 pages, nor with the role list, the search results or a preview open. Colour contrast is excluded because the simulated browser cannot compute it.
+- **38 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as list; the search with arrow keys; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from the cases and written tasks of the self-check, its private result with course links, sharing it, the work sample the manager reads, through the conversation to the changed HR totals; that switching a tab inside a page keeps the place on the page; the self-check filled as a persona; changing tasks, personas, skills by unit and roles for HR, never with a person's name; a job description that raises a target profile and the reset that takes it back; the path to 2030; the list of differences in view, who on the team can help others, and that closing the preview does not move the page; the slimmed menus of manager and HR with their tabs; the definition and behaviour anchors of a competency for HR; reload and reset; and one test for each finding of the code review.
 
 A second workflow (`.github/workflows/pages.yml`) runs the tests, builds the app and publishes it at the demo link on every push to `main`.
 
 The CI workflow (`.github/workflows/ci.yml`) runs on every push to `main` and on pull requests, in four jobs: lint, tests, build and `npm audit` (fails from severity high); the container build with a start as an arbitrary non-root user, the health endpoint, the security and cache headers and a second build with settings passed in; a rollout of the manifests on a Kubernetes cluster; a scan of the whole git history for secrets (gitleaks). After a transfer to a GitHub organisation the gitleaks action needs a licence key, or has to be replaced by the gitleaks command line.
 
-Manual test: as employee do the self-check; as manager open that person's conversation, agree all levels, choose a focus and a measure, complete it; check that the employee's profile and the HR figures changed; reset the demo data.
+Manual test: as employee do the self-check (or use "Answer as ..." on its first page) and share the result; as manager open that person's conversation, agree all levels, choose a focus and a measure, complete it; check that the employee's profile and the HR figures changed; reset the demo data.
 
 ## Assumptions
 
 - The check is part of the existing yearly appraisal talk and takes about twenty minutes.
-- Six AI competencies in three groups, three described levels plus "not yet", one target profile per job family for today and for 2030.
+- Six AI competencies in three groups and three general competencies, three described levels plus "not yet", one target profile per job family for today and for 2030.
+- The target profile of a job family is the highest level any of its tasks needs; it is set before anyone is assessed.
+- The self-check belongs to the employee and takes 40 minutes at most; a level counts when at least two thirds of the cases of a competency show it. Written tasks are rated by the manager, never by the tool.
+- VERBUND offers the measures named here; the learning itself happens in its learning offer or at the provider, not in the tool.
 - Three focus job families and managers as a separate group, as agreed in the project.
 - Levels are agreed by two people; no AI rates anyone.
 - The data serves development only and is not used for pay or appraisal.
@@ -250,11 +276,14 @@ Manual test: as employee do the self-check; as manager open that person's conver
 ## Known limitations
 
 - No backend, no login; data stays in one browser and does not sync between users.
-- The six AI competencies follow VERBUND's competency model; levels, questions, target profiles and measures are student-team drafts and will follow the target profiles of the project, which are not final yet.
-- The sample ratings are random around today's level, so the figures show how the screens work and are no finding.
+- The six AI competencies follow VERBUND's competency model; levels, cases, general competencies, tasks, target profiles, personas and measures are student-team drafts and will follow the results of the project, which are not final yet.
+- The sample ratings are random around today's level, so the figures show how the screens work and are no finding. There is no current-state data for VERBUND.
+- The cases and written tasks are written by the team and not tested with employees. A case with fixed answers shows what a person says they would do, not what they do; the written tasks ask for what was really done, but how a manager rates such a text depends on the manager. Whether the levels are valid and consistent between managers would have to be checked in a pilot.
+- The upload reads text with keyword rules and misreads lines a person would understand; it can only raise the target of a competency that is already in the profile. Uploaded tasks apply to the whole job family, not to one role.
+- Course links point to public pages that can change or disappear; they were opened on 28.11.2026.
 - Gaps are ordered by urgency and size; strategic relevance is not weighted.
 - Click and accessibility tests run in a simulated browser; there are no tests in real browsers, no visual regression tests and no check of colour contrast.
-- The linter reports no errors and about 80 warnings, most of them places where the code assumes that a record exists (`!`) and the order of rules in the stylesheet.
+- The linter reports no errors and about 125 warnings, most of them places where the code assumes that a record exists (`!`) and the order of rules in the stylesheet.
 - Cards in the pipeline cannot be dragged; they move when the state of the person changes.
 - The look follows VERBUND's public material (company presentation, verbund.com, the V-Go app). VERBUND's fonts are licensed and replaced by the fallbacks its website names; no logo or other brand asset is included.
 

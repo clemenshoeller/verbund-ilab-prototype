@@ -1,5 +1,5 @@
 {
-  "_note": "AI competencies, groups, definitions, behaviour anchors and the reasons why follow VERBUND's internal concept 'Kompetenzmodell goes AI' (15.10.2026, dimension 'Miteinander | AI nutzen'), translated into English by the student team; use approved by VERBUND (22.11.2026). The three levels, self-check questions, conversation questions, job examples, target profiles and measures are student-team drafts. Job-family-specific competencies follow from the team's research.",
+  "_note": "AI competencies, groups, definitions, behaviour anchors and the reasons why follow VERBUND's internal concept 'Kompetenzmodell goes AI' (15.10.2026, dimension 'Miteinander | AI nutzen'), translated into English by the student team; use approved by VERBUND (22.11.2026). Everything else is a student-team draft built on the team's interviews and desk research: the three levels, the cases and written tasks of the self-check, the conversation questions, the job examples, the three general competencies (VERBUND's own general competencies were not available to the team), the tasks today and in 2030 per job family, the target profiles that follow from them, the personas and the measures. Course links are examples; entries of VERBUND's catalogue are assumed to exist.",
   "levels": [
     {
       "value": 1,
@@ -32,6 +32,11 @@
       "id": "lead",
       "name": "Leadership competencies",
       "note": "For managers"
+    },
+    {
+      "id": "general",
+      "name": "General competencies",
+      "note": "For everyone: what the changing job needs beyond AI"
     }
   ],
   "competencies": [
@@ -75,24 +80,161 @@
         "D": "Uses only released tools for plant data and maintenance reports.",
         "M": "Makes sure the team knows the rules and where to ask."
       },
-      "selfCheck": [
+      "cases": [
         {
-          "question": "How do you use AI tools in your daily work?",
-          "answers": [
-            "I hardly use AI tools in my work so far.",
-            "I use approved AI tools now and then for simple tasks.",
-            "I use AI tools regularly, where they make me more productive.",
-            "I use AI as a matter of course and show colleagues how to use it well."
+          "id": "safe-1",
+          "title": "A quick summary",
+          "situation": "You have to summarise a long document for a meeting in an hour. It contains names of customers and contract figures. A free AI chatbot on the internet would do it in seconds.",
+          "options": [
+            {
+              "text": "I do not use the free chatbot for this. I know that such data may only go into approved tools.",
+              "level": 1
+            },
+            {
+              "text": "I paste the document into the chatbot; the summary is only for internal use anyway.",
+              "level": 0
+            },
+            {
+              "text": "I use the approved company tool, leave out what it does not need, and check the summary before I pass it on.",
+              "level": 2
+            },
+            {
+              "text": "I use the approved tool, and because the question comes up often I write down for my team which data may go where.",
+              "level": 3
+            }
+          ],
+          "minutes": 2
+        },
+        {
+          "id": "safe-A",
+          "title": "Code in the assistant",
+          "situation": "You are fixing a bug in a system that handles plant data. The coding assistant would help more if you gave it the whole module, including the configuration file with access data.",
+          "options": [
+            {
+              "text": "I give it everything; the faster the bug is fixed, the better.",
+              "level": 0
+            },
+            {
+              "text": "I give it the code it needs, remove access data and anything confidential first, and use only the released assistant.",
+              "level": 2
+            },
+            {
+              "text": "I am not sure what is allowed, so I ask before I paste anything.",
+              "level": 1
+            },
+            {
+              "text": "I remove secrets first, and I suggest a rule or an automatic check for the team so that access data cannot end up in prompts.",
+              "level": 3
+            }
+          ],
+          "minutes": 3,
+          "families": [
+            "A"
           ]
         },
         {
-          "question": "How do you decide what you may enter, and when AI is the right choice?",
-          "answers": [
-            "I am not sure what I may enter into AI tools.",
-            "I know the rules on data protection, confidentiality and security for AI tools.",
-            "I follow the rules without looking them up and decide consciously when to use AI and when not.",
-            "I know the strengths and limits of our tools well, and colleagues ask me about unclear cases."
+          "id": "safe-B",
+          "title": "A contract to compare",
+          "situation": "A colleague asks you to compare two supplier contracts with an AI tool. They contain prices and personal data of contact persons.",
+          "options": [
+            {
+              "text": "I know that contracts and personal data do not belong in a public chatbot, and I say so.",
+              "level": 1
+            },
+            {
+              "text": "I use the approved tool, and I prepare a short checklist for the team on what to remove from contracts before using AI.",
+              "level": 3
+            },
+            {
+              "text": "I upload both contracts to the tool that gives the best comparison.",
+              "level": 0
+            },
+            {
+              "text": "I use the approved tool, remove the personal data that is not needed, and check the comparison against the contracts.",
+              "level": 2
+            }
+          ],
+          "minutes": 3,
+          "families": [
+            "B"
           ]
+        },
+        {
+          "id": "safe-D",
+          "title": "A photo from the plant",
+          "situation": "On site you find damage you cannot classify. An AI app on your private phone could analyse a photo. The photo would show parts of the plant and its labelling.",
+          "options": [
+            {
+              "text": "I use only the released tool for plant data, or I send the photo to the responsible engineer the usual way.",
+              "level": 2
+            },
+            {
+              "text": "I use the app; it is the fastest way to get an answer.",
+              "level": 0
+            },
+            {
+              "text": "I do not use the private app, because plant data may only go into released tools.",
+              "level": 1
+            },
+            {
+              "text": "I use the released way, and I report that we need a released tool for such cases, so that nobody uses private apps.",
+              "level": 3
+            }
+          ],
+          "minutes": 3,
+          "families": [
+            "D"
+          ]
+        },
+        {
+          "id": "safe-M",
+          "title": "A tool the team likes",
+          "situation": "Two people in your team use a new AI tool they found themselves. It saves them time. It is not on the list of approved tools.",
+          "options": [
+            {
+              "text": "I point them to the rules and the list of approved tools.",
+              "level": 1
+            },
+            {
+              "text": "I let them continue; the results are what counts.",
+              "level": 0
+            },
+            {
+              "text": "I stop the use for company data, have the tool checked the official way, and make sure the whole team knows the rules and where to ask.",
+              "level": 3
+            },
+            {
+              "text": "I clarify with them which data they entered, stop the use for company data and ask the responsible unit whether the tool can be approved.",
+              "level": 2
+            }
+          ],
+          "minutes": 3,
+          "families": [
+            "M"
+          ]
+        }
+      ],
+      "tasks": [
+        {
+          "id": "task-safe",
+          "families": [
+            "A",
+            "B",
+            "D"
+          ],
+          "title": "A time you decided against AI",
+          "task": "Think of a situation at work in which you did not use AI, or used it differently, because of the data or the rules.",
+          "prompts": [
+            "What was the situation?",
+            "What made you decide?",
+            "What did you do instead?"
+          ],
+          "lookFor": [
+            "Names the rule that applied.",
+            "Decided on the own judgement in an unclear case and found a way that works.",
+            "Passed the case on: advised colleagues or suggested a change to the rules."
+          ],
+          "minutes": 4
         }
       ]
     },
@@ -137,24 +279,156 @@
         "D": "Compares an AI fault diagnosis with measurements and own experience.",
         "M": "Asks how a result was checked before deciding on it."
       },
-      "selfCheck": [
+      "cases": [
         {
-          "question": "How do you check an AI result before you use it?",
-          "answers": [
-            "I mostly use AI results as they are.",
-            "I check whether the result is plausible and whether the facts that matter are right.",
-            "I have my own checks for AI results and use my expertise to judge them.",
-            "I have set up checks that others use, and I show them how to judge AI results."
+          "id": "check-2",
+          "title": "A mistake after the fact",
+          "situation": "A colleague finds an error in a text you sent out last week. The passage came from an AI tool.",
+          "options": [
+            {
+              "text": "I correct it. It was my text, so it is my responsibility, even if AI wrote the passage.",
+              "level": 1
+            },
+            {
+              "text": "I correct it, inform the recipients, and bring the case into the team so that we agree on how AI passages are checked and marked.",
+              "level": 3
+            },
+            {
+              "text": "I explain that the error came from the AI tool.",
+              "level": 0
+            },
+            {
+              "text": "I correct it, inform the recipients, and from now on check such passages against the source before sending.",
+              "level": 2
+            }
+          ],
+          "minutes": 2
+        },
+        {
+          "id": "check-A",
+          "title": "Generated code in review",
+          "situation": "A colleague’s change contains 300 lines of generated code. All automated tests pass. You are the reviewer.",
+          "options": [
+            {
+              "text": "I review it like any other code, read the logic, and add tests for the edge cases the generated tests miss.",
+              "level": 2
+            },
+            {
+              "text": "The tests pass, so I approve.",
+              "level": 0
+            },
+            {
+              "text": "I review it fully, and I propose review rules for generated code that the team adopts.",
+              "level": 3
+            },
+            {
+              "text": "I look through it and ask the colleague whether they have checked it themselves.",
+              "level": 1
+            }
+          ],
+          "minutes": 3,
+          "families": [
+            "A"
           ]
         },
         {
-          "question": "How do you handle responsibility for AI-generated content?",
-          "answers": [
-            "I have not thought about this yet.",
-            "I know that I am responsible for what I pass on, even if AI wrote it.",
-            "I disclose AI-generated content where it matters and stand by what I use.",
-            "I help my team agree on when and how AI content is disclosed."
+          "id": "check-B",
+          "title": "A report draft with figures",
+          "situation": "The assistant has drafted the monthly report, with comments on the deviations. The figures look reasonable.",
+          "options": [
+            {
+              "text": "I compare the most important figures with the system before I send it.",
+              "level": 1
+            },
+            {
+              "text": "I check all figures against the source data and rewrite the comments I cannot confirm.",
+              "level": 2
+            },
+            {
+              "text": "I send it; the assistant takes the figures from the system anyway.",
+              "level": 0
+            },
+            {
+              "text": "I check it against the source data, and I have defined for the team which checks a report needs before it goes out.",
+              "level": 3
+            }
+          ],
+          "minutes": 3,
+          "families": [
+            "B"
           ]
+        },
+        {
+          "id": "check-D",
+          "title": "A fault diagnosis",
+          "situation": "The maintenance tool suggests a defective bearing as the cause of a vibration alarm and recommends replacing it.",
+          "options": [
+            {
+              "text": "I check the suggestion against measurements and history, and I report back when it was wrong, so that the tool and the team learn from it.",
+              "level": 3
+            },
+            {
+              "text": "I treat the suggestion as a hint and have a look at the plant before anything is ordered.",
+              "level": 1
+            },
+            {
+              "text": "I order the replacement; the tool has the data.",
+              "level": 0
+            },
+            {
+              "text": "I compare the suggestion with the measurements and my experience, and only then decide.",
+              "level": 2
+            }
+          ],
+          "minutes": 3,
+          "families": [
+            "D"
+          ]
+        },
+        {
+          "id": "check-M",
+          "title": "A proposal on your desk",
+          "situation": "Your team gives you a proposal for a decision. You know that large parts were prepared with AI.",
+          "options": [
+            {
+              "text": "I read it more carefully than usual.",
+              "level": 1
+            },
+            {
+              "text": "I ask how it was checked, and I have agreed with the team how AI-supported work is checked and marked before it reaches me.",
+              "level": 3
+            },
+            {
+              "text": "I decide on it as on any other proposal; how it was made does not matter.",
+              "level": 0
+            },
+            {
+              "text": "I ask how the central statements were checked and decide only when that is clear.",
+              "level": 2
+            }
+          ],
+          "minutes": 3,
+          "families": [
+            "M"
+          ]
+        }
+      ],
+      "tasks": [
+        {
+          "id": "task-check",
+          "title": "An AI result you used",
+          "task": "Take an AI result you used at work in the last weeks. If you have none, produce one now with the approved tool for a task of yours.",
+          "prompts": [
+            "What was the task?",
+            "How did you check the result?",
+            "What did you change, and what did you pass on?"
+          ],
+          "lookFor": [
+            "Read the result and checked whether it is plausible.",
+            "Describes concrete checks against a source, the figures or the own expertise, and what was corrected.",
+            "Describes a routine or checklist that others use, or how the case changed the way the team checks."
+          ],
+          "minutes": 4
         }
       ]
     },
@@ -201,24 +475,53 @@
         "D": "Suggests where inspection data could point to maintenance needs earlier.",
         "M": "Collects ideas from the team and brings the best ones forward."
       },
-      "selfCheck": [
+      "cases": [
         {
-          "question": "Where in your work could AI create real value?",
-          "answers": [
-            "I cannot name a task yet.",
-            "I can name some tasks in my job where AI could help.",
-            "I look at whole processes and can say where AI adds value and what it would take.",
-            "I bring AI into improvement and innovation work in our unit as a matter of course."
-          ]
-        },
+          "id": "spot-2",
+          "title": "An idea in the team meeting",
+          "situation": "A colleague suggests using AI for a task in your area. You doubt that it is worth the effort.",
+          "options": [
+            {
+              "text": "I estimate benefit, effort and feasibility together with the colleague, and also look at simpler alternatives.",
+              "level": 2
+            },
+            {
+              "text": "I assess it with a fixed set of criteria we use for all AI ideas, so that the decision can be followed.",
+              "level": 3
+            },
+            {
+              "text": "I leave the assessment to others; I cannot judge AI ideas.",
+              "level": 0
+            },
+            {
+              "text": "I say what speaks for and against it from my experience.",
+              "level": 1
+            }
+          ],
+          "minutes": 2
+        }
+      ],
+      "tasks": [
         {
-          "question": "What do you do with an idea for using AI?",
-          "answers": [
-            "I have not had an idea like this yet.",
-            "I mention it to my manager or my team.",
-            "I turn it into a concrete proposal with benefit, effort and feasibility.",
-            "I follow new AI developments and translate them into use cases for our area."
-          ]
+          "id": "task-spot",
+          "families": [
+            "A",
+            "B",
+            "D"
+          ],
+          "title": "A task AI could change",
+          "task": "Pick one recurring task of your job.",
+          "prompts": [
+            "What is the task, and how much time does it take?",
+            "Where would AI help, and what would it need?",
+            "What could go wrong, and is there a simpler way?"
+          ],
+          "lookFor": [
+            "Names a task and the part AI could support.",
+            "Describes the whole process, the benefit, the data needed and the risks.",
+            "Compares it with other tasks of the unit and says how the idea would be decided and brought forward."
+          ],
+          "minutes": 4
         }
       ]
     },
@@ -261,24 +564,53 @@
         "D": "Configures an assistant for standard maintenance documentation.",
         "M": "Makes sure a working solution is handed over and reused in other teams."
       },
-      "selfCheck": [
+      "cases": [
         {
-          "question": "Have you put an AI use case into practice?",
-          "answers": [
-            "Not yet.",
-            "I use AI solutions and templates that others have built.",
-            "I have built a solution, myself or with technical experts, and improved it until it worked reliably.",
-            "I choose and combine tools for use cases across several teams."
-          ]
-        },
+          "id": "build-2",
+          "title": "From pilot to daily use",
+          "situation": "A small AI solution works well for you and one colleague. Other teams are interested.",
+          "options": [
+            {
+              "text": "I adapt it to their needs with them, document it, and clarify who runs and maintains it.",
+              "level": 3
+            },
+            {
+              "text": "I have not built or set up an AI solution so far.",
+              "level": 0
+            },
+            {
+              "text": "I improve it until it works reliably and show the other teams how to use it.",
+              "level": 2
+            },
+            {
+              "text": "I point them to the person who built it; I only use it.",
+              "level": 1
+            }
+          ],
+          "minutes": 2
+        }
+      ],
+      "tasks": [
         {
-          "question": "How do others benefit from what you build?",
-          "answers": [
-            "I have not built anything to share yet.",
-            "I pass on a good prompt or tip now and then.",
-            "I document my solutions so that colleagues can reuse them.",
-            "I help other teams to adopt and adapt our solutions."
-          ]
+          "id": "task-build",
+          "families": [
+            "A",
+            "B",
+            "D"
+          ],
+          "title": "Something you built or reuse",
+          "task": "Think of a prompt, a template or a small AI solution you built, adapted or reuse. If there is none: which one would you build first?",
+          "prompts": [
+            "What is it for?",
+            "What did you do yourself?",
+            "Who else uses it?"
+          ],
+          "lookFor": [
+            "Uses templates or solutions others built and can say what for.",
+            "Built or adapted something, improved it until it worked, and shared it.",
+            "Runs a solution that several teams use, and names documentation, maintenance and quality."
+          ],
+          "minutes": 4
         }
       ]
     },
@@ -325,24 +657,48 @@
       "examples": {
         "M": "Sets two or three AI goals for the team and reviews them every quarter."
       },
-      "selfCheck": [
+      "cases": [
         {
-          "question": "How do you steer AI use in your area?",
-          "answers": [
-            "AI is not yet a topic I set priorities for.",
-            "I know where my team already uses AI.",
-            "I have a target picture and priorities for AI in my area and review the results.",
-            "I align AI use with the unit's strategy and with data, infrastructure and security needs."
-          ]
-        },
+          "id": "steer-2",
+          "title": "After six months",
+          "situation": "Your team has had AI licences for half a year. Usage differs a lot between people.",
+          "options": [
+            {
+              "text": "I look at where it helps, set two or three goals for the team and review them regularly.",
+              "level": 2
+            },
+            {
+              "text": "I have not looked at how the licences are used.",
+              "level": 0
+            },
+            {
+              "text": "I know who uses AI for what.",
+              "level": 1
+            },
+            {
+              "text": "I adjust goals, time and support from the results, and bring what we learned into the unit’s planning.",
+              "level": 3
+            }
+          ],
+          "minutes": 2
+        }
+      ],
+      "tasks": [
         {
-          "question": "What do you do so that your team can use AI well?",
-          "answers": [
-            "Nothing specific yet.",
-            "I point the team to trainings and the rules.",
-            "I make room for learning and trying out, and weigh benefit and cost with the team.",
-            "I build my team's AI skills systematically and share our approach with other managers."
-          ]
+          "id": "task-steer",
+          "title": "Your priorities for AI",
+          "task": "Think of the goals or priorities you set for AI in your area this year.",
+          "prompts": [
+            "What are they?",
+            "How did you choose them?",
+            "How do you follow what comes out of them?"
+          ],
+          "lookFor": [
+            "Knows where the team uses AI.",
+            "Names goals or priorities and a regular review.",
+            "Links them to the unit’s strategy and to data, security and budget."
+          ],
+          "minutes": 4
         }
       ]
     },
@@ -391,24 +747,183 @@
       "examples": {
         "M": "Blocks learning time and shows the own use of AI in team meetings."
       },
-      "selfCheck": [
+      "cases": [
         {
-          "question": "How do you talk with your team about what AI changes?",
-          "answers": [
-            "We have not talked about it yet.",
-            "I explain the reasons and goals of AI initiatives when asked.",
-            "I openly address chances, risks and uncertainties and involve the team in decisions.",
-            "Other managers use my way of guiding the change in their teams."
-          ]
-        },
+          "id": "guide-2",
+          "title": "No time to learn",
+          "situation": "Your team says there is no time to try AI tools next to the daily work.",
+          "options": [
+            {
+              "text": "I show how I use AI myself and encourage them to try.",
+              "level": 1
+            },
+            {
+              "text": "I fix learning time in the calendar, set up exchange across teams and help other managers to do the same.",
+              "level": 3
+            },
+            {
+              "text": "I plan fixed learning time, and we look together at what can be dropped for it.",
+              "level": 2
+            },
+            {
+              "text": "I tell them to use the tools when there is time.",
+              "level": 0
+            }
+          ],
+          "minutes": 2
+        }
+      ],
+      "tasks": [
         {
-          "question": "What do you do when team members are unsure or hesitant about AI?",
-          "answers": [
-            "I have not done anything specific yet.",
-            "I listen to their concerns.",
-            "I take concerns seriously, give time to learn and pair people with role models.",
-            "I spot support needs early and set targeted measures across teams."
-          ]
+          "id": "task-guide",
+          "title": "Someone who hesitated",
+          "task": "Think of a team member who was unsure or hesitant about AI.",
+          "prompts": [
+            "What was the concern?",
+            "What did you do?",
+            "What happened then?"
+          ],
+          "lookFor": [
+            "Listened and explained the reasons.",
+            "Took the concern seriously, gave time to learn and a role model.",
+            "Turned it into something for the whole team or for other managers."
+          ],
+          "minutes": 4
+        }
+      ]
+    },
+    {
+      "id": "data-work",
+      "group": "general",
+      "name": "Working with data",
+      "description": "Reads, questions and maintains the data the own work and the AI tools rely on.",
+      "question": "Which data does your work rely on, and how do you know it is good enough?",
+      "levels": [
+        "Knows which data the own tasks use and reports obvious errors.",
+        "Checks data quality before using it and feeds corrections back to the source.",
+        "Sets data standards for the team and improves how data is collected and shared."
+      ],
+      "why": "AI results are only as good as the data behind them. In all focus families the work moves from producing data and reports to judging and maintaining them.",
+      "examples": {
+        "A": "Looks after data quality and access in pipelines and interfaces.",
+        "B": "Knows where the figures of a report come from and spots when they cannot be right.",
+        "D": "Records inspection and maintenance data so that it can be used later.",
+        "M": "Asks which data a proposal rests on and how good it is."
+      },
+      "cases": [
+        {
+          "id": "data-1",
+          "title": "Figures that do not match",
+          "situation": "For your task you take data from a system. Two figures do not match what you know from practice.",
+          "options": [
+            {
+              "text": "I use the data as it is; it comes from the system.",
+              "level": 0
+            },
+            {
+              "text": "I notice it and report it to someone who is responsible.",
+              "level": 1
+            },
+            {
+              "text": "I clarify the cause, have it corrected at the source, and suggest a check so that it is noticed earlier next time.",
+              "level": 3
+            },
+            {
+              "text": "I check where the figures come from before I use them, and have the error corrected at the source.",
+              "level": 2
+            }
+          ],
+          "minutes": 2
+        }
+      ]
+    },
+    {
+      "id": "adapt-learn",
+      "group": "general",
+      "name": "Adapting and learning",
+      "description": "Takes up new tools and ways of working and builds the skills they need.",
+      "question": "What was the last tool or way of working you had to learn? How did you go about it?",
+      "levels": [
+        "Takes up new tools and ways of working when they are introduced.",
+        "Tries new tools on the own tasks early and builds the missing skills on purpose.",
+        "Helps others through changes and shapes how the team learns."
+      ],
+      "why": "Tools and tasks will change several times until 2030. Studies of the energy sector and the team's interviews name adaptability and continuous learning as key competencies.",
+      "examples": {
+        "A": "Keeps up with new models and tools and tries them on real work.",
+        "B": "Moves from entering data to handling exceptions and learns the tools for it.",
+        "D": "Works with digital assistants on site and operates several systems side by side.",
+        "M": "Learns visibly and plans time for the team to do the same."
+      },
+      "cases": [
+        {
+          "id": "adapt-1",
+          "title": "A new tool replaces a familiar one",
+          "situation": "A tool you know well is replaced. The new one works differently and includes AI functions.",
+          "options": [
+            {
+              "text": "I try it on my real tasks early and look for the training I need.",
+              "level": 2
+            },
+            {
+              "text": "I take part in the training and use it once it is introduced.",
+              "level": 1
+            },
+            {
+              "text": "I keep to the old way as long as possible.",
+              "level": 0
+            },
+            {
+              "text": "I try it early, pass on what I learn and help colleagues who struggle with the change.",
+              "level": 3
+            }
+          ],
+          "minutes": 2
+        }
+      ]
+    },
+    {
+      "id": "process-solve",
+      "group": "general",
+      "name": "Thinking in processes and solving problems",
+      "description": "Understands the process around the own task and solves new problems in a structured way.",
+      "question": "Tell me about a problem that was not covered by any instruction. How did you solve it?",
+      "levels": [
+        "Knows the own step in the process and solves routine problems.",
+        "Understands the process from end to end and solves new problems in a structured way.",
+        "Redesigns processes across teams and leads others through complex problems."
+      ],
+      "why": "Routine steps are automated; what stays with people are the exceptions and the improvement of the process. Problem-solving gains strongly in technical jobs, process skills in management.",
+      "examples": {
+        "A": "Designs integrations with the whole process in mind, across IT and plant systems.",
+        "B": "Handles the cases the automation cannot and improves the process behind them.",
+        "D": "Narrows down faults that no tool has seen before.",
+        "M": "Redesigns how work is shared between people and AI in the own area."
+      },
+      "cases": [
+        {
+          "id": "process-1",
+          "title": "A problem nobody has had before",
+          "situation": "A step in your work fails in a way that is not described anywhere. Others are waiting for your result.",
+          "options": [
+            {
+              "text": "I solve what I can in my own step and pass the rest on.",
+              "level": 1
+            },
+            {
+              "text": "I find the cause across the whole process with the others involved, and change the process so that it does not happen again.",
+              "level": 3
+            },
+            {
+              "text": "I narrow down the cause step by step, look at the steps before and after mine, and solve it.",
+              "level": 2
+            },
+            {
+              "text": "I wait until someone tells me what to do.",
+              "level": 0
+            }
+          ],
+          "minutes": 2
         }
       ]
     }
@@ -435,8 +950,148 @@
         "build-scale": {
           "baseline": 2,
           "target": 3
+        },
+        "data-work": {
+          "baseline": 2,
+          "target": 3
+        },
+        "adapt-learn": {
+          "baseline": 2,
+          "target": 3
+        },
+        "process-solve": {
+          "baseline": 2,
+          "target": 3
         }
-      }
+      },
+      "tasks": [
+        {
+          "id": "A1",
+          "task": "Writing and reviewing code",
+          "today": "Developers write most code by hand and review each other’s changes.",
+          "future": "AI writes a large share of the code. The developer specifies, reviews and tests it and answers for what is merged.",
+          "change": "augmented",
+          "needsToday": {
+            "check-results": 2,
+            "safe-use": 2
+          },
+          "needs2030": {
+            "check-results": 3,
+            "safe-use": 3
+          }
+        },
+        {
+          "id": "A2",
+          "task": "Testing and documentation",
+          "today": "Tests and documentation are written by hand, often late.",
+          "future": "Generated by AI and checked by the team. The effort moves to the test strategy and the edge cases.",
+          "change": "automated",
+          "needsToday": {
+            "check-results": 2,
+            "process-solve": 2
+          },
+          "needs2030": {
+            "check-results": 3,
+            "process-solve": 2
+          }
+        },
+        {
+          "id": "A3",
+          "task": "Integrating systems and data",
+          "today": "Interfaces and data pipelines are built per project; data quality is checked case by case.",
+          "future": "Integration, data access and data quality decide whether an AI use case works, across IT and plant systems.",
+          "change": "augmented",
+          "needsToday": {
+            "data-work": 2,
+            "process-solve": 2,
+            "safe-use": 2
+          },
+          "needs2030": {
+            "data-work": 3,
+            "process-solve": 3,
+            "safe-use": 3
+          }
+        },
+        {
+          "id": "A4",
+          "task": "Building and running AI solutions",
+          "today": "First pilots with assistants and single models.",
+          "future": "Agents and AI services are built, monitored and scaled for several units, with security and operation in mind.",
+          "change": "new",
+          "needsToday": {
+            "build-scale": 2,
+            "spot-potential": 2
+          },
+          "needs2030": {
+            "build-scale": 3,
+            "spot-potential": 3,
+            "safe-use": 3
+          }
+        },
+        {
+          "id": "A5",
+          "task": "Advising the business units",
+          "today": "IT implements what the units ask for.",
+          "future": "IT is the multiplier: it finds use cases with the units, judges what is feasible and keeps up with new tools.",
+          "change": "augmented",
+          "needsToday": {
+            "spot-potential": 2,
+            "adapt-learn": 2
+          },
+          "needs2030": {
+            "spot-potential": 3,
+            "adapt-learn": 3
+          }
+        }
+      ],
+      "personas": [
+        {
+          "id": "beginner",
+          "name": "Beginner",
+          "role": "IT application manager",
+          "story": "Uses the coding assistant now and then for small snippets. Knows the rules, but is unsure which data may go into a prompt.",
+          "levels": {
+            "safe-use": 1,
+            "check-results": 1,
+            "spot-potential": 1,
+            "build-scale": 1,
+            "data-work": 2,
+            "adapt-learn": 1,
+            "process-solve": 2
+          }
+        },
+        {
+          "id": "advanced",
+          "name": "Advanced",
+          "role": "Software developer",
+          "story": "Works with AI every day, reviews generated code carefully and has built templates the team uses.",
+          "levels": {
+            "safe-use": 2,
+            "check-results": 2,
+            "spot-potential": 2,
+            "build-scale": 2,
+            "data-work": 2,
+            "adapt-learn": 2,
+            "process-solve": 2
+          }
+        },
+        {
+          "id": "expert",
+          "name": "Expert",
+          "role": "Data engineer",
+          "story": "Builds agents and pipelines for several teams, sets the checks others use and is asked about unclear cases.",
+          "levels": {
+            "safe-use": 3,
+            "check-results": 3,
+            "spot-potential": 2,
+            "build-scale": 3,
+            "data-work": 3,
+            "adapt-learn": 3,
+            "process-solve": 2
+          }
+        }
+      ],
+      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026; wording and levels are a draft."
     },
     {
       "id": "B",
@@ -459,8 +1114,146 @@
         "build-scale": {
           "baseline": 0,
           "target": 1
+        },
+        "data-work": {
+          "baseline": 1,
+          "target": 2
+        },
+        "adapt-learn": {
+          "baseline": 1,
+          "target": 2
+        },
+        "process-solve": {
+          "baseline": 1,
+          "target": 2
         }
-      }
+      },
+      "tasks": [
+        {
+          "id": "B1",
+          "task": "Reporting and closing",
+          "today": "Figures are collected from several systems; reports are built by hand in spreadsheets.",
+          "future": "Standard reports and bookings are produced automatically. People check the figures, explain deviations and answer for the result.",
+          "change": "automated",
+          "needsToday": {
+            "check-results": 1,
+            "data-work": 1
+          },
+          "needs2030": {
+            "check-results": 3,
+            "data-work": 2
+          }
+        },
+        {
+          "id": "B2",
+          "task": "Research, texts and drafts",
+          "today": "Research, minutes, mails and first drafts are written by hand.",
+          "future": "An assistant prepares research, texts and analyses. The person briefs it, checks the output and decides what goes out.",
+          "change": "augmented",
+          "needsToday": {
+            "safe-use": 1,
+            "check-results": 1
+          },
+          "needs2030": {
+            "safe-use": 2,
+            "check-results": 3
+          }
+        },
+        {
+          "id": "B3",
+          "task": "Invoices, offers and data entry",
+          "today": "Documents are read, entered and matched by hand.",
+          "future": "Entry and matching run automatically. Staff handle the exceptions and improve the process.",
+          "change": "automated",
+          "needsToday": {
+            "process-solve": 1,
+            "data-work": 1
+          },
+          "needs2030": {
+            "process-solve": 2,
+            "data-work": 2,
+            "spot-potential": 2
+          }
+        },
+        {
+          "id": "B4",
+          "task": "Contracts and personal data",
+          "today": "Contracts, supplier data and personal data are handled under the existing confidentiality rules.",
+          "future": "The same rules decide what may go into which AI tool. Staff judge unclear cases themselves.",
+          "change": "augmented",
+          "needsToday": {
+            "safe-use": 1
+          },
+          "needs2030": {
+            "safe-use": 2,
+            "check-results": 2
+          }
+        },
+        {
+          "id": "B5",
+          "task": "Improving the own work",
+          "today": "Improvements come up from case to case.",
+          "future": "Staff name where an assistant helps, use the templates others built and take up new tools quickly.",
+          "change": "new",
+          "needsToday": {
+            "spot-potential": 1,
+            "adapt-learn": 1
+          },
+          "needs2030": {
+            "spot-potential": 2,
+            "build-scale": 1,
+            "adapt-learn": 2
+          }
+        }
+      ],
+      "personas": [
+        {
+          "id": "beginner",
+          "name": "Beginner",
+          "role": "Accountant",
+          "story": "Has tried the chatbot a few times. Is unsure what may be entered and uses results as they come.",
+          "levels": {
+            "safe-use": 0,
+            "check-results": 0,
+            "spot-potential": 0,
+            "build-scale": 0,
+            "data-work": 1,
+            "adapt-learn": 0,
+            "process-solve": 1
+          }
+        },
+        {
+          "id": "advanced",
+          "name": "Advanced",
+          "role": "Controller",
+          "story": "Uses the assistant every week for drafts and analyses and checks the figures against the source.",
+          "levels": {
+            "safe-use": 2,
+            "check-results": 1,
+            "spot-potential": 1,
+            "build-scale": 0,
+            "data-work": 1,
+            "adapt-learn": 1,
+            "process-solve": 1
+          }
+        },
+        {
+          "id": "expert",
+          "name": "Expert",
+          "role": "HR business partner",
+          "story": "Has built prompt templates the team uses. Colleagues ask about unclear cases.",
+          "levels": {
+            "safe-use": 2,
+            "check-results": 3,
+            "spot-potential": 2,
+            "build-scale": 1,
+            "data-work": 2,
+            "adapt-learn": 2,
+            "process-solve": 2
+          }
+        }
+      ],
+      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026; wording and levels are a draft."
     },
     {
       "id": "D",
@@ -483,8 +1276,149 @@
         "build-scale": {
           "baseline": 0,
           "target": 1
+        },
+        "data-work": {
+          "baseline": 1,
+          "target": 2
+        },
+        "adapt-learn": {
+          "baseline": 1,
+          "target": 2
+        },
+        "process-solve": {
+          "baseline": 2,
+          "target": 3
         }
-      }
+      },
+      "tasks": [
+        {
+          "id": "D1",
+          "task": "Inspection and maintenance",
+          "today": "Inspections follow fixed intervals; findings are judged from experience.",
+          "future": "AI points to maintenance needs from inspection and sensor data. Technicians check the hint against measurements and experience before they act.",
+          "change": "augmented",
+          "needsToday": {
+            "check-results": 1,
+            "process-solve": 2
+          },
+          "needs2030": {
+            "check-results": 2,
+            "process-solve": 3,
+            "data-work": 2
+          }
+        },
+        {
+          "id": "D2",
+          "task": "Documentation and reports",
+          "today": "Maintenance reports and plant documentation are written by hand after the job.",
+          "future": "An assistant drafts the documentation. The technician corrects it and feeds good data back.",
+          "change": "automated",
+          "needsToday": {
+            "data-work": 1,
+            "safe-use": 1
+          },
+          "needs2030": {
+            "data-work": 2,
+            "safe-use": 2
+          }
+        },
+        {
+          "id": "D3",
+          "task": "Planning, CAD and simulation",
+          "today": "Designs and simulations are set up by hand.",
+          "future": "AI proposes variants in CAD and simulation. Engineers check whether they are plausible and stay responsible for the design.",
+          "change": "augmented",
+          "needsToday": {
+            "check-results": 1,
+            "process-solve": 2
+          },
+          "needs2030": {
+            "check-results": 2,
+            "spot-potential": 2,
+            "process-solve": 3
+          }
+        },
+        {
+          "id": "D4",
+          "task": "Fault analysis",
+          "today": "Faults are narrowed down step by step with measurements and manuals.",
+          "future": "AI suggests likely causes. New and complex faults stay with people.",
+          "change": "augmented",
+          "needsToday": {
+            "process-solve": 2,
+            "check-results": 1
+          },
+          "needs2030": {
+            "process-solve": 3,
+            "check-results": 2
+          }
+        },
+        {
+          "id": "D5",
+          "task": "Field work on the plant",
+          "today": "Manual work on site: assembly, switching, repairs.",
+          "future": "Changes least. Digital assistants give instructions and record the work; several systems are operated side by side.",
+          "change": "stable",
+          "needsToday": {
+            "safe-use": 1,
+            "adapt-learn": 1,
+            "spot-potential": 1
+          },
+          "needs2030": {
+            "safe-use": 2,
+            "adapt-learn": 2,
+            "build-scale": 1
+          }
+        }
+      ],
+      "personas": [
+        {
+          "id": "beginner",
+          "name": "Beginner",
+          "role": "Maintenance technician",
+          "story": "Works mainly on site and has not used AI tools at work so far.",
+          "levels": {
+            "safe-use": 0,
+            "check-results": 0,
+            "spot-potential": 0,
+            "build-scale": 0,
+            "data-work": 1,
+            "adapt-learn": 0,
+            "process-solve": 2
+          }
+        },
+        {
+          "id": "advanced",
+          "name": "Advanced",
+          "role": "Electrical engineer",
+          "story": "Uses the released tools for documentation and analysis and compares AI hints with measurements.",
+          "levels": {
+            "safe-use": 1,
+            "check-results": 2,
+            "spot-potential": 1,
+            "build-scale": 0,
+            "data-work": 1,
+            "adapt-learn": 1,
+            "process-solve": 2
+          }
+        },
+        {
+          "id": "expert",
+          "name": "Expert",
+          "role": "Project engineer",
+          "story": "Suggested where inspection data can point to maintenance needs earlier, and set up an assistant for standard documentation.",
+          "levels": {
+            "safe-use": 2,
+            "check-results": 2,
+            "spot-potential": 2,
+            "build-scale": 1,
+            "data-work": 2,
+            "adapt-learn": 2,
+            "process-solve": 3
+          }
+        }
+      ],
+      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026; wording and levels are a draft."
     },
     {
       "id": "M",
@@ -515,72 +1449,308 @@
         "guide-change": {
           "baseline": 1,
           "target": 3
+        },
+        "data-work": {
+          "baseline": 1,
+          "target": 2
+        },
+        "adapt-learn": {
+          "baseline": 2,
+          "target": 3
+        },
+        "process-solve": {
+          "baseline": 2,
+          "target": 3
         }
-      }
+      },
+      "tasks": [
+        {
+          "id": "M1",
+          "task": "Setting goals and priorities",
+          "today": "Goals follow the unit’s plan; AI is one topic among many.",
+          "future": "Managers decide where AI is used in their area, with which priority and under which rules.",
+          "change": "new",
+          "needsToday": {
+            "steer-use": 1,
+            "process-solve": 2
+          },
+          "needs2030": {
+            "steer-use": 3,
+            "process-solve": 3,
+            "spot-potential": 2
+          }
+        },
+        {
+          "id": "M2",
+          "task": "Deciding on the basis of reports",
+          "today": "Decisions rest on reports the team prepares.",
+          "future": "Much of the basis is prepared with AI. Managers ask how it was checked and stay accountable.",
+          "change": "augmented",
+          "needsToday": {
+            "check-results": 2,
+            "data-work": 1
+          },
+          "needs2030": {
+            "check-results": 3,
+            "data-work": 2
+          }
+        },
+        {
+          "id": "M3",
+          "task": "Leading the team through change",
+          "today": "Change is led project by project.",
+          "future": "AI changes tasks and roles continuously. Managers give orientation, plan learning time and take up concerns.",
+          "change": "augmented",
+          "needsToday": {
+            "guide-change": 1,
+            "adapt-learn": 2
+          },
+          "needs2030": {
+            "guide-change": 3,
+            "adapt-learn": 3
+          }
+        },
+        {
+          "id": "M4",
+          "task": "Developing people",
+          "today": "Development is agreed in the yearly appraisal talk.",
+          "future": "The competency conversation is part of it: managers know the AI levels in their team and agree on measures.",
+          "change": "augmented",
+          "needsToday": {
+            "guide-change": 1,
+            "safe-use": 1
+          },
+          "needs2030": {
+            "guide-change": 3,
+            "safe-use": 2
+          }
+        },
+        {
+          "id": "M5",
+          "task": "Using AI in the own work",
+          "today": "Own use differs strongly between managers.",
+          "future": "Leaders go first: they use AI visibly themselves and reuse what their teams built.",
+          "change": "new",
+          "needsToday": {
+            "safe-use": 1,
+            "spot-potential": 1
+          },
+          "needs2030": {
+            "safe-use": 2,
+            "build-scale": 1,
+            "adapt-learn": 3
+          }
+        }
+      ],
+      "personas": [
+        {
+          "id": "beginner",
+          "name": "Beginner",
+          "role": "Team lead",
+          "story": "Leaves AI to the team and has set no priorities for it.",
+          "levels": {
+            "safe-use": 1,
+            "check-results": 1,
+            "spot-potential": 0,
+            "build-scale": 0,
+            "steer-use": 0,
+            "guide-change": 0,
+            "data-work": 1,
+            "adapt-learn": 1,
+            "process-solve": 2
+          }
+        },
+        {
+          "id": "advanced",
+          "name": "Advanced",
+          "role": "Team lead",
+          "story": "Knows where the team uses AI, plans learning time and uses AI now and then.",
+          "levels": {
+            "safe-use": 1,
+            "check-results": 2,
+            "spot-potential": 1,
+            "build-scale": 0,
+            "steer-use": 1,
+            "guide-change": 2,
+            "data-work": 1,
+            "adapt-learn": 2,
+            "process-solve": 2
+          }
+        },
+        {
+          "id": "expert",
+          "name": "Expert",
+          "role": "Head of unit",
+          "story": "Has a target picture for AI and reviews the results. Other managers copy the approach.",
+          "levels": {
+            "safe-use": 2,
+            "check-results": 3,
+            "spot-potential": 2,
+            "build-scale": 1,
+            "steer-use": 3,
+            "guide-change": 3,
+            "data-work": 2,
+            "adapt-learn": 3,
+            "process-solve": 3
+          }
+        }
+      ],
+      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026; wording and levels are a draft."
     }
   ],
   "measures": [
     {
       "id": "m1",
       "type": "upskilling",
-      "title": "Basic training on approved tools and data rules",
-      "description": "Mandatory and repeated every year, with cases from the own unit.",
+      "title": "Starter training on approved tools and data rules",
+      "description": "Before a licence is handed out, so that licences do not stay unused. From “What is AI?” to the rules for data and confidentiality, repeated every year.",
       "competencies": [
         "safe-use"
+      ],
+      "courses": [
+        {
+          "title": "AI Academy: basics and the AI Act",
+          "provider": "VERBUND AI Academy",
+          "format": "E-training, catalogue entry assumed"
+        },
+        {
+          "title": "Elements of AI",
+          "provider": "University of Helsinki and MinnaLearn",
+          "format": "Online course, free",
+          "url": "https://www.elementsofai.com/"
+        },
+        {
+          "title": "Fundamentals of AI Security",
+          "provider": "Microsoft Learn",
+          "format": "Online module, free",
+          "url": "https://learn.microsoft.com/en-us/training/modules/fundamentals-ai-security/"
+        }
       ]
     },
     {
       "id": "m2",
       "type": "upskilling",
       "title": "Workshop on checking AI output",
-      "description": "Real tasks from the team; a four-eyes check for critical results.",
+      "description": "Review of AI output as part of quality assurance, on real tasks from the team, with a four-eyes check for critical results.",
       "competencies": [
         "check-results"
+      ],
+      "courses": [
+        {
+          "title": "AI Fluency: Framework & Foundations",
+          "provider": "Anthropic Academy",
+          "format": "Online course, free",
+          "url": "https://anthropic.skilljar.com/ai-fluency-framework-foundations"
+        },
+        {
+          "title": "Intro to Large Language Models",
+          "provider": "Andrej Karpathy on YouTube",
+          "format": "Video, 1 hour",
+          "url": "https://www.youtube.com/watch?v=zjkBMFhNj_g"
+        }
       ]
     },
     {
       "id": "m3",
       "type": "upskilling",
       "title": "Use-case workshop in the team",
-      "description": "Small groups work on use cases from their own job.",
+      "description": "Small groups work on use cases from their own job and assess benefit, effort and feasibility.",
       "competencies": [
-        "spot-potential"
+        "spot-potential",
+        "process-solve"
+      ],
+      "courses": [
+        {
+          "title": "AI Academy: use cases",
+          "provider": "VERBUND AI Academy",
+          "format": "Webinar, catalogue entry assumed"
+        },
+        {
+          "title": "Generative AI for Everyone",
+          "provider": "DeepLearning.AI",
+          "format": "Online course",
+          "url": "https://www.deeplearning.ai/courses/generative-ai-for-everyone/"
+        }
       ]
     },
     {
       "id": "m4",
       "type": "upskilling",
-      "title": "Hands-on sessions on templates and agents",
-      "description": "Learning by doing on a real use case, with a mentor.",
+      "title": "Hands-on sessions on prompting, templates and agents",
+      "description": "Learning by doing on a real use case, with a mentor. Follows the starter training: first prompting, then building agents.",
       "competencies": [
         "build-scale"
+      ],
+      "courses": [
+        {
+          "title": "AI Academy: prompting",
+          "provider": "VERBUND AI Academy",
+          "format": "E-training, catalogue entry assumed"
+        },
+        {
+          "title": "Prompt Engineering for ChatGPT",
+          "provider": "Vanderbilt University on Coursera",
+          "format": "Online course",
+          "url": "https://www.coursera.org/learn/prompt-engineering"
+        },
+        {
+          "title": "Transformers, the tech behind LLMs",
+          "provider": "3Blue1Brown on YouTube",
+          "format": "Video, 30 minutes",
+          "url": "https://www.youtube.com/watch?v=wjZofJX0v4M"
+        }
       ]
     },
     {
       "id": "m5",
       "type": "upskilling",
       "title": "Leadership programme on AI",
-      "description": "Steering AI use, leading the change, peer exchange between managers.",
+      "description": "Leaders go first: steering AI use, leading the change, peer exchange between managers.",
       "competencies": [
         "steer-use",
         "guide-change"
+      ],
+      "families": [
+        "M"
+      ],
+      "courses": [
+        {
+          "title": "Management development programme: AI module",
+          "provider": "VERBUND",
+          "format": "Programme, catalogue entry assumed"
+        },
+        {
+          "title": "AI For Business",
+          "provider": "Wharton on Coursera",
+          "format": "Online course",
+          "url": "https://www.coursera.org/specializations/ai-for-business-wharton"
+        }
       ]
     },
     {
       "id": "m6",
       "type": "reskilling",
       "title": "Programme for changing roles",
-      "description": "For employees whose tasks change strongly, for example towards data or automation work.",
+      "description": "For employees whose tasks change strongly, for example from data entry to exception handling, or towards data and automation work. Internal conversion before hiring.",
       "competencies": [
         "spot-potential",
-        "build-scale"
+        "build-scale",
+        "data-work"
+      ],
+      "courses": [
+        {
+          "title": "AI for Everyone",
+          "provider": "DeepLearning.AI on Coursera",
+          "format": "Online course",
+          "url": "https://www.coursera.org/learn/ai-for-everyone"
+        }
       ]
     },
     {
       "id": "m7",
       "type": "recruiting",
-      "title": "Hire for scarce advanced skills",
-      "description": "Where the gap to the advanced level cannot be closed in time by training.",
+      "title": "Hire for scarce specialist skills",
+      "description": "Upskilling first, hiring for specialists: where the gap to the advanced level cannot be closed in time by training. With an entry route for juniors.",
       "competencies": [
         "build-scale"
       ]
@@ -598,21 +1768,58 @@
     {
       "id": "m9",
       "type": "organisation",
-      "title": "AI champions in the units",
-      "description": "Role models who help colleagues and collect use cases.",
+      "title": "AI champions, AI café and office hours",
+      "description": "Role models in the units who help colleagues, collect use cases and show what they built.",
       "competencies": [
         "spot-potential",
-        "build-scale"
+        "build-scale",
+        "adapt-learn"
       ]
     },
     {
       "id": "m10",
       "type": "organisation",
-      "title": "Fixed learning time",
-      "description": "Agreed hours per month in the team calendar.",
+      "title": "Planned time to try",
+      "description": "Agreed hours per month in the team calendar. The yearly education time can be used for it.",
       "competencies": [
         "guide-change",
-        "safe-use"
+        "safe-use",
+        "adapt-learn"
+      ]
+    },
+    {
+      "id": "m11",
+      "type": "upskilling",
+      "title": "Data basics for the own job",
+      "description": "Where the data of the own tasks comes from, how to judge its quality and how to feed corrections back.",
+      "competencies": [
+        "data-work"
+      ],
+      "courses": [
+        {
+          "title": "Courses on data and AI, in German",
+          "provider": "KI-Campus",
+          "format": "Online courses, free",
+          "url": "https://ki-campus.org/"
+        }
+      ]
+    },
+    {
+      "id": "m12",
+      "type": "upskilling",
+      "title": "Learning routine and problem-solving",
+      "description": "Short formats on learning new tools on the job and on structured problem-solving, with cases from the unit.",
+      "competencies": [
+        "adapt-learn",
+        "process-solve"
+      ],
+      "courses": [
+        {
+          "title": "Learning How to Learn",
+          "provider": "Deep Teaching Solutions on Coursera",
+          "format": "Online course",
+          "url": "https://www.coursera.org/learn/learning-how-to-learn"
+        }
       ]
     }
   ],
@@ -648,9 +1855,10 @@
       "title": "Foundation",
       "current": true,
       "items": [
-        "Target profiles for three job families and managers",
-        "Conversation guide and gap logic",
-        "Clickable prototype with sample data"
+        "Tasks today and in 2030 for three job families and managers",
+        "Target profiles that follow from the tasks",
+        "Case-based self-check, conversation guide and gap logic",
+        "Clickable prototype with simulated data"
       ]
     },
     {
@@ -742,6 +1950,7 @@
     "rules": [
       "The check serves development. It is not used for pay, appraisal or staffing decisions.",
       "Levels are agreed by two people in a conversation. No AI rates anyone.",
+      "The self-check belongs to the employee. The manager sees it only if the employee shares it.",
       "A manager sees the own team. HR sees totals only, never single persons.",
       "Groups with fewer than five rated employees are not shown.",
       "Employees can see everything stored about them and ask for corrections.",

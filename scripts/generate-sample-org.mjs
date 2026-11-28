@@ -16,6 +16,19 @@ function rand() {
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 }
 const pick = (list) => list[Math.floor(rand() * list.length)];
+
+// A second, independent generator for the general competencies added on 28.11.2026,
+// so that the ratings of the six AI competencies stay exactly as they were.
+let state2 = 20261128;
+function rand2() {
+  state2 |= 0;
+  state2 = (state2 + 0x6d2b79f5) | 0;
+  let t = Math.imul(state2 ^ (state2 >>> 15), 1 | state2);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+const pick2 = (list) => list[Math.floor(rand2() * list.length)];
+const general = new Set(content.competencies.filter((c) => c.group === "general").map((c) => c.id));
 const clamp = (value) => Math.max(0, Math.min(3, value));
 
 // The demo manager's own team, written by hand so the walkthrough stays stable.
@@ -40,6 +53,9 @@ const demoAssessments = {
       "check-results": r(3, 3, 3),
       "spot-potential": r(2, 2, 2),
       "build-scale": r(2, 3, 3, "Built the checks for the data pipeline."),
+      "data-work": r(3, 3, 3),
+      "adapt-learn": r(2, 2, 2),
+      "process-solve": r(2, 2, 2),
     },
   },
   e3: {
@@ -51,6 +67,9 @@ const demoAssessments = {
       "check-results": r(2, 1, 1, "Checks figures, but not yet text output."),
       "spot-potential": r(1, 1, 1),
       "build-scale": r(0, 0, 0),
+      "data-work": r(2, 2, 2),
+      "adapt-learn": r(1, 1, 1),
+      "process-solve": r(1, 1, 1),
     },
   },
   e5: {
@@ -61,6 +80,9 @@ const demoAssessments = {
       "check-results": r(1, 2, 2, "Very careful with results from the maintenance tool."),
       "spot-potential": r(0, 1, 1),
       "build-scale": r(0, 0, 0),
+      "data-work": r(1, 1, 1),
+      "adapt-learn": r(1, 1, 1),
+      "process-solve": r(2, 3, 3, "Finds faults that others miss."),
     },
   },
   // Markus has done the self-check, the conversation has not started.
@@ -68,10 +90,13 @@ const demoAssessments = {
     status: "open",
     date: null,
     ratings: {
-      "safe-use": r(3, null, null),
-      "check-results": r(2, null, null),
-      "spot-potential": r(2, null, null),
-      "build-scale": r(2, null, null),
+      "safe-use": { ...r(3, null, null), selfTask: "A supplier sent logs with customer numbers for a bug analysis. I did not paste them into the assistant, removed the numbers with a script first and then used the released tool. I put the script into our team wiki, two colleagues use it now." },
+      "check-results": { ...r(2, null, null), selfTask: "The assistant wrote a migration script for the application database. I read it line by line, ran it on a copy first and compared the row counts. It had dropped an index, which I added again before the release." },
+      "spot-potential": { ...r(2, null, null), selfTask: "Release notes take me about two hours per release. An assistant could draft them from the tickets; it would need read access to the ticket system. Risk: it invents changes, so I would still check them against the tickets." },
+      "build-scale": { ...r(2, null, null), selfTask: "I built a prompt template for incident summaries and adjusted it until the format fitted our reports. The three people in the on-call rotation use it." },
+      "data-work": r(2, null, null),
+      "adapt-learn": r(2, null, null),
+      "process-solve": r(3, null, null),
     },
   },
   e7: {
@@ -113,11 +138,13 @@ function newName() {
 function rate(familyId, bias) {
   const ratings = {};
   for (const [competencyId, entry] of Object.entries(families[familyId].profile)) {
-    const noise = (rand() + rand() + rand() - 1.5) * 1.2;
+    // General competencies draw from the second generator (see above).
+    const [r1, p1] = general.has(competencyId) ? [rand2, pick2] : [rand, pick];
+    const noise = (r1() + r1() + r1() - 1.5) * 1.2;
     const agreed = clamp(Math.round(entry.baseline + bias + noise));
     ratings[competencyId] = {
-      self: clamp(agreed + pick([0, 0, 0, 1, -1])),
-      manager: clamp(agreed + pick([0, 0, 0, 0, 1, -1])),
+      self: clamp(agreed + p1([0, 0, 0, 1, -1])),
+      manager: clamp(agreed + p1([0, 0, 0, 0, 1, -1])),
       agreed,
       note: "",
     };
@@ -141,7 +168,9 @@ const perPerson = new Set(content.measureTypes.filter((t) => t.perPerson).map((t
 
 /** One or two measures that address the largest gaps of a rated person. */
 function assign(familyId, ratings, date) {
+  // Sample measures address the AI competencies only, as before the general competencies were added.
   const gaps = Object.entries(families[familyId].profile)
+    .filter(([competencyId]) => !general.has(competencyId))
     .map(([competencyId, entry]) => ({ competencyId, gap: entry.target - (ratings[competencyId]?.agreed ?? entry.target) }))
     .filter((g) => g.gap > 0)
     .sort((a, b) => b.gap - a.gap);
@@ -176,7 +205,7 @@ teamPlans.forEach((plan, index) => {
         if (chosen.length) assignments[id] = chosen;
       }
     } else if (dice < plan.coverage + (1 - plan.coverage) * 0.3) {
-      const all = Object.entries(rate(family, plan.bias));
+      const all = Object.entries(rate(family, plan.bias)).filter(([competencyId]) => !general.has(competencyId));
       assessments[id] = { status: "in-progress", date: "2026-11-13", ratings: Object.fromEntries(all.slice(0, 2)) };
     }
   }

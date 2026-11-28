@@ -7,7 +7,8 @@ import { Search } from "./components/Search";
 import { SectionContext, type Section } from "./components/Ui";
 import { ViewAs, type View } from "./components/ViewAs";
 import { DataContext, useData, type Data } from "./data";
-import { useRoute } from "./lib/router";
+import { withUploads } from "./lib/jobprofile";
+import { takeStay, useRoute } from "./lib/router";
 import { useStore } from "./lib/store";
 import { nextActions } from "./lib/workflow";
 import { About } from "./pages/About";
@@ -16,8 +17,11 @@ import { Start } from "./pages/Start";
 import { CompetencyList, CompetencyRecord } from "./pages/hr/Competencies";
 import { HrGapAnalysis } from "./pages/hr/GapAnalysis";
 import { HrHome } from "./pages/hr/Home";
+import { HrPersonas, HrTasks } from "./pages/hr/JobChange";
 import { HrGovernance, HrMeasures, HrRoadmap } from "./pages/hr/Plans";
 import { TeamList, TeamRecord } from "./pages/hr/Teams";
+import { HrRoles, HrSkills } from "./pages/hr/Units";
+import { HrUpload } from "./pages/hr/Upload";
 import { MyData, MyProfile } from "./pages/me/Me";
 import { SelfCheck } from "./pages/me/SelfCheck";
 import { TeamHome } from "./pages/team/Home";
@@ -64,7 +68,9 @@ function Root({ content, org }: { content: Content; org: Org }) {
     const info = org.teams.find((t) => t.id === org.currentTeamId) ?? org.teams[0];
     return { info, employees: org.employees.filter((e) => e.team === info.id) };
   }, [org]);
-  const data: Data = { ...store, content, org, team };
+  // Tasks from uploaded job descriptions are part of the model from the moment HR applies them.
+  const model = useMemo(() => withUploads(content, store.uploads), [content, store.uploads]);
+  const data: Data = { ...store, content: model, org, team };
   return (
     <DataContext.Provider value={data}>
       <UiProvider>
@@ -94,6 +100,20 @@ function Shell() {
   useLayoutEffect(() => {
     if (firstPage.current) {
       firstPage.current = false;
+      return;
+    }
+    // A switch between views of the same page (tabs of a card) keeps the place on the page and the focus on the chosen tab.
+    const stay = takeStay();
+    if (stay) {
+      const page = document.querySelector<HTMLElement>("main");
+      if (page) page.style.animation = "none";
+      try {
+        window.scrollTo(0, stay.y);
+      } catch {
+        // Not available in every environment (tests).
+      }
+      const list = [...document.querySelectorAll<HTMLElement>('main [role="tablist"]')].find((l) => l.getAttribute("aria-label") === stay.tablist);
+      list?.querySelector<HTMLElement>('[aria-selected="true"]')?.focus({ preventScroll: true });
       return;
     }
     try {
@@ -132,14 +152,14 @@ function Shell() {
               title: "Steering",
               items: [
                 { key: "", label: "Dashboard", icon: "home" },
-                { key: "gaps", label: "Gap analysis", icon: "chart" },
-                { key: "teams", label: "Teams", icon: "team", badge: org.teams.length },
+                { key: "gaps", label: "Gap analysis", icon: "chart", also: ["tasks", "personas"] },
+                { key: "teams", label: "Teams", icon: "team", badge: org.teams.length, also: ["skills", "roles"] },
               ],
             },
             {
               title: "Model and plan",
               items: [
-                { key: "profiles", label: "Competency model", icon: "layers", also: ["competencies", "measures"] },
+                { key: "profiles", label: "Competency model", icon: "layers", also: ["competencies", "measures", "upload"] },
                 { key: "roadmap", label: "Plan", icon: "map", also: ["governance"] },
               ],
             },
@@ -150,12 +170,31 @@ function Shell() {
     view === "hr"
       ? [
           {
+            label: "Gap analysis",
+            active: page,
+            tabs: [
+              { id: "gaps", label: "Competency gaps", href: "#/hr/gaps" },
+              { id: "tasks", label: "Changing tasks", href: "#/hr/tasks" },
+              { id: "personas", label: "Personas", href: "#/hr/personas" },
+            ],
+          },
+          {
+            label: "Teams",
+            active: page,
+            tabs: [
+              { id: "teams", label: "Teams", href: "#/hr/teams", count: org.teams.length },
+              { id: "skills", label: "Skills by unit", href: "#/hr/skills" },
+              { id: "roles", label: "Roles", href: "#/hr/roles" },
+            ],
+          },
+          {
             label: "Competency model",
             active: page,
             tabs: [
               { id: "profiles", label: "Job families", href: "#/hr/profiles", count: content.families.length },
               { id: "competencies", label: "Competencies", href: "#/hr/competencies", count: content.competencies.length },
               { id: "measures", label: "Measures", href: "#/hr/measures", count: content.measures.length },
+              { id: "upload", label: "Upload", href: "#/hr/upload" },
             ],
           },
           {
@@ -247,6 +286,16 @@ function Shell() {
             )
           ) : page === "gaps" ? (
             <HrGapAnalysis horizonId={id} />
+          ) : page === "tasks" ? (
+            <HrTasks familyId={id} />
+          ) : page === "personas" ? (
+            <HrPersonas familyId={id} />
+          ) : page === "skills" ? (
+            <HrSkills horizonId={id} />
+          ) : page === "roles" ? (
+            <HrRoles familyId={id} />
+          ) : page === "upload" ? (
+            <HrUpload familyId={id} />
           ) : page === "teams" && id ? (
             <TeamRecord teamId={id} />
           ) : page === "teams" ? (

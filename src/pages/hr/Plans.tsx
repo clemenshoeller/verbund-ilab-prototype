@@ -1,8 +1,9 @@
 import { DraftTag, Meter } from "../../components/Figures";
+import { CourseLinks } from "../../components/Learning";
 import { Card, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
 import { MIN_GROUP, measureReach, tooFew } from "../../lib/metrics";
-import { go } from "../../lib/router";
+import { switchTo } from "../../lib/router";
 import { measureUptake } from "../../lib/workflow";
 
 export function HrMeasures({ typeId }: { typeId?: string }) {
@@ -22,18 +23,18 @@ export function HrMeasures({ typeId }: { typeId?: string }) {
             Measures <DraftTag />
           </>
         }
-        sub="Types of measures and how far each is in use."
+        sub="The measures the team worked out from the interviews, how far each is in use, and where to start learning. The tool links to courses; it holds no e-learning itself."
       />
 
       <Card
         title={type ? type.name : "All measures"}
         aside={
           <span className="tabs" role="tablist" aria-label="Type of measure">
-            <button type="button" role="tab" aria-selected={!type} className={"tab" + (!type ? " on" : "")} onClick={() => go("/hr/measures")}>
+            <button type="button" role="tab" aria-selected={!type} className={"tab" + (!type ? " on" : "")} onClick={() => switchTo("/hr/measures")}>
               All
             </button>
             {content.measureTypes.map((t) => (
-              <button key={t.id} type="button" role="tab" aria-selected={t.id === type?.id} className={"tab" + (t.id === type?.id ? " on" : "")} onClick={() => go(`/hr/measures/${t.id}`)} title={t.short}>
+              <button key={t.id} type="button" role="tab" aria-selected={t.id === type?.id} className={"tab" + (t.id === type?.id ? " on" : "")} onClick={() => switchTo(`/hr/measures/${t.id}`)} title={t.short}>
                 {t.name}
               </button>
             ))}
@@ -47,6 +48,7 @@ export function HrMeasures({ typeId }: { typeId?: string }) {
               <tr>
                 <th>Measure</th>
                 <th>Type</th>
+                <th>Where to start</th>
                 <th>Agreed, of employees it would fit</th>
               </tr>
             </thead>
@@ -60,6 +62,7 @@ export function HrMeasures({ typeId }: { typeId?: string }) {
                   <td>
                     <span className="kind">{typeName(m.type)}</span>
                   </td>
+                  <td>{m.courses?.length ? <CourseLinks courses={m.courses} /> : <span className="muted">–</span>}</td>
                   <td className="meter-cell">
                     {perPerson(m.type) && tooFew(reach) ? (
                       <span className="sub">Would fit fewer than {MIN_GROUP} employees</span>
@@ -74,6 +77,10 @@ export function HrMeasures({ typeId }: { typeId?: string }) {
             </tbody>
           </table>
         </div>
+        <p className="muted small card-note">
+          For the project we assume that VERBUND offers these measures; the catalogue changes every year. Entries marked “catalogue entry assumed” stand for VERBUND’s
+          own offer, the links are examples of public courses and videos.
+        </p>
       </Card>
     </>
   );

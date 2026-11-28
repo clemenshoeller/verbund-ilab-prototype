@@ -30,13 +30,81 @@ export interface Competency {
   anchors?: { weak: string[]; good: string[]; overdone: string[] };
   /** What it looks like in daily work, per job family id. */
   examples: Record<string, string>;
-  /** Questions of the employee self-check; answers in I-form, index 0 = not yet, 1 to 3 = levels. */
-  selfCheck?: SelfQuestion[];
+  /** Cases of the employee self-check: a situation from work and what the person would do. */
+  cases?: CaseTask[];
+  /** Written tasks of the self-check: something from the own work, described in the own words and read by the manager. */
+  tasks?: WorkTask[];
 }
 
-export interface SelfQuestion {
-  question: string;
-  answers: string[];
+/**
+ * A task of the self-check that is answered in writing: what the person did in a real situation.
+ * No level is derived from it automatically; the manager reads it in the conversation.
+ */
+export interface WorkTask {
+  id: string;
+  /** Job families the task is written for; missing = every family that has the competency. */
+  families?: string[];
+  title: string;
+  /** What to think of or to do. */
+  task: string;
+  /** What to write about, as short questions. */
+  prompts: string[];
+  /** What the manager looks for in the answer, per level; index 0 = level 1. */
+  lookFor: string[];
+  minutes: number;
+}
+
+/** One answer to a case. The level it shows (0 = not yet, 1 to 3 = levels) is never shown while answering. */
+export interface CaseOption {
+  text: string;
+  level: number;
+}
+
+/** A case of the self-check: a concrete situation and four ways to handle it, one per level, in mixed order. */
+export interface CaseTask {
+  id: string;
+  /** Job families the case is written for; missing = every family that has the competency. */
+  families?: string[];
+  title: string;
+  situation: string;
+  options: CaseOption[];
+  /** Time the case takes, for the time budget of the whole self-check. */
+  minutes: number;
+}
+
+/** A common task of a job family: what it looks like today, what it looks like in 2030, and what it asks for. */
+export interface TaskChange {
+  id: string;
+  task: string;
+  today: string;
+  future: string;
+  /** How AI changes the task until 2030. */
+  change: "automated" | "augmented" | "new" | "stable";
+  /** Level per competency the task needs today. */
+  needsToday: Record<string, number>;
+  /** Level per competency the task needs in 2030. */
+  needs2030: Record<string, number>;
+  /** Set for tasks that came from an uploaded job description. */
+  source?: string;
+}
+
+/** An example profile that stands in for the unknown current state: a beginner, an advanced user, an expert. */
+export interface Persona {
+  id: string;
+  name: string;
+  role: string;
+  story: string;
+  /** Level per competency of the family's profile. */
+  levels: Record<string, number>;
+}
+
+/** Where to learn it: a link to a course or video. The learning itself happens outside the tool. */
+export interface CourseLink {
+  title: string;
+  provider: string;
+  format: string;
+  /** Missing for entries of VERBUND's own catalogue, which the project assumes to exist. */
+  url?: string;
 }
 
 export interface ProfileEntry {
@@ -53,6 +121,12 @@ export interface Family {
   example: string;
   /** Competencies missing here are not part of the family's profile. */
   profile: Record<string, ProfileEntry>;
+  /** Common tasks today and in 2030; the target profile follows from what they need. */
+  tasks?: TaskChange[];
+  /** Example profiles used as a simulated current state. */
+  personas?: Persona[];
+  /** Where the tasks and levels come from. */
+  basis?: string;
 }
 
 export interface MeasureType {
@@ -70,6 +144,10 @@ export interface Measure {
   description: string;
   /** Competencies this measure helps to build. */
   competencies: string[];
+  /** Job families the measure is meant for; missing = all. */
+  families?: string[];
+  /** Courses or videos to start with. */
+  courses?: CourseLink[];
 }
 
 export interface RoadmapPhase {
@@ -111,8 +189,10 @@ export interface Rating {
   note: string;
   /** Example from the own work the employee gave in the self-check. */
   selfNote?: string;
-  /** Answer per self-check question (0 = not yet, 1 to 3 = level); `self` follows from them. */
+  /** Chosen option per case of the self-check (index into the case's options); `self` follows from them. */
   selfAnswers?: (number | null)[];
+  /** What the employee wrote in the written task of the self-check; empty = no example given. */
+  selfTask?: string;
 }
 
 export type AssessmentStatus = "open" | "in-progress" | "completed";
@@ -123,6 +203,8 @@ export interface Assessment {
   ratings: Record<string, Rating>;
   /** Competencies manager and employee chose to work on first (at most two). */
   focus?: string[];
+  /** False while the employee keeps the self-check for the own development; anything else counts as shared with the manager. */
+  selfShared?: boolean;
 }
 
 export type AssignmentStatus = "planned" | "running" | "done";
@@ -156,3 +238,6 @@ export interface Org {
 }
 
 export type Assessments = Record<string, Assessment>;
+
+/** Tasks HR added to a job family from uploaded job descriptions, by family id. */
+export type Uploads = Record<string, TaskChange[]>;

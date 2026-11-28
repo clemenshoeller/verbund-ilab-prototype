@@ -1,8 +1,10 @@
+import { TaskTable } from "../components/Learning";
 import { Steps, StepsLegend } from "../components/Steps";
 import { Card, PageHead } from "../components/Ui";
 import { useData } from "../data";
 import { profileCompetencies } from "../lib/gap";
-import { go } from "../lib/router";
+import { tasksBehind } from "../lib/jobprofile";
+import { switchTo } from "../lib/router";
 import type { Content } from "../types";
 
 /** Target profile per job family. Shown in both views; HR reaches it as "Job families". */
@@ -19,7 +21,7 @@ export function Profiles({ familyId, base }: { familyId?: string; base: string }
 
       <div className="tabs" role="tablist" aria-label="Job family">
         {content.families.map((f) => (
-          <button key={f.id} role="tab" type="button" aria-selected={f.id === family.id} className={"tab" + (f.id === family.id ? " on" : "")} onClick={() => go(`${base}/profiles/${f.id}`)}>
+          <button key={f.id} role="tab" type="button" aria-selected={f.id === family.id} className={"tab" + (f.id === family.id ? " on" : "")} onClick={() => switchTo(`${base}/profiles/${f.id}`)}>
             {f.name}
           </button>
         ))}
@@ -60,6 +62,16 @@ export function Profiles({ familyId, base }: { familyId?: string; base: string }
                           <dd>{c.examples[family.id]}</dd>
                         </>
                       )}
+                      {tasksBehind(family, c.id).length > 0 && (
+                        <>
+                          <dt>Needed for</dt>
+                          <dd>
+                            {tasksBehind(family, c.id)
+                              .map((task) => task.task)
+                              .join(" · ")}
+                          </dd>
+                        </>
+                      )}
                     </dl>
                     {hr && (
                       <p style={{ marginTop: 10 }}>
@@ -75,6 +87,13 @@ export function Profiles({ familyId, base }: { familyId?: string; base: string }
       })}
 
       <StepsLegend />
+
+      {family.tasks && (
+        <Card title="How the job changes until 2030" aside={hr ? <a href={`#/hr/tasks/${family.id}`}>Tasks and levels</a> : `${family.tasks.length} common tasks`} flush>
+          <TaskTable content={content} family={family} needs={false} />
+          <p className="muted small card-note">The profile above follows from these tasks: each competency is needed at the level the most demanding task asks for.</p>
+        </Card>
+      )}
     </>
   );
 }

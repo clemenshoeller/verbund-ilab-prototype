@@ -681,6 +681,24 @@
           "manager": 3,
           "agreed": 3,
           "note": "Built the checks for the data pipeline."
+        },
+        "data-work": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -715,6 +733,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -745,6 +781,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
+          "note": "Finds faults that others miss."
         }
       }
     },
@@ -756,22 +810,44 @@
           "self": 3,
           "manager": null,
           "agreed": null,
-          "note": ""
+          "note": "",
+          "selfTask": "A supplier sent logs with customer numbers for a bug analysis. I did not paste them into the assistant, removed the numbers with a script first and then used the released tool. I put the script into our team wiki, two colleagues use it now."
         },
         "check-results": {
           "self": 2,
           "manager": null,
           "agreed": null,
-          "note": ""
+          "note": "",
+          "selfTask": "The assistant wrote a migration script for the application database. I read it line by line, ran it on a copy first and compared the row counts. It had dropped an index, which I added again before the release."
         },
         "spot-potential": {
           "self": 2,
           "manager": null,
           "agreed": null,
-          "note": ""
+          "note": "",
+          "selfTask": "Release notes take me about two hours per release. An assistant could draft them from the tickets; it would need read access to the ticket system. Risk: it invents changes, so I would still check them against the tickets."
         },
         "build-scale": {
           "self": 2,
+          "manager": null,
+          "agreed": null,
+          "note": "",
+          "selfTask": "I built a prompt template for incident summaries and adjusted it until the format fitted our reports. The three people in the on-call rotation use it."
+        },
+        "data-work": {
+          "self": 2,
+          "manager": null,
+          "agreed": null,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": null,
+          "agreed": null,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
           "manager": null,
           "agreed": null,
           "note": ""
@@ -841,6 +917,24 @@
           "manager": 1,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -870,6 +964,24 @@
           "self": 2,
           "manager": 3,
           "agreed": 3,
+          "note": ""
+        },
+        "data-work": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -901,6 +1013,24 @@
           "manager": 2,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -930,6 +1060,24 @@
           "self": 2,
           "manager": 1,
           "agreed": 2,
+          "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 3,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
           "note": ""
         }
       }
@@ -961,6 +1109,24 @@
           "manager": 1,
           "agreed": 2,
           "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
         }
       }
     },
@@ -990,6 +1156,24 @@
           "self": 3,
           "manager": 3,
           "agreed": 3,
+          "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -1021,6 +1205,24 @@
           "manager": 0,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 3,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
         }
       }
     },
@@ -1048,6 +1250,24 @@
         },
         "build-scale": {
           "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "data-work": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
           "manager": 2,
           "agreed": 2,
           "note": ""
@@ -1079,6 +1299,24 @@
         "build-scale": {
           "self": 1,
           "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 1,
           "agreed": 2,
           "note": ""
         }
@@ -1123,6 +1361,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -1165,6 +1421,24 @@
           "manager": 1,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 3,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -1195,6 +1469,24 @@
           "manager": 3,
           "agreed": 2,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
         }
       }
     },
@@ -1222,6 +1514,24 @@
         },
         "build-scale": {
           "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "data-work": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
           "manager": 3,
           "agreed": 3,
           "note": ""
@@ -1255,6 +1565,24 @@
           "manager": 2,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -1284,6 +1612,24 @@
           "self": 1,
           "manager": 2,
           "agreed": 2,
+          "note": ""
+        },
+        "data-work": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
           "note": ""
         }
       }
@@ -1315,6 +1661,24 @@
           "manager": 2,
           "agreed": 2,
           "note": ""
+        },
+        "data-work": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 3,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -1344,6 +1708,24 @@
           "self": 3,
           "manager": 1,
           "agreed": 2,
+          "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 0,
+          "manager": 2,
+          "agreed": 1,
           "note": ""
         }
       }
@@ -1375,6 +1757,24 @@
           "manager": 3,
           "agreed": 3,
           "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -1403,6 +1803,24 @@
         "build-scale": {
           "self": 2,
           "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "data-work": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 3,
           "agreed": 2,
           "note": ""
         }
@@ -1447,6 +1865,24 @@
           "manager": 1,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -1473,6 +1909,24 @@
           "note": ""
         },
         "build-scale": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
           "self": 0,
           "manager": 0,
           "agreed": 0,
@@ -1507,6 +1961,24 @@
           "manager": 1,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -1536,6 +2008,24 @@
           "self": 0,
           "manager": 1,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -1567,6 +2057,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -1597,6 +2105,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -1626,6 +2152,24 @@
           "self": 1,
           "manager": 1,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         }
       }
@@ -1669,6 +2213,24 @@
           "manager": 1,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
         }
       }
     },
@@ -1698,6 +2260,24 @@
           "self": 0,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         }
       }
@@ -1747,6 +2327,24 @@
           "manager": 0,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -1776,6 +2374,24 @@
           "self": 0,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -1807,6 +2423,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -1836,6 +2470,24 @@
           "self": 0,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 1,
           "note": ""
         }
       }
@@ -1879,6 +2531,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -1909,6 +2579,24 @@
           "manager": 1,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 0,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -1936,6 +2624,24 @@
         },
         "build-scale": {
           "self": 0,
+          "manager": 1,
+          "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
           "manager": 1,
           "agreed": 0,
           "note": ""
@@ -1969,6 +2675,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -1998,6 +2722,24 @@
           "self": 0,
           "manager": 1,
           "agreed": 1,
+          "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -2029,6 +2771,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 0,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -2055,6 +2815,24 @@
           "note": ""
         },
         "build-scale": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 0,
+          "note": ""
+        },
+        "process-solve": {
           "self": 1,
           "manager": 0,
           "agreed": 0,
@@ -2088,6 +2866,24 @@
           "self": 0,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         }
       }
@@ -2131,6 +2927,24 @@
           "manager": 1,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
         }
       }
     },
@@ -2173,6 +2987,24 @@
           "manager": 1,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -2202,6 +3034,24 @@
           "self": 1,
           "manager": 1,
           "agreed": 1,
+          "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -2233,6 +3083,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -2262,6 +3130,24 @@
           "self": 1,
           "manager": 1,
           "agreed": 1,
+          "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -2293,6 +3179,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -2323,6 +3227,24 @@
           "manager": 1,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
         }
       }
     },
@@ -2352,6 +3274,24 @@
           "self": 0,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -2401,6 +3341,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -2443,6 +3401,24 @@
           "manager": 1,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 3,
+          "manager": 3,
+          "agreed": 3,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 3,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -2472,6 +3448,24 @@
           "self": 1,
           "manager": 1,
           "agreed": 1,
+          "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -2503,6 +3497,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -2532,6 +3544,24 @@
           "self": 0,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -2563,6 +3593,24 @@
           "manager": 1,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 0,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -2592,6 +3640,24 @@
           "self": 0,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
           "note": ""
         }
       }
@@ -2641,6 +3707,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
         }
       }
     },
@@ -2670,6 +3754,24 @@
           "self": 1,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 0,
+          "manager": 0,
+          "agreed": 0,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }
@@ -2701,6 +3803,24 @@
           "manager": 1,
           "agreed": 1,
           "note": ""
+        },
+        "data-work": {
+          "self": 3,
+          "manager": 1,
+          "agreed": 2,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 2,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -2731,6 +3851,24 @@
           "manager": 0,
           "agreed": 0,
           "note": ""
+        },
+        "data-work": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 1,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 3,
+          "manager": 2,
+          "agreed": 2,
+          "note": ""
         }
       }
     },
@@ -2760,6 +3898,24 @@
           "self": 0,
           "manager": 0,
           "agreed": 0,
+          "note": ""
+        },
+        "data-work": {
+          "self": 1,
+          "manager": 0,
+          "agreed": 1,
+          "note": ""
+        },
+        "adapt-learn": {
+          "self": 0,
+          "manager": 1,
+          "agreed": 1,
+          "note": ""
+        },
+        "process-solve": {
+          "self": 1,
+          "manager": 2,
+          "agreed": 2,
           "note": ""
         }
       }

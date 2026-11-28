@@ -1,12 +1,13 @@
 import { FamilyHeat } from "../../components/FamilyHeat";
 import { ShareLegend } from "../../components/Figures";
+import { SimNote } from "../../components/Learning";
 import { Card, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
 import { familyGrid, priorities, type Horizon } from "../../lib/metrics";
-import { go } from "../../lib/router";
+import { switchTo } from "../../lib/router";
 import { useUi } from "../../ui";
 
-const HORIZONS: { id: Horizon; label: string; what: string; reads: string }[] = [
+export const HORIZONS: { id: Horizon; label: string; what: string; reads: string }[] = [
   {
     id: "baseline",
     label: "Expected today",
@@ -30,14 +31,15 @@ export function HrGapAnalysis({ horizonId }: { horizonId?: string }) {
 
   return (
     <>
-      <PageHead title="Gap analysis" sub="Agreed levels against the target profiles: the darker the cell, the more people are there. Click a cell or a row for the detail." />
+      <PageHead title="Competency gaps" sub="Agreed levels against the target profiles, for the AI competencies and the general ones: the darker the cell, the more people are there. Click a cell or a row for the detail." />
+      <SimNote />
 
       <Card
         title={`Share of rated employees who already reach ${horizon.what}`}
         aside={
           <span className="tabs" role="tablist" aria-label="Horizon">
             {HORIZONS.map((h) => (
-              <button key={h.id} type="button" role="tab" aria-selected={h.id === horizon.id} className={"tab" + (h.id === horizon.id ? " on" : "")} onClick={() => go(`/hr/gaps/${h.id}`)}>
+              <button key={h.id} type="button" role="tab" aria-selected={h.id === horizon.id} className={"tab" + (h.id === horizon.id ? " on" : "")} onClick={() => switchTo(`/hr/gaps/${h.id}`)}>
                 {h.label}
               </button>
             ))}
