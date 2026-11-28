@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Assessments, AssignmentStatus, Assignments, Rating, TaskChange, Uploads } from "../types";
+import type { Assessments, AssignmentStatus, Assignments, Rating, RoleOf, RoleProfile, TaskChange, Uploads } from "../types";
 
 /** Demo state lives in the browser only. "Reset demo data" deletes it. */
 export const STORAGE_KEY = "ai-competency-check.state.v5";
@@ -10,11 +10,15 @@ export const MAX_FOCUS = 2;
 interface Seed {
   assessments: Assessments;
   assignments: Assignments;
+  /** Role profile per employee. */
+  roles: RoleOf;
 }
 
 interface State extends Seed {
   /** Tasks from uploaded job descriptions, by job family. */
   uploads: Uploads;
+  /** Role profiles HR created in the app, in addition to those of the content. */
+  customRoles: RoleProfile[];
 }
 
 /** Short fingerprint of the sample data, so saved edits are dropped when the data underneath changes. */
@@ -36,17 +40,21 @@ export function readSaved(raw: string | null, seedPrint: string): State | null {
     const { assessments, assignments } = saved;
     // Saved states from before the upload existed have no uploads.
     const uploads = saved.uploads ?? {};
-    if (!isRecord(assessments) || !isRecord(assignments) || !isRecord(uploads)) return null;
+    const roles = saved.roles ?? {};
+    const customRoles = saved.customRoles ?? [];
+    if (!isRecord(assessments) || !isRecord(assignments) || !isRecord(uploads) || !isRecord(roles) || !Array.isArray(customRoles)) return null;
     const assessmentsOk = Object.values(assessments).every((a) => isRecord(a) && typeof a.status === "string" && isRecord(a.ratings));
     const assignmentsOk = Object.values(assignments).every((list) => Array.isArray(list) && list.every((a) => isRecord(a) && typeof a.measureId === "string"));
     const uploadsOk = Object.values(uploads).every((list) => Array.isArray(list) && list.every((t) => isRecord(t) && typeof t.task === "string" && isRecord(t.needs2030)));
-    return assessmentsOk && assignmentsOk && uploadsOk ? ({ assessments, assignments, uploads } as unknown as State) : null;
+    const rolesOk = Object.values(roles).every((id) => typeof id === "string");
+    const customOk = customRoles.every((r) => isRecord(r) && typeof r.id === "string" && typeof r.name === "string" && typeof r.family === "string" && Array.isArray(r.tasks));
+    return assessmentsOk && assignmentsOk && uploadsOk && rolesOk && customOk ? ({ assessments, assignments, uploads, roles, customRoles } as unknown as State) : null;
   } catch {
     return null;
   }
 }
 
-const fresh = (seed: Seed): State => ({ ...structuredClone(seed), uploads: {} });
+const fresh = (seed: Seed): State => ({ ...structuredClone(seed), uploads: {}, customRoles: [] });
 
 function load(seed: Seed, seedPrint: string): { state: State; fromStorage: boolean } {
   try {
@@ -152,6 +160,27 @@ export function useStore(seed: Seed) {
     [change],
   );
 
+  /** A manager assigns a role profile to a team member, or takes it away with null. */
+  const assignRole = useCallback(
+    (employeeId: string, roleId: string | null) => {
+      change((prev) => {
+        const roles = { ...prev.roles };
+        if (roleId) roles[employeeId] = roleId;
+        else delete roles[employeeId];
+        return { ...prev, roles };
+      });
+    },
+    [change],
+  );
+
+  /** HR saves the tasks read from a job description as a role profile that managers can assign. */
+  const addRole = useCallback(
+    (role: Omit<RoleProfile, "id">) => {
+      change((prev) => ({ ...prev, customRoles: [...prev.customRoles, { ...role, id: `role-custom-${prev.customRoles.length + 1}` }] }));
+    },
+    [change],
+  );
+
   const setFocus = useCallback(
     (employeeId: string, focus: string[]) => {
       change((prev) => {
@@ -218,7 +247,7 @@ export function useStore(seed: Seed) {
     setState(fresh(seed));
   }, [seed]);
 
-  return { ...state, setRating, setSelf, shareSelf, setFocus, complete, assign, setAssignmentStatus, unassign, addUpload, clearUploads, reset };
+  return { ...state, setRating, setSelf, shareSelf, setFocus, complete, assign, setAssignmentStatus, unassign, addUpload, clearUploads, assignRole, addRole, reset };
 }
 
 export type Store = ReturnType<typeof useStore>;

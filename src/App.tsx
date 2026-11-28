@@ -7,7 +7,7 @@ import { Search } from "./components/Search";
 import { SectionContext, type Section } from "./components/Ui";
 import { ViewAs, type View } from "./components/ViewAs";
 import { DataContext, useData, type Data } from "./data";
-import { withUploads } from "./lib/jobprofile";
+import { withRoles, withUploads } from "./lib/jobprofile";
 import { takeStay, useRoute } from "./lib/router";
 import { useStore } from "./lib/store";
 import { nextActions } from "./lib/workflow";
@@ -62,14 +62,19 @@ export function App() {
 }
 
 function Root({ content, org }: { content: Content; org: Org }) {
-  const seed = useMemo(() => ({ assessments: org.assessments, assignments: org.assignments }), [org]);
+  const seed = useMemo(() => ({ assessments: org.assessments, assignments: org.assignments, roles: org.roles ?? {} }), [org]);
   const store = useStore(seed);
   const team = useMemo(() => {
     const info = org.teams.find((t) => t.id === org.currentTeamId) ?? org.teams[0];
     return { info, employees: org.employees.filter((e) => e.team === info.id) };
   }, [org]);
   // Tasks from uploaded job descriptions are part of the model from the moment HR applies them.
-  const model = useMemo(() => withUploads(content, store.uploads), [content, store.uploads]);
+  // Role profiles (those of the content and those HR added) give the people they are assigned to a profile of their own.
+  const model = useMemo(() => {
+    const base = withUploads(content, store.uploads);
+    const roleProfiles = [...(content.roleProfiles ?? []), ...store.customRoles];
+    return withRoles({ ...base, roleProfiles }, org.employees, store.roles, roleProfiles);
+  }, [content, org, store.uploads, store.roles, store.customRoles]);
   const data: Data = { ...store, content: model, org, team };
   return (
     <DataContext.Provider value={data}>
@@ -194,7 +199,7 @@ function Shell() {
               { id: "profiles", label: "Job families", href: "#/hr/profiles", count: content.families.length },
               { id: "competencies", label: "Competencies", href: "#/hr/competencies", count: content.competencies.length },
               { id: "measures", label: "Measures", href: "#/hr/measures", count: content.measures.length },
-              { id: "upload", label: "Upload", href: "#/hr/upload" },
+              { id: "upload", label: "Role profiles", href: "#/hr/upload", count: content.roleProfiles?.length },
             ],
           },
           {

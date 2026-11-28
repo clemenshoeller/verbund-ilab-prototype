@@ -3,7 +3,7 @@ import { KpiTile, Tiles } from "../../components/KpiTile";
 import { Steps, StepsLegend } from "../../components/Steps";
 import { Avatar, Card, PageHead, StageChip } from "../../components/Ui";
 import { useData } from "../../data";
-import { gapRows } from "../../lib/gap";
+import { familyOf, gapRows } from "../../lib/gap";
 import { kpis } from "../../lib/metrics";
 import { nextActions } from "../../lib/workflow";
 import { useUi } from "../../ui";
@@ -16,12 +16,12 @@ export function TeamHome() {
   const actions = nextActions(content, team.employees, assessments, assignments);
   const withMeasures = team.employees.filter((e) => assessments[e.id]?.status === "completed" && (assignments[e.id] ?? []).length > 0).length;
   // Only the competencies someone in this team needs.
-  const columns = content.competencies.filter((c) => team.employees.some((e) => (content.families.find((f) => f.id === e.family)?.profile[c.id]?.target ?? 0) > 0));
+  const columns = content.competencies.filter((c) => team.employees.some((e) => (familyOf(content, e)?.profile[c.id]?.target ?? 0) > 0));
 
   // Per competency: who in the team has reached the 2030 target. A skill held by one person is fragile.
   const holders = columns.map((c) => {
     const rated = team.employees.flatMap((e) => {
-      const target = content.families.find((f) => f.id === e.family)?.profile[c.id]?.target ?? 0;
+      const target = familyOf(content, e)?.profile[c.id]?.target ?? 0;
       const agreed = assessments[e.id]?.ratings[c.id]?.agreed ?? null;
       return target > 0 && agreed !== null ? [{ employee: e, reached: agreed >= target }] : [];
     });
@@ -108,7 +108,7 @@ export function TeamHome() {
             </thead>
             <tbody>
               {team.employees.map((employee) => {
-                const family = content.families.find((f) => f.id === employee.family)!;
+                const family = familyOf(content, employee)!;
                 const rows = gapRows(content, family, assessments[employee.id]);
                 return (
                   <tr key={employee.id} className="clickable" onClick={() => openDrawer({ type: "person", id: employee.id })}>

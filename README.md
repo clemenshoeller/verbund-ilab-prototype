@@ -48,6 +48,7 @@ What came in after the jour fixe with VERBUND of 24.11.2026 and the feedback of 
 | No current-state data: personas | "Personas" shows a beginner, an advanced user and an expert per job family with their gaps and fitting measures, marked as simulated. The same personas can fill the self-check in a demo |
 | Skills dashboard per job unit, overview of all roles | "Skills by unit" (unit by competency) and "Roles" (holders per role, roles held by one person, required profile) |
 | HR uploads job descriptions, profiles adapt | "Upload": paste a job description or choose a text file, review the tasks and levels read from it, see its skills clustered by competency and the job family it reads like, apply. The target profile of the family is raised where the text asks for more. Mocked with keyword rules; no AI model is called |
+| Requirements of the job, not only of the job family (28.11.2026) | Role profiles: HR creates one from the job description of a role (Competency model, Role profiles); a manager assigns it to the team members who hold the role, in the record of the person. The person is then measured against the job family plus what the role asks for: self-check, conversation, gap, measures and the HR totals use these targets. In the conversation the manager sees which task of the role sets a level. Three role profiles are assigned in the demo team, two more can be assigned |
 | A stronger logic behind the front end | The rules are functions with tests: level from cases, target from tasks, share of the 2030 profile, ranking of measures, upload analysis |
 | Findings must feed the logic of the tool | The chain from findings to measures is shown on "Changing tasks"; tasks, levels and measures sit in one content file |
 
@@ -73,7 +74,7 @@ Requires Node.js 22.12 or newer.
 ```bash
 npm install
 npm run dev        # http://localhost:5173 (next free port if taken)
-npm test           # 120 tests
+npm test           # 128 tests
 npm run lint       # code and accessibility rules
 npm run build      # production build in dist/
 npm run build:single   # the same as one HTML file in dist-single/
@@ -134,7 +135,7 @@ src/
   lib/metrics.ts       totals, trend, heatmap, priorities
   lib/workflow.ts      stages, next steps, use of measures
   lib/scoring.ts       level from the cases, share of the 2030 profile, path to 2030, ranking of measures
-  lib/jobprofile.ts    target profile from tasks; reading a job description (mocked)
+  lib/jobprofile.ts    target profile from tasks; role profiles and the profile of a person; reading a job description (mocked)
   lib/store.ts         ratings, measures and uploads in the browser
   lib/router.ts        hash routing, needs no server rules
   pages/me/            employee: Me, SelfCheck
@@ -210,7 +211,7 @@ What follows for the handover:
 - Whether the team's notes from talks with VERBUND may be processed in an externally hosted AI service is to be confirmed with VERBUND. No VERBUND credentials, systems or data sets were entered.
 - The training setting of the Claude account should be checked and, if it is on, switched off for further work on the project (claude.ai → Settings → Privacy).
 
-**Use of AI.** All code, the placeholder content and this documentation were written with Claude Code on instructions of the student team. Reviewed by: type check, lint with accessibility rules, 120 automated tests including an accessibility check with axe-core, dependency audit, a scan of the git history for secrets, click-throughs in the browser at desktop and phone width, and a second, independent review pass by an AI agent that had not written the code (see below). A line-by-line review by a human developer has not taken place.
+**Use of AI.** All code, the placeholder content and this documentation were written with Claude Code on instructions of the student team. Reviewed by: type check, lint with accessibility rules, 128 automated tests including an accessibility check with axe-core, dependency audit, a scan of the git history for secrets, click-throughs in the browser at desktop and phone width, and a second, independent review pass by an AI agent that had not written the code (see below). A line-by-line review by a human developer has not taken place.
 
 **Findings of the independent AI review (16.11.2026), all fixed and covered by tests:** the HR role showed figures that rested on one or two managers of a team; broken saved data could blank the app with no way back; saved edits could shadow new sample data; editing a note reopened a completed conversation; focus areas could lock after a level was raised; organisation-wide figures had no minimum group size; settings could not be passed to the container build. Accessibility: focus was lost on every page change, search results could not be reached by keyboard, the preview was not really modal, clickable rows were not announced as controls, the role menu had no keyboard support. Not acted on: the number of nginx worker processes under a small memory limit, judged a low risk.
 
@@ -248,11 +249,11 @@ Container images: `node:24-alpine` (build), `nginxinc/nginx-unprivileged:stable-
 
 ## Tests
 
-`npm test` runs 120 tests.
+`npm test` runs 128 tests.
 
-- **80 unit tests**: gaps and status in words, focus areas, totals and trend, heatmap, prioritisation, minimum group size, stages and next steps, loading of saved data, consistency of the content files; since 28.11.2026 also the level from the cases, the written tasks and what to look for in them, the time limit of the self-check, the target profile from the tasks, the share of the 2030 profile and the path to 2030, the personas, the ranking of measures, skills by unit and roles, and the reading of job descriptions in English and German.
+- **86 unit tests**: gaps and status in words, focus areas, totals and trend, heatmap, prioritisation, minimum group size, stages and next steps, loading of saved data, consistency of the content files; since 28.11.2026 also the level from the cases, the written tasks and what to look for in them, the time limit of the self-check, the target profile from the tasks, the share of the 2030 profile and the path to 2030, the personas, the ranking of measures, skills by unit and roles, and the reading of job descriptions in English and German.
 - **2 accessibility tests** (`src/a11y.test.tsx`, axe-core): no violations on 33 pages, nor with the role list, the search results or a preview open. Colour contrast is excluded because the simulated browser cannot compute it.
-- **38 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as list; the search with arrow keys; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from the cases and written tasks of the self-check, its private result with course links, sharing it, the work sample the manager reads, through the conversation to the changed HR totals; that switching a tab inside a page keeps the place on the page; the self-check filled as a persona; changing tasks, personas, skills by unit and roles for HR, never with a person's name; a job description that raises a target profile and the reset that takes it back; the path to 2030; the list of differences in view, who on the team can help others, and that closing the preview does not move the page; the slimmed menus of manager and HR with their tabs; the definition and behaviour anchors of a competency for HR; reload and reset; and one test for each finding of the code review.
+- **40 click tests of the whole app** (`src/app.test.tsx`, jsdom and Testing Library): every page opens with a heading; every navigation link in every role works; the start page and the logo; the View-as list; the search with arrow keys; the preview panel for persons, pipeline cards and heatmap cells; the whole journey from the cases and written tasks of the self-check, its private result with course links, sharing it, the work sample the manager reads, through the conversation to the changed HR totals; that switching a tab inside a page keeps the place on the page; the self-check filled as a persona; changing tasks, personas, skills by unit and roles for HR, never with a person's name; a job description that raises a target profile and the reset that takes it back; the path to 2030; the list of differences in view, who on the team can help others, and that closing the preview does not move the page; the slimmed menus of manager and HR with their tabs; the definition and behaviour anchors of a competency for HR; reload and reset; and one test for each finding of the code review.
 
 A second workflow (`.github/workflows/pages.yml`) runs the tests, builds the app and publishes it at the demo link on every push to `main`.
 
@@ -265,6 +266,7 @@ Manual test: as employee do the self-check (or use "Answer as ..." on its first 
 - The check is part of the existing yearly appraisal talk and takes about twenty minutes.
 - Six AI competencies in three groups and three general competencies, three described levels plus "not yet", one target profile per job family for today and for 2030.
 - The target profile of a job family is the highest level any of its tasks needs; it is set before anyone is assessed.
+- A role profile belongs to one job family, is created by HR and assigned by the manager; it can raise a 2030 target for the people who hold the role and never lowers one. The person sees it.
 - The self-check belongs to the employee and takes 40 minutes at most; a level counts when at least two thirds of the cases of a competency show it. Written tasks are rated by the manager, never by the tool.
 - VERBUND offers the measures named here; the learning itself happens in its learning offer or at the provider, not in the tool.
 - Three focus job families and managers as a separate group, as agreed in the project.

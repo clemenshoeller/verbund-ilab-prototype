@@ -6,6 +6,11 @@
     "name": "Martina Koch",
     "role": "Personnel development"
   },
+  "roles": {
+    "e1": "role-data-engineer",
+    "e3": "role-controller",
+    "e5": "role-maintenance"
+  },
   "teams": [
     {
       "id": "t1",

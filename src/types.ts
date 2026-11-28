@@ -101,6 +101,22 @@ export interface TaskChange {
   needs2030: Record<string, number>;
   /** Set for tasks that came from an uploaded job description. */
   source?: string;
+  /** Set for tasks that belong to a role profile: the name of that profile. */
+  role?: string;
+}
+
+/**
+ * The tasks of one job role, read from its job description. HR creates role profiles; a manager
+ * assigns one to the team members who hold the role. A role profile can raise 2030 targets above
+ * those of the job family, for these people only.
+ */
+export interface RoleProfile {
+  id: string;
+  name: string;
+  /** Job family the role belongs to. */
+  family: string;
+  summary: string;
+  tasks: TaskChange[];
 }
 
 /** An example profile that stands in for the unknown current state: a beginner, an advanced user, an expert. */
@@ -142,6 +158,8 @@ export interface Family {
   personas?: Persona[];
   /** Where the tasks and levels come from. */
   basis?: string;
+  /** Set on the profile of a person with a role profile: the job family with the targets and tasks of the role added. */
+  role?: { id: string; name: string };
 }
 
 export interface MeasureType {
@@ -189,6 +207,10 @@ export interface Content {
   governance: Governance;
   /** Second layer of the framework: skills beyond AI, with the interviews behind them. */
   furtherSkills?: FurtherSkill[];
+  /** Role profiles that come with the sample content; HR can add more in the app. */
+  roleProfiles?: RoleProfile[];
+  /** Derived, never part of the content file: the profile of each person who has a role profile, by employee id. */
+  personal?: Record<string, Family>;
 }
 
 export interface Employee {
@@ -252,7 +274,12 @@ export interface Org {
   employees: Employee[];
   assessments: Record<string, Assessment>;
   assignments: Assignments;
+  /** Role profile per employee, by employee id. */
+  roles?: RoleOf;
 }
+
+/** Which role profile a person has, by employee id. */
+export type RoleOf = Record<string, string>;
 
 export type Assessments = Record<string, Assessment>;
 

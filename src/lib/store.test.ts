@@ -5,7 +5,7 @@ const good = { seed: "p1", assessments: { e1: { status: "completed", date: "2026
 
 describe("readSaved", () => {
   it("accepts a saved state of the expected shape for the same sample data", () => {
-    expect(readSaved(JSON.stringify(good), "p1")).toEqual({ assessments: good.assessments, assignments: good.assignments, uploads: {} });
+    expect(readSaved(JSON.stringify(good), "p1")).toEqual({ assessments: good.assessments, assignments: good.assignments, uploads: {}, roles: {}, customRoles: [] });
   });
   it("keeps the tasks of uploaded job descriptions", () => {
     const uploads = { D: [{ id: "D-upload-1", task: "Review diagnoses", today: "", future: "Review diagnoses", change: "augmented", needsToday: {}, needs2030: { "check-results": 3 } }] };

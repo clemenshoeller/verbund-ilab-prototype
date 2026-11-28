@@ -1,4 +1,4 @@
-import type { Content, Family, ProfileEntry, TaskChange, Uploads } from "../types";
+import type { Content, Employee, Family, ProfileEntry, RoleOf, RoleProfile, TaskChange, Uploads } from "../types";
 
 /**
  * From tasks to the target profile: a job family needs, per competency, the highest level any of
@@ -55,6 +55,33 @@ export function withUploads(content: Content, uploads: Uploads): Content {
     return { ...family, profile, tasks: [...(family.tasks ?? []), ...added] };
   });
   return { ...content, families };
+}
+
+/** What a role profile raises above the profile of its job family. */
+export function roleChanges(content: Content, role: RoleProfile): ProfileChange[] {
+  const family = content.families.find((f) => f.id === role.family);
+  return family ? profileChanges(family, role.tasks, content.levels.length) : [];
+}
+
+/**
+ * The content with a personal profile for everyone who has a role profile: the job family with the
+ * tasks of the role added and the 2030 targets raised where the role asks for more. A role profile
+ * only applies to people of its own job family, and like an upload it never lowers a target.
+ */
+export function withRoles(content: Content, employees: Employee[], roleOf: RoleOf, roles: RoleProfile[]): Content {
+  const personal: Record<string, Family> = {};
+  for (const employee of employees) {
+    const role = roles.find((r) => r.id === roleOf[employee.id] && r.family === employee.family);
+    const family = content.families.find((f) => f.id === employee.family);
+    if (!role || !family) continue;
+    const tasks = role.tasks.map((task) => ({ ...task, role: role.name }));
+    const profile = { ...family.profile };
+    for (const change of profileChanges(family, tasks, content.levels.length)) {
+      profile[change.competencyId] = { ...profile[change.competencyId], target: change.to };
+    }
+    personal[employee.id] = { ...family, profile, tasks: [...(family.tasks ?? []), ...tasks], role: { id: role.id, name: role.name } };
+  }
+  return Object.keys(personal).length ? { ...content, personal } : content;
 }
 
 /*

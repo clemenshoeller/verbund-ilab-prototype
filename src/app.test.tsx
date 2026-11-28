@@ -353,7 +353,8 @@ describe("differences in view", () => {
   it("shows on the team dashboard who has reached the 2030 target per competency", async () => {
     await start("/team");
     const cells = [...main().querySelectorAll(".matrix tfoot td")].map((td) => td.textContent);
-    expect(cells).toEqual(["Julia, Michael", "Anna, Stefan", "Nobody yet", "Annaonly one", "–", "–", "Anna, Julia", "Nobody yet", "Stefanonly one"]);
+    // Stefan's and Julia's role profiles ask for more than their job families, so fewer have reached the target.
+    expect(cells).toEqual(["Julia, Michael", "Annaonly one", "Nobody yet", "Annaonly one", "–", "–", "Annaonly one", "Nobody yet", "Stefanonly one"]);
   });
 
   it("leaves the card out while the manager has rated nothing", async () => {
@@ -401,7 +402,7 @@ describe("findings of the code review", () => {
     await start("/team/people/e3/conversation/focus");
     const options = () => [...main().querySelectorAll<HTMLButtonElement>(".options .option")];
     expect(options().filter((o) => o.getAttribute("aria-pressed") === "true")).toHaveLength(2);
-    expect(options()[2].disabled).toBe(true);
+    expect(options().filter((o) => o.getAttribute("aria-pressed") !== "true").every((o) => o.disabled)).toBe(true);
     // Raise "Checking and owning AI results" to its target: it is no gap any more and no focus either.
     await open("/team/people/e3/conversation/check-results");
     click([...main().querySelectorAll<HTMLInputElement>(".pickcell.agreed input")][3]);
@@ -454,7 +455,7 @@ describe("menu", () => {
     expect(labels()).toEqual(["Dashboard", "Gap analysis", "Teams", "Competency model", "Plan"]);
     expect(menu().getByRole("link", { name: "Competency model" }).getAttribute("aria-current")).toBe("page");
     const tabs = within(screen.getByRole("tablist", { name: "Competency model" }));
-    expect(tabs.getAllByRole("tab").map((t) => t.textContent?.replace(/\d+$/, ""))).toEqual(["Job families", "Competencies", "Measures", "Upload"]);
+    expect(tabs.getAllByRole("tab").map((t) => t.textContent?.replace(/\d+$/, ""))).toEqual(["Job families", "Competencies", "Measures", "Role profiles"]);
     expect(tabs.getByRole("tab", { name: /Competencies/ }).getAttribute("aria-selected")).toBe("true");
     await open("/hr/governance");
     expect(menu().getByRole("link", { name: "Plan" }).getAttribute("aria-current")).toBe("page");
@@ -621,7 +622,7 @@ describe("after the jour fixe of 24.11.2026", () => {
     click(within(main()).getByRole("button", { name: "Use Engineering & Technicians" }));
     expect(within(main()).getByRole("tab", { name: "Engineering & Technicians" }).getAttribute("aria-selected")).toBe("true");
     expect(main().textContent).not.toContain("This reads like a job in");
-    click(within(main()).getByRole("button", { name: "Apply to the job profile" }));
+    click(within(main()).getByRole("button", { name: "Apply to the whole job family" }));
     expect(screen.getByRole("status").textContent).toContain("Profile of Engineering & Technicians updated");
 
     await open("/hr/tasks/D");
@@ -632,6 +633,66 @@ describe("after the jour fixe of 24.11.2026", () => {
     click(screen.getByRole("button", { name: /View as/ }));
     click(screen.getByRole("button", { name: /Reset demo data/ }));
     expect(line()).toBe("Today: Foundation · 2030: Practitioner");
+  });
+
+  it("measures a person against the role profile the manager assigned", async () => {
+    // Three role profiles are assigned in the demo team.
+    await start("/team/people");
+    const row = (name: string) => [...main().querySelectorAll("tbody tr")].find((tr) => tr.textContent!.includes(name))!;
+    expect(row("Julia Steiner").textContent).toContain("Controller, group controlling");
+    expect(row("Katharina Moser").textContent).toContain("None");
+
+    await open("/team/people/e3");
+    const card = () => [...main().querySelectorAll<HTMLElement>(".card")].find((c) => c.querySelector("h2")?.textContent === "Role profile")!;
+    expect(card().textContent).toContain("Asks for more than Commercial & Corporate Office");
+    expect(card().textContent).toContain("Data and information literacyPractitioner → Advanced");
+    expect(card().textContent).toContain("Realising and scaling AI use casesFoundation → Practitioner");
+    const line = (name: string) => [...main().querySelectorAll("details.comp")].find((d) => d.querySelector("strong")!.textContent === name)!;
+    expect(line("Data and information literacy").querySelector(".chip.role")).not.toBeNull();
+    expect(line("Using AI safely").querySelector(".chip.role")).toBeNull();
+    // In the conversation the manager sees what the role asks for, next to the work sample and the levels.
+    await open("/team/people/e3/conversation/data-work");
+    expect(main().textContent).toContain("Role profile “Controller, group controlling”: the role asks for Advanced here, because of “Data quality of the reporting”.");
+    expect(main().querySelector(".rate tr.is-target")!.textContent).toContain("3 Advanced");
+
+    // Katharina has none: the manager chooses one, and her targets and her own view follow.
+    await open("/team/people/e6");
+    expect(card().textContent).toContain("Without a role profile Katharina is measured against the profile of Engineering & Technicians.");
+    const select = within(card()).getByRole("combobox", { name: "Role of Katharina" }) as HTMLSelectElement;
+    expect([...select.options].map((o) => o.textContent)).toEqual(["No role profile, job family only", "Maintenance Technician, hydropower", "Electrical Engineer, plant engineering"]);
+    fireEvent.change(select, { target: { value: "role-electrical" } });
+    expect(screen.getByRole("status").textContent).toContain("Role profile assigned to Katharina");
+    expect(card().textContent).toContain("Recognising and shaping AI potentialPractitioner → Advanced");
+    expect(line("Checking and owning AI results").querySelector(".chip.role")).not.toBeNull();
+    await open("/me");
+    expect(main().textContent).toContain("Your role profile: Electrical Engineer, plant engineering.");
+    expect(main().textContent).toContain("Design reviews with AI support");
+    await open("/team/people/e6");
+    fireEvent.change(within(card()).getByRole("combobox", { name: "Role of Katharina" }), { target: { value: "" } });
+    await open("/me");
+    expect(main().textContent).not.toContain("Your role profile");
+  });
+
+  it("lets HR create a role profile from a job description, for managers to assign", async () => {
+    await start("/hr/upload/D");
+    const list = () => [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Role profiles in Engineering & Technicians")!;
+    expect(list().querySelectorAll("li")).toHaveLength(2);
+    expect(list().textContent).toContain("Maintenance Technician, hydropower");
+    expect(list().textContent).toContain("assigned to 1");
+    expect(list().textContent).not.toMatch(names);
+    click(within(main()).getByRole("button", { name: "Use an example" }));
+    click(within(main()).getByRole("button", { name: "Read the tasks" }));
+    click(within(main()).getByRole("button", { name: "Save as a role profile" }));
+    expect(screen.getByRole("status").textContent).toContain("Role profile “Senior Maintenance Engineer, hydropower (invented example)” saved");
+    expect(list().querySelectorAll("li")).toHaveLength(3);
+    // Saving a role profile changes nobody's targets until a manager assigns it.
+    await open("/team/profiles/D");
+    expect(main().textContent).toContain("Today: Foundation · 2030: Practitioner");
+    await open("/team/people/e6");
+    const select = within(main()).getByRole("combobox", { name: "Role of Katharina" }) as HTMLSelectElement;
+    expect([...select.options].map((o) => o.textContent)).toContain("Senior Maintenance Engineer, hydropower (invented example)");
+    fireEvent.change(select, { target: { value: select.options[select.options.length - 1].value } });
+    expect(main().textContent).toContain("Asks for more than Engineering & Technicians");
   });
 
   it("shows HR the path to 2030 and where a measure starts", async () => {

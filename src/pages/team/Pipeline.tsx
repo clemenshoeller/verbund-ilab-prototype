@@ -1,7 +1,7 @@
 import { Icon } from "../../components/Icon";
 import { Avatar, PageHead, ViewToggle } from "../../components/Ui";
 import { useData } from "../../data";
-import { agreedCount, gapRows, totalGap } from "../../lib/gap";
+import { agreedCount, familyOf, gapRows, totalGap } from "../../lib/gap";
 import { STAGES, selfCheckShared, stageOf } from "../../lib/workflow";
 import { useUi } from "../../ui";
 
@@ -24,7 +24,7 @@ export function Pipeline() {
   const { content, team, assessments, assignments } = useData();
   const { openDrawer } = useUi();
   const cards = team.employees.map((employee) => {
-    const family = content.families.find((f) => f.id === employee.family)!;
+    const family = familyOf(content, employee)!;
     const assessment = assessments[employee.id];
     const rows = gapRows(content, family, assessment);
     return {

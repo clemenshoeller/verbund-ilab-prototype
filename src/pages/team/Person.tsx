@@ -2,9 +2,11 @@ import { CompetencyDetails, GapHeadline } from "../../components/CompetencyDetai
 import { StepsLegend } from "../../components/Steps";
 import { Avatar, Card, LinkTabs, NotFound, PageHead, StageChip, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
-import { activeFocus, gapRows, standing, summarise, type GapRow } from "../../lib/gap";
+import { activeFocus, familyOf, type GapRow, gapRows, standing, summarise } from "../../lib/gap";
 import { selfCheckDone, selfShared, stageOf } from "../../lib/workflow";
+import { roleChanges } from "../../lib/jobprofile";
 import type { Employee } from "../../types";
+import { useUi } from "../../ui";
 import { Conversation } from "./Conversation";
 
 const STATUS_LABEL = { planned: "Planned", running: "Running", done: "Done" } as const;
@@ -17,7 +19,7 @@ export function Person({ employeeId, tab = "overview", step }: { employeeId: str
     return <NotFound what="Person" back="#/team/people" backLabel="Team" />;
   }
 
-  const family = content.families.find((f) => f.id === employee.family)!;
+  const family = familyOf(content, employee)!;
   const assessment = assessments[employee.id];
   const assigned = assignments[employee.id] ?? [];
   const rows = gapRows(content, family, assessment);
@@ -126,6 +128,7 @@ function Overview({ employee, rows }: { employee: Employee; rows: GapRow[] }) {
         </Card>
 
         <div className="stack">
+          <RoleCard employee={employee} />
           <SeenDifferently employee={employee} rows={rows} />
           <Card title="Development plan" aside={completed ? <a href={`#/team/people/${employee.id}/conversation/focus`}>Change</a> : undefined}>
             {!completed ? (
@@ -161,6 +164,72 @@ function Overview({ employee, rows }: { employee: Employee; rows: GapRow[] }) {
         </div>
       </div>
     </>
+  );
+}
+
+/**
+ * The role profile of a team member: what the job description of the role asks for on top of the
+ * job family. HR creates role profiles; the manager chooses the one that fits.
+ */
+function RoleCard({ employee }: { employee: Employee }) {
+  const { content, roles, assignRole } = useData();
+  const { toast } = useUi();
+  const first = employee.name.split(" ")[0];
+  const family = content.families.find((f) => f.id === employee.family)!;
+  const options = (content.roleProfiles ?? []).filter((role) => role.family === employee.family);
+  const role = options.find((r) => r.id === roles[employee.id]);
+  const changes = role ? roleChanges(content, role) : [];
+  const level = (value: number) => content.levels.find((l) => l.value === value)?.name ?? "Not required";
+
+  return (
+    <Card title="Role profile" aside={role ? `${role.tasks.length} ${role.tasks.length === 1 ? "task" : "tasks"} from the job description` : "None assigned"}>
+      <label className="field">
+        <span>Role of {first}</span>
+        <select
+          value={role?.id ?? ""}
+          onChange={(event) => {
+            assignRole(employee.id, event.target.value || null);
+            toast(event.target.value ? `Role profile assigned to ${first}` : `Role profile removed for ${first}`);
+          }}
+        >
+          <option value="">No role profile, job family only</option>
+          {options.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      {!role ? (
+        <p className="muted">
+          Without a role profile {first} is measured against the profile of {family.name}.
+        </p>
+      ) : (
+        <>
+          <p className="muted">{role.summary}</p>
+          {changes.length === 0 ? (
+            <p>The profile of {family.name} already covers this role. Its tasks are added; no target changes.</p>
+          ) : (
+            <>
+              <p className="plan-label">Asks for more than {family.name}</p>
+              <ul className="plan">
+                {changes.map((change) => (
+                  <li key={change.competencyId}>
+                    <span>{content.competencies.find((c) => c.id === change.competencyId)?.name}</span>
+                    <span className="raise">
+                      {level(change.from)} → {level(change.to)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </>
+      )}
+      <p className="muted small role-note">
+        Role profiles are created by HR from job descriptions (Competency model, Role profiles). You choose the one that fits; {first} sees it too.
+      </p>
+    </Card>
   );
 }
 

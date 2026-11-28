@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { useData } from "../data";
-import { activeFocus, gapRows, standingText, summarise } from "../lib/gap";
+import { activeFocus, familyOf, gapRows, standingText, summarise } from "../lib/gap";
 import { MIN_GROUP, competencyStats, familyGrid, kpis, measureReach, percent, tooFew } from "../lib/metrics";
 import { measureUptake, selfCheckShared, stageOf } from "../lib/workflow";
 import { useUi, type DrawerSpec } from "../ui";
@@ -82,7 +82,7 @@ function PersonPreview({ id }: { id: string }) {
   const { content, team, assessments, assignments } = useData();
   const employee = team.employees.find((e) => e.id === id);
   if (!employee) return <p className="empty">Not found.</p>;
-  const family = content.families.find((f) => f.id === employee.family)!;
+  const family = familyOf(content, employee)!;
   const assessment = assessments[employee.id];
   const assigned = assignments[employee.id] ?? [];
   const rows = gapRows(content, family, assessment);

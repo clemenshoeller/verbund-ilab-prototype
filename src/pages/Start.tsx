@@ -1,5 +1,6 @@
 import { Avatar, PageHead } from "../components/Ui";
 import { useData } from "../data";
+import { familyOf } from "../lib/gap";
 import { selfCheckItems, selfCheckMinutes } from "../lib/scoring";
 
 /** Entry page: who uses the tool, the one journey to follow in a demo, and why it is built this way. */
@@ -45,7 +46,7 @@ export function Start() {
   const { content, org, team } = useData();
   const employee = org.employees.find((e) => e.id === org.currentEmployeeId)!;
   const first = employee.name.split(" ")[0];
-  const items = selfCheckItems(content, content.families.find((f) => f.id === employee.family)!);
+  const items = selfCheckItems(content, familyOf(content, employee)!);
   const written = items.filter((item) => item.kind === "task").length;
 
   const journey = [

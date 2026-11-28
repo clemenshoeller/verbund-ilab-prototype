@@ -27,6 +27,9 @@ export function CompetencyDetails({
   subText?: string;
 }) {
   const kind = standing(row);
+  // A target above that of the job family comes from the person's role profile.
+  const familyTarget = content.families.find((f) => f.id === familyId)?.profile[row.competency.id]?.target;
+  const fromRole = familyTarget !== undefined && row.target > familyTarget;
   const toGo = row.target - (row.agreed ?? 0);
   const example = row.competency.examples[familyId];
   const levelText = (level: number) => (level > 0 ? row.competency.levels[level - 1] : "Not yet at the first level.");
@@ -38,6 +41,7 @@ export function CompetencyDetails({
         <span className="comp-main">
           <strong>{row.competency.name}</strong>
           {focus && <span className="chip focus">Focus</span>}
+          {fromRole && <span className="chip role">Role</span>}
           <span className="sub">{subText ?? standingText(row)}</span>
         </span>
         <Steps value={row.agreed} target={row.target} baseline={row.baseline} levels={content.levels} compact />
@@ -46,6 +50,14 @@ export function CompetencyDetails({
       <div className="comp-body">
         <p>{row.competency.why}</p>
         <dl>
+          {fromRole && (
+            <>
+              <dt>From the role profile</dt>
+              <dd>
+                The job family asks for {levelName(familyTarget ?? 0)} by 2030; this role asks for {levelName(row.target)}.
+              </dd>
+            </>
+          )}
           {example && (
             <>
               <dt>In this job</dt>

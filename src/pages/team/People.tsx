@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Avatar, Card, PageHead, StageChip, formatDate } from "../../components/Ui";
 import { TeamToggle } from "./Pipeline";
 import { useData } from "../../data";
-import { gapRows, totalGap } from "../../lib/gap";
+import { familyOf, gapRows, totalGap } from "../../lib/gap";
 import { queryParam } from "../../lib/router";
 import { useUi } from "../../ui";
 import { STAGES, stageOf } from "../../lib/workflow";
@@ -22,7 +22,7 @@ export function People() {
   const [sort, setSort] = useState<SortKey>("stage");
 
   const all = team.employees.map((employee) => {
-    const fam = content.families.find((f) => f.id === employee.family)!;
+    const fam = familyOf(content, employee)!;
     const assessment = assessments[employee.id];
     const rows = gapRows(content, fam, assessment);
     return {
@@ -95,6 +95,7 @@ export function People() {
               <tr>
                 {head("name", "Name")}
                 <th>Job family</th>
+                <th>Role profile</th>
                 {head("stage", "Stage")}
                 {head("gap", "Steps to 2030", true)}
                 <th>Last change</th>
@@ -122,6 +123,7 @@ export function People() {
                     </span>
                   </td>
                   <td>{p.family.name}</td>
+                  <td>{p.family.role ? p.family.role.name : <span className="muted">None</span>}</td>
                   <td>
                     <StageChip stage={p.stage} />
                   </td>
@@ -131,7 +133,7 @@ export function People() {
               ))}
               {list.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="empty">
+                  <td colSpan={6} className="empty">
                     No team member matches the filters.
                   </td>
                 </tr>

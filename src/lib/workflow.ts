@@ -1,5 +1,5 @@
 import type { Assessment, Assessments, Assignment, Assignments, Content, Employee } from "../types";
-import { agreedCount, gapRows, totalGap } from "./gap";
+import { agreedCount, familyOf, gapRows, totalGap } from "./gap";
 
 /** Where a person stands in the process, from first talk to agreed measures. */
 export type Stage = "open" | "talking" | "agreed" | "planned";
@@ -16,14 +16,14 @@ export const stageName = (stage: Stage) => STAGES.find((s) => s.id === stage)!.n
 export function stageOf(content: Content, employee: Employee, assessment?: Assessment, assigned: Assignment[] = []): Stage {
   if (!assessment || assessment.status === "open") return "open";
   if (assessment.status === "in-progress") return "talking";
-  const family = content.families.find((f) => f.id === employee.family)!;
+  const family = familyOf(content, employee)!;
   const gap = totalGap(gapRows(content, family, assessment)) ?? 0;
   return gap === 0 || assigned.length > 0 ? "planned" : "agreed";
 }
 
 /** True once the employee has a self-check level in every competency of the profile. */
 export function selfCheckDone(content: Content, employee: Employee, assessment?: Assessment): boolean {
-  const family = content.families.find((f) => f.id === employee.family)!;
+  const family = familyOf(content, employee)!;
   const rows = gapRows(content, family, assessment);
   return rows.length > 0 && rows.every((row) => assessment?.ratings[row.competency.id]?.self != null);
 }
@@ -54,7 +54,7 @@ export function nextActions(content: Content, employees: Employee[], assessments
   for (const employee of employees) {
     const assessment = assessments[employee.id];
     const stage = stageOf(content, employee, assessment, assignments[employee.id]);
-    const family = content.families.find((f) => f.id === employee.family)!;
+    const family = familyOf(content, employee)!;
     const rows = gapRows(content, family, assessment);
     if (stage === "talking") {
       actions.push({

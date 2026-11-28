@@ -4,6 +4,7 @@ import { useData } from "../../data";
 import { useState } from "react";
 import { activeFocus, agreedCount, standing, standingText, summarise, type GapRow } from "../../lib/gap";
 import { go } from "../../lib/router";
+import { tasksBehind } from "../../lib/jobprofile";
 import { answerLevels, casesFor, evidenceText, recommendMeasures, spread, tasksFor } from "../../lib/scoring";
 import { MAX_FOCUS } from "../../lib/store";
 import { selfCheckDone, selfShared } from "../../lib/workflow";
@@ -125,6 +126,8 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
   const caseLevels = shared && rating?.selfAnswers ? answerLevels(casesFor(competency, family.id), rating.selfAnswers) : [];
   // The written task of the self-check: the manager reads it and says which level it shows.
   const written = shared && rating?.selfTask !== undefined ? tasksFor(competency, family.id)[0] : undefined;
+  // Tasks of the person's role profile that set the 2030 level of this competency.
+  const roleTasks = tasksBehind(family, competency.id).filter((task) => task.role);
 
   return (
     <section className="card question">
@@ -145,6 +148,12 @@ function Rate({ employee, family, row, first, position, total }: { employee: Emp
           </p>
         )}
       </div>
+      {roleTasks.length > 0 && (
+        <p className="callout role">
+          <strong>Role profile “{family.role?.name}”:</strong> the role asks for {options[row.target].name} here, because of “
+          {roleTasks.map((task) => task.task).join("” and “")}”.
+        </p>
+      )}
       {shared && rating?.selfNote && (
         <p className="callout">
           <strong>{first}’s example:</strong> “{rating.selfNote}”

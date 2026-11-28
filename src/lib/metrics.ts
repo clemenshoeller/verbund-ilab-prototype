@@ -1,4 +1,5 @@
 import type { Assessments, Competency, Content, Employee, Family, Measure, Org, TeamInfo } from "../types";
+import { familyOf } from "./gap";
 import { progress } from "./scoring";
 
 /** "baseline" = the level expected today, "target" = the level expected in 2030. */
@@ -25,11 +26,11 @@ export const isCompleted = (assessments: Assessments, employeeId: string) =>
 
 /** All agreed ratings from completed conversations. Open and running conversations do not count. */
 export function ratedPairs(content: Content, employees: Employee[], assessments: Assessments): Pair[] {
-  const families = new Map(content.families.map((f) => [f.id, f]));
   const pairs: Pair[] = [];
   for (const employee of employees) {
     if (!isCompleted(assessments, employee.id)) continue;
-    const family = families.get(employee.family);
+    // The person's own profile: the job family, with the targets of a role profile where one is assigned.
+    const family = familyOf(content, employee);
     if (!family) continue;
     for (const [competencyId, entry] of Object.entries(family.profile)) {
       if (entry.target <= 0) continue;

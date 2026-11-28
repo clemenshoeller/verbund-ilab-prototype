@@ -3,7 +3,8 @@ import { CourseLinks, TaskTable } from "../../components/Learning";
 import { StepsLegend } from "../../components/Steps";
 import { Card, PageHead, formatDate } from "../../components/Ui";
 import { useData } from "../../data";
-import { activeFocus, gapRows } from "../../lib/gap";
+import { activeFocus, familyOf, gapRows } from "../../lib/gap";
+import { roleChanges } from "../../lib/jobprofile";
 import { go } from "../../lib/router";
 import { MIN_GROUP } from "../../lib/metrics";
 import { progress, selfCheckItems, selfCheckMinutes } from "../../lib/scoring";
@@ -14,7 +15,7 @@ import { useUi } from "../../ui";
 export function useMe() {
   const { content, org, assessments, assignments } = useData();
   const employee = org.employees.find((e) => e.id === org.currentEmployeeId) ?? org.employees[0];
-  const family = content.families.find((f) => f.id === employee.family)!;
+  const family = familyOf(content, employee)!;
   const team = org.teams.find((t) => t.id === employee.team)!;
   const assessment = assessments[employee.id];
   const rows = gapRows(content, family, assessment);
@@ -38,6 +39,8 @@ export function MyProfile() {
   const { employee, family, team, assessment, rows, measures, completed, prepared, shared } = useMe();
   const first = employee.name.split(" ")[0];
   const items = selfCheckItems(content, family);
+  const role = content.roleProfiles?.find((r) => r.id === family.role?.id);
+  const raised = role ? roleChanges(content, role).map((change) => content.competencies.find((c) => c.id === change.competencyId)?.name) : [];
   const written = items.filter((item) => item.kind === "task").length;
   const reached = progress(rows);
   // Before the conversation the profile shows the own self-check, afterwards the agreed levels.
@@ -113,6 +116,13 @@ export function MyProfile() {
           </>
         )}
       </section>
+
+      {role && (
+        <p className="callout role">
+          <strong>Your role profile: {role.name}.</strong> {team.manager} assigned it from the job description of your role.{" "}
+          {raised.length > 0 ? `It asks for more than ${family.name} in: ${raised.join(", ")}.` : `It adds tasks; your targets are those of ${family.name}.`}
+        </p>
+      )}
 
       <Card
         title={completed ? "Where you stand" : prepared ? "Your self-check" : `Your target profile: ${family.name}`}

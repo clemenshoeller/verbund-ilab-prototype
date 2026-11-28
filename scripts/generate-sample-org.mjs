@@ -216,6 +216,8 @@ const org = {
   currentTeamId: "t1",
   currentEmployeeId: "e6",
   hrUser: { name: "Martina Koch", role: "Personnel development" },
+  // Role profiles of the demo team: three are assigned, the others can be assigned in the manager view.
+  roles: { e1: "role-data-engineer", e3: "role-controller", e5: "role-maintenance" },
   teams,
   employees,
   assessments,

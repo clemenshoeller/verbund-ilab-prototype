@@ -2031,6 +2031,7 @@
       "The check serves development. It is not used for pay, appraisal or staffing decisions.",
       "Levels are agreed by two people in a conversation. No AI rates anyone.",
       "The self-check belongs to the employee. The manager sees it only if the employee shares it.",
+      "A role profile is created by HR from a job description and assigned by the manager; the person sees it. It can raise a target, never lower one.",
       "A manager sees the own team. HR sees totals only, never single persons.",
       "Groups with fewer than five rated employees are not shown.",
       "Employees can see everything stored about them and ask for corrections.",
@@ -2117,6 +2118,151 @@
         "I7",
         "I13",
         "I18"
+      ]
+    }
+  ],
+  "roleProfiles": [
+    {
+      "id": "role-data-engineer",
+      "name": "Data Engineer, digital unit",
+      "family": "A",
+      "summary": "Builds and runs the data pipelines behind reporting and AI use cases.",
+      "tasks": [
+        {
+          "id": "R-DE1",
+          "task": "Operating data pipelines for AI use cases",
+          "today": "Pipelines are built per project.",
+          "future": "Runs pipelines that several AI solutions depend on, with monitoring and data quality checks.",
+          "change": "augmented",
+          "needsToday": {},
+          "needs2030": {
+            "data-work": 3,
+            "build-scale": 3
+          }
+        },
+        {
+          "id": "R-DE2",
+          "task": "Access rules for data in AI tools",
+          "today": "Access is granted per system.",
+          "future": "Defines with the security team which data may flow into which AI tool.",
+          "change": "augmented",
+          "needsToday": {},
+          "needs2030": {
+            "safe-use": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "role-controller",
+      "name": "Controller, group controlling",
+      "family": "B",
+      "summary": "Prepares the monthly reporting and explains deviations to the management.",
+      "tasks": [
+        {
+          "id": "R-CO1",
+          "task": "Data quality of the reporting",
+          "today": "Checks the figures before the report goes out.",
+          "future": "Is responsible for the data quality of AI-produced reports and sets the checks for the team.",
+          "change": "augmented",
+          "needsToday": {},
+          "needs2030": {
+            "data-work": 3,
+            "check-results": 3
+          }
+        },
+        {
+          "id": "R-CO2",
+          "task": "Report templates",
+          "today": "Uses the templates of the department.",
+          "future": "Builds and maintains AI-supported report templates for the controlling team.",
+          "change": "new",
+          "needsToday": {},
+          "needs2030": {
+            "build-scale": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "role-maintenance",
+      "name": "Maintenance Technician, hydropower",
+      "family": "D",
+      "summary": "Inspects and repairs turbines and generators on site.",
+      "tasks": [
+        {
+          "id": "R-MT1",
+          "task": "Sign-off of AI-supported diagnoses",
+          "today": "Faults are judged from experience and measurements.",
+          "future": "Signs off AI-supported fault diagnoses on site and reports back when the tool was wrong.",
+          "change": "augmented",
+          "needsToday": {},
+          "needs2030": {
+            "check-results": 3
+          }
+        },
+        {
+          "id": "R-MT2",
+          "task": "Recording work for the data",
+          "today": "Reports are written after the job.",
+          "future": "Records inspection and repair data so that the maintenance model can learn from it.",
+          "change": "automated",
+          "needsToday": {},
+          "needs2030": {
+            "data-work": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "role-electrical",
+      "name": "Electrical Engineer, plant engineering",
+      "family": "D",
+      "summary": "Plans and reviews the electrical systems of the plants.",
+      "tasks": [
+        {
+          "id": "R-EE1",
+          "task": "Design reviews with AI support",
+          "today": "Designs are checked by hand against the standards.",
+          "future": "Checks the variants AI proposes in CAD and simulation and is responsible for the design.",
+          "change": "augmented",
+          "needsToday": {},
+          "needs2030": {
+            "check-results": 3,
+            "process-solve": 3
+          }
+        },
+        {
+          "id": "R-EE2",
+          "task": "Use cases for the plant",
+          "today": "Improvements come up in projects.",
+          "future": "Identifies where AI can improve planning and brings the ideas into the unit.",
+          "change": "new",
+          "needsToday": {},
+          "needs2030": {
+            "spot-potential": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "role-app-manager",
+      "name": "IT Application Manager",
+      "family": "A",
+      "summary": "Runs business applications and looks after their users.",
+      "tasks": [
+        {
+          "id": "R-AM1",
+          "task": "Running applications with AI functions",
+          "today": "Applications are run and updated by the vendor’s plan.",
+          "future": "Decides which AI functions of an application are switched on, and checks what they do with the data.",
+          "change": "augmented",
+          "needsToday": {},
+          "needs2030": {
+            "safe-use": 3,
+            "check-results": 3
+          }
+        }
       ]
     }
   ]

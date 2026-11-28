@@ -3,7 +3,7 @@ import { DraftTag } from "../../components/Figures";
 import { LevelBar } from "../../components/Level";
 import { Card, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
-import { SAMPLE_JOB_DESCRIPTIONS, analyseJobDescription, clusterBySkill, profileChanges, suggestFamily, type Analysis } from "../../lib/jobprofile";
+import { SAMPLE_JOB_DESCRIPTIONS, analyseJobDescription, clusterBySkill, profileChanges, roleChanges, suggestFamily, type Analysis } from "../../lib/jobprofile";
 import { useUi } from "../../ui";
 
 /**
@@ -12,7 +12,7 @@ import { useUi } from "../../ui";
  * every proposal before it is applied.
  */
 export function HrUpload({ familyId: startFamily }: { familyId?: string }) {
-  const { content, uploads, addUpload, clearUploads } = useData();
+  const { content, uploads, roles: roleOf, addUpload, clearUploads, addRole } = useData();
   const { toast } = useUi();
   // The job family is chosen on the page, so the text that was entered stays when it changes.
   const [familyId, setFamilyId] = useState(startFamily);
@@ -21,6 +21,8 @@ export function HrUpload({ familyId: startFamily }: { familyId?: string }) {
   const [text, setText] = useState("");
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const applied = uploads[family.id] ?? [];
+  const roleProfiles = (content.roleProfiles ?? []).filter((role) => role.family === family.id);
+  const holders = (roleId: string) => Object.values(roleOf).filter((id) => id === roleId).length;
   const name = (id: string) => content.competencies.find((c) => c.id === id)?.name ?? id;
   const changes = analysis ? profileChanges(family, analysis.tasks, content.levels.length) : [];
   const clusters = analysis ? clusterBySkill(analysis.tasks) : [];
@@ -53,10 +55,10 @@ export function HrUpload({ familyId: startFamily }: { familyId?: string }) {
       <PageHead
         title={
           <>
-            Upload a job description <DraftTag>Mocked</DraftTag>
+            Role profiles <DraftTag>Mocked</DraftTag>
           </>
         }
-        sub="The tool reads the tasks from a job description, proposes the levels they need in 2030 and adapts the target profile of the job family once you apply it."
+        sub="A role profile holds what the job description of one role asks for. You create it here from the job description; managers assign it to the team members who hold the role."
       />
 
       <div className="tabs" role="tablist" aria-label="Job family">
@@ -77,7 +79,38 @@ export function HrUpload({ familyId: startFamily }: { familyId?: string }) {
         ))}
       </div>
 
-      <Card title="1. The job description" aside={`for ${family.name}`}>
+      <Card title={`Role profiles in ${family.name}`} aside={`${roleProfiles.length} profiles`} flush>
+        {roleProfiles.length === 0 ? (
+          <p className="empty">No role profile yet. Create one from a job description below.</p>
+        ) : (
+          <ul className="rows">
+            {roleProfiles.map((role) => {
+              const raised = roleChanges(content, role);
+              return (
+                <li key={role.id} className="row static">
+                  <span className="row-main">
+                    <strong>{role.name}</strong>
+                    <span className="sub">
+                      {role.summary}{" "}
+                      {raised.length === 0 ? "No target above the job family." : `Above the job family: ${raised.map((change) => name(change.competencyId)).join(", ")}.`}
+                    </span>
+                  </span>
+                  <span className="row-figure">
+                    {role.tasks.length} {role.tasks.length === 1 ? "task" : "tasks"}
+                    <span className="sub">assigned to {holders(role.id)}</span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        <p className="muted small card-note">
+          Managers assign a role profile in the record of a team member. A role profile can raise a 2030 target for the people who hold the role, never lower one. You
+          see how many people have it, not who.
+        </p>
+      </Card>
+
+      <Card title="1. A job description" aside={`for ${family.name}`}>
         <div className="form">
           <label>
             <span>Title</span>
@@ -212,27 +245,45 @@ export function HrUpload({ familyId: startFamily }: { familyId?: string }) {
                 </div>
               )}
               <div className="finish card-note">
-                <span className="muted small">Applies to everyone in {family.name}: gaps, key figures and recommended measures follow at once.</span>
-                <button
-                  type="button"
-                  className="btn"
-                  onClick={() => {
-                    addUpload(family.id, analysis.tasks);
-                    toast(`Profile of ${family.name} updated`);
-                    setAnalysis(null);
-                    setText("");
-                    setTitle("");
-                  }}
-                >
-                  Apply to the job profile
-                </button>
+                <span className="muted small">
+                  As a role profile it applies to the people a manager assigns it to. Applied to the job family it applies to everyone in {family.name}.
+                </span>
+                <div className="head-actions">
+                  <button
+                    type="button"
+                    className="btn ghost"
+                    onClick={() => {
+                      addUpload(family.id, analysis.tasks);
+                      toast(`Profile of ${family.name} updated`);
+                      setAnalysis(null);
+                      setText("");
+                      setTitle("");
+                    }}
+                  >
+                    Apply to the whole job family
+                  </button>
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => {
+                      const roleName = title.trim() || "Role from a job description";
+                      addRole({ name: roleName, family: family.id, summary: "Created from an uploaded job description.", tasks: analysis.tasks.map((task) => ({ ...task, source: undefined })) });
+                      toast(`Role profile “${roleName}” saved`);
+                      setAnalysis(null);
+                      setText("");
+                      setTitle("");
+                    }}
+                  >
+                    Save as a role profile
+                  </button>
+                </div>
               </div>
             </Card>
           )}
         </div>
       )}
 
-      <Card title="Applied uploads" aside={<a href={`#/hr/tasks/${family.id}`}>Tasks of {family.name}</a>}>
+      <Card title="Applied to the whole job family" aside={<a href={`#/hr/tasks/${family.id}`}>Tasks of {family.name}</a>}>
         {applied.length === 0 ? (
           <p className="muted">No job description has been applied to {family.name} yet.</p>
         ) : (

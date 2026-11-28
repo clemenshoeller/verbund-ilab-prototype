@@ -87,6 +87,7 @@ export function TaskTable({ content, family, needs = true }: { content: Content;
                 <strong>{task.task}</strong>
                 <span className="sub">
                   <ChangeChip change={task.change} />
+                  {task.role && <span className="chip role">Role: {task.role}</span>}
                 </span>
               </td>
               <td>{task.source ? <span className="muted">From the job description “{task.source}”</span> : task.today}</td>

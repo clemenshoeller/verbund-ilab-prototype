@@ -1,4 +1,12 @@
-import type { Assessment, Competency, Content, Family } from "../types";
+import type { Assessment, Competency, Content, Employee, Family } from "../types";
+
+/**
+ * The profile a person is measured against: the job family, or, for someone with a role profile,
+ * the job family with the targets and tasks of the role added.
+ */
+export function familyOf(content: Content, employee: Employee): Family | undefined {
+  return content.personal?.[employee.id] ?? content.families.find((f) => f.id === employee.family);
+}
 
 export interface GapRow {
   competency: Competency;
