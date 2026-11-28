@@ -477,7 +477,18 @@ describe("VERBUND's competency model", () => {
     await start("/hr/competencies");
     expect(main().textContent).toContain("6 AI competencies from VERBUND’s competency model");
     expect(main().textContent).toContain("3 general competencies");
-    expect(main().textContent).toContain("Its general competencies were not available to the team");
+    // The framework of the team: three layers, and the further skills with the interviews that name them.
+    expect(main().textContent).toContain("The framework in three layers");
+    const further = [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Further skills from the interviews")!;
+    expect(further.querySelectorAll("tbody tr")).toHaveLength(7);
+    expect(further.textContent).toContain("Critical thinking and independent judgment");
+    expect(further.textContent).toContain("7 interviewsI1, I7, I10, I13, I18, I20, I22");
+    expect(further.textContent).toContain("Not assessed");
+    expect(further.textContent).toContain("VERBUND’s own general competencies were not available to the team");
+    await open("/hr/competencies/adapt-learn");
+    expect(main().textContent).toContain("according to 6 of our interviews (I2, I7, I13, I20, I21, I22)");
+    await open("/hr/competencies/safe-use");
+    expect(main().textContent).toContain("Includes, in the team’s framework:");
     await open("/hr/competencies/check-results");
     const card = [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Cases and tasks in the self-check")!;
     expect(card.querySelectorAll("details")).toHaveLength(6);
@@ -553,10 +564,11 @@ describe("after the jour fixe of 24.11.2026", () => {
     expect(screen.getByRole("link", { name: "Gap analysis" }).getAttribute("aria-current")).toBe("page");
     expect(main().textContent).toContain("Reporting and closing");
     expect(main().textContent).toContain("Largely automated");
-    expect(main().textContent).toContain("Working with data");
+    expect(main().textContent).toContain("Data and information literacy");
+    expect(main().textContent).toContain("Decisions on the basis of analyses");
     const profile = [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Target profile that follows from the tasks")!;
     expect(profile.querySelectorAll("tbody tr")).toHaveLength(7);
-    expect(profile.textContent).toContain("Reporting and closing · Research, texts and drafts");
+    expect(profile.textContent).toContain("Reporting and closing · AI-assisted knowledge work · Decisions on the basis of analyses");
   });
 
   it("shows three personas per job family as a simulation", async () => {
@@ -597,6 +609,18 @@ describe("after the jour fixe of 24.11.2026", () => {
     click(read);
     expect(main().textContent).toContain("targets raised");
     expect(main().textContent).toContain("not part of this family’s profile: Guiding the AI change");
+    // The skills of the text, clustered by competency.
+    const clusters = [...main().querySelectorAll(".card")].find((c) => c.querySelector("h2")?.textContent === "Skills in this job description")!;
+    expect(clusters.querySelectorAll("li").length).toBeGreaterThanOrEqual(4);
+    expect(clusters.textContent).toContain("Data and information literacy");
+    // The same text under another job family: the tool says where it belongs, and the text stays.
+    click(within(main()).getByRole("tab", { name: "Commercial & Corporate Office" }));
+    expect((within(main()).getByRole("textbox", { name: /Text, one task per line/ }) as HTMLTextAreaElement).value).toContain("turbines");
+    click(within(main()).getByRole("button", { name: "Read the tasks" }));
+    expect(main().textContent).toContain("This reads like a job in Engineering & Technicians, not in Commercial & Corporate Office.");
+    click(within(main()).getByRole("button", { name: "Use Engineering & Technicians" }));
+    expect(within(main()).getByRole("tab", { name: "Engineering & Technicians" }).getAttribute("aria-selected")).toBe("true");
+    expect(main().textContent).not.toContain("This reads like a job in");
     click(within(main()).getByRole("button", { name: "Apply to the job profile" }));
     expect(screen.getByRole("status").textContent).toContain("Profile of Engineering & Technicians updated");
 

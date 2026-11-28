@@ -11,10 +11,35 @@ export function CompetencyList() {
   const stats = competencyStats(content, org.employees, assessments);
   const groupOf = (id: string) => content.groups.find((g) => g.id === id);
   const general = content.competencies.filter((c) => c.group === "general").length;
+  const further = content.furtherSkills ?? [];
+  const name = (id?: string) => content.competencies.find((c) => c.id === id)?.name;
 
   return (
     <>
       <PageHead title="Competencies" sub={`${content.competencies.length - general} AI competencies from VERBUND’s competency model (“Miteinander | AI nutzen”) and ${general} general competencies, each with three levels`} />
+      <Card title="The framework in three layers" aside="Team framework, draft of 27.11.2026">
+        <ol className="cycle chain">
+          <li>
+            <span className="period">1</span>
+            <strong>AI competencies</strong>
+            <span className="sub">The six of VERBUND’s competency model, unchanged: base, future and leadership competencies.</span>
+          </li>
+          <li>
+            <span className="period">2</span>
+            <strong>Further skills</strong>
+            <span className="sub">
+              {further.length} skills beyond AI that our interviews say gain importance. {further.filter((skill) => skill.inTool).length} are covered by a competency in this tool.
+            </span>
+          </li>
+          <li>
+            <span className="period">3</span>
+            <strong>Per job family</strong>
+            <span className="sub">
+              How the common tasks change until 2030 and what they need: <a href="#/hr/tasks">Changing tasks</a>.
+            </span>
+          </li>
+        </ol>
+      </Card>
       <Card flush>
         <div className="table-wrap">
           <table className="table">
@@ -54,11 +79,38 @@ export function CompetencyList() {
           </table>
         </div>
       </Card>
-      <Card title="General competencies" aside="Student-team draft">
-        <p className="muted">
-          The six AI competencies come from VERBUND’s competency model. Its general competencies were not available to the team; the {general} here follow from our
-          interviews and desk research and stand in for them. What is specific to a job family sits in its tasks: see{" "}
-          <a href="#/hr/tasks">Gap analysis, Changing tasks</a>.
+      <Card title="Further skills from the interviews" aside={`${further.length} skills · team framework, draft`} flush>
+        <div className="table-wrap">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Skill</th>
+                <th>Why it gains importance</th>
+                <th>Named in</th>
+                <th>In this tool</th>
+              </tr>
+            </thead>
+            <tbody>
+              {further.map((skill) => (
+                <tr key={skill.name}>
+                  <td>
+                    <strong>{skill.name}</strong>
+                  </td>
+                  <td>{skill.why}</td>
+                  <td>
+                    {skill.interviews.length} interviews
+                    <span className="sub">{skill.interviews.join(", ")}</span>
+                  </td>
+                  <td>{skill.inTool ? <a href={`#/hr/competencies/${skill.inTool}`}>{name(skill.inTool)}</a> : <span className="muted">Not assessed</span>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="muted small card-note">
+          Skills and interview references follow the team’s coding of the interviews; a skill that merges several codes carries the interviews of its parts. The count
+          is no weighting. VERBUND’s own general competencies were not available to the team; these skills stand in for them. Only a few are assessed here, so that the
+          self-check stays under 40 minutes.
         </p>
       </Card>
     </>
@@ -95,9 +147,23 @@ export function CompetencyRecord({ competencyId }: { competencyId: string }) {
         </span>
       </div>
 
+      {!competency.definition && competency.interviews && (
+        <Card title="Where it comes from" aside="Team framework, draft">
+          <p>
+            A skill beyond AI that gains importance according to {competency.interviews.length} of our interviews ({competency.interviews.join(", ")}). It stands in for
+            the general competencies of VERBUND’s competency model, which were not available to the team.
+          </p>
+        </Card>
+      )}
+
       {competency.definition && (
         <Card title="Definition" aside={competency.original ? `VERBUND: ${competency.original}` : undefined}>
           <p>{competency.definition}</p>
+          {competency.includes && (
+            <p className="muted includes">
+              <strong>Includes, in the team’s framework:</strong> {competency.includes}.
+            </p>
+          )}
           {competency.anchors && (
             <div className="anchors">
               {(

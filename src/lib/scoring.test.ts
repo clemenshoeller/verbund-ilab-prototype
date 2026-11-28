@@ -144,6 +144,12 @@ describe("recommendMeasures", () => {
     const expert = family("D").personas![2];
     expect(recommendMeasures(content, family("D"), rowsForLevels(content, family("D"), expert.levels))).toEqual([]);
   });
+  it("lets a second measure for the same competency wait behind measures for other competencies", () => {
+    const ids = recommendMeasures(content, b, beginner).map((rec) => rec.measure.id);
+    // m1 and m13 both build "Using AI safely" with the same urgency: the use-case workshop (m3) comes in between.
+    expect(ids.indexOf("m1")).toBeLessThan(ids.indexOf("m3"));
+    expect(ids.indexOf("m3")).toBeLessThan(ids.indexOf("m13"));
+  });
   it("prefers a chosen focus area", () => {
     const rows = gapRows(content, b, { status: "completed", date: "2026-11-01", ratings: Object.fromEntries(Object.keys(b.profile).map((id) => [id, { self: 1, manager: 1, agreed: 1, note: "" }])) });
     expect(recommendMeasures(content, b, rows, ["data-work"])[0].measure.competencies).toContain("data-work");
@@ -156,6 +162,24 @@ describe("recommendMeasures", () => {
         if (course.url) expect(course.url.startsWith("https://"), course.url).toBe(true);
         else expect(course.format, measure.id).toContain("assumed");
       }
+    }
+  });
+});
+
+describe("further skills of the framework", () => {
+  it("name the interviews behind each skill and only point to competencies that exist", () => {
+    const known = new Set(content.competencies.map((c) => c.id));
+    expect(content.furtherSkills).toHaveLength(7);
+    for (const skill of content.furtherSkills ?? []) {
+      expect(skill.interviews.length, skill.name).toBeGreaterThan(0);
+      expect(skill.interviews.every((id) => /^I\d+$/.test(id)), skill.name).toBe(true);
+      if (skill.inTool) expect(known.has(skill.inTool), skill.name).toBe(true);
+    }
+  });
+  it("gives every general competency its interviews and every AI competency of VERBUND its sub-skills", () => {
+    for (const competency of content.competencies) {
+      if (competency.group === "general") expect(competency.interviews?.length, competency.id).toBeGreaterThan(0);
+      else expect(competency.includes?.length, competency.id).toBeGreaterThan(10);
     }
   });
 });

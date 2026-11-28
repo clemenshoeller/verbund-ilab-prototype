@@ -9,6 +9,7 @@ const ENTITIES = [
   { name: "Job family", fields: "name, summary, tasks, target profile, personas", now: "content.json", later: "Maintained by HR; link to the job architecture" },
   { name: "Task", fields: "job family, task today, task in 2030, kind of change, level needed per competency today and in 2030", now: "content.json; uploads in the browser", later: "From job descriptions and the yearly review" },
   { name: "Target profile entry", fields: "job family, competency, level today, level 2030", now: "content.json, checked against the tasks by a test", later: "Calculated from the tasks; reviewed once a year (see Governance)" },
+  { name: "Further skill", fields: "name, why it gains importance, interviews that name it, competency that covers it in the tool", now: "content.json", later: "Replaced by the general competencies of VERBUND’s model" },
   { name: "Persona", fields: "job family, name, role, story, level per competency", now: "content.json", later: "Replaced by real conversations" },
   { name: "Team", fields: "name, manager", now: "org.json (generated)", later: "From the HR master data" },
   { name: "Employee", fields: "name, role, job family, team", now: "org.json (generated)", later: "From the HR master data; no manual upkeep" },

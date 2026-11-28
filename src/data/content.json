@@ -1,5 +1,5 @@
 {
-  "_note": "AI competencies, groups, definitions, behaviour anchors and the reasons why follow VERBUND's internal concept 'Kompetenzmodell goes AI' (15.10.2026, dimension 'Miteinander | AI nutzen'), translated into English by the student team; use approved by VERBUND (22.11.2026). Everything else is a student-team draft built on the team's interviews and desk research: the three levels, the cases and written tasks of the self-check, the conversation questions, the job examples, the three general competencies (VERBUND's own general competencies were not available to the team), the tasks today and in 2030 per job family, the target profiles that follow from them, the personas and the measures. Course links are examples; entries of VERBUND's catalogue are assumed to exist.",
+  "_note": "AI competencies, groups, definitions, behaviour anchors and the reasons why follow VERBUND's internal concept 'Kompetenzmodell goes AI' (15.10.2026, dimension 'Miteinander | AI nutzen'), translated into English by the student team; use approved by VERBUND (22.11.2026). Everything else is a student-team draft built on the team's interviews and desk research: the three levels, the cases and written tasks of the self-check, the conversation questions, the job examples, the three general competencies and the further skills (from the competency framework of Elena Hametner, 27.11.2026, with the interviews that name each skill; VERBUND's own general competencies were not available to the team), the tasks today and in 2030 per job family, the target profiles that follow from them, the personas and the measures. Course links are examples; entries of VERBUND's catalogue are assumed to exist.",
   "levels": [
     {
       "value": 1,
@@ -36,7 +36,7 @@
     {
       "id": "general",
       "name": "General competencies",
-      "note": "For everyone: what the changing job needs beyond AI"
+      "note": "For everyone: skills beyond AI that the interviews say gain importance"
     }
   ],
   "competencies": [
@@ -236,7 +236,8 @@
           ],
           "minutes": 4
         }
-      ]
+      ],
+      "includes": "AI and digital literacy, tool application and prompting, data protection, AI Act Article 4"
     },
     {
       "id": "check-results",
@@ -430,7 +431,8 @@
           ],
           "minutes": 4
         }
-      ]
+      ],
+      "includes": "Critical evaluation of AI output, human oversight, human and AI working together, owning the result"
     },
     {
       "id": "spot-potential",
@@ -523,7 +525,8 @@
           ],
           "minutes": 4
         }
-      ]
+      ],
+      "includes": "Process understanding, problem solving, knowing when AI adds value"
     },
     {
       "id": "build-scale",
@@ -612,7 +615,8 @@
           ],
           "minutes": 4
         }
-      ]
+      ],
+      "includes": "Task specification for templates and agents, sharing solutions"
     },
     {
       "id": "steer-use",
@@ -700,7 +704,8 @@
           ],
           "minutes": 4
         }
-      ]
+      ],
+      "includes": "Priorities, roles and rules for AI in the unit"
     },
     {
       "id": "guide-change",
@@ -790,13 +795,14 @@
           ],
           "minutes": 4
         }
-      ]
+      ],
+      "includes": "Continuous learning, time to try, leading by example"
     },
     {
       "id": "data-work",
       "group": "general",
-      "name": "Working with data",
-      "description": "Reads, questions and maintains the data the own work and the AI tools rely on.",
+      "name": "Data and information literacy",
+      "description": "Understands data quality, interprets information and judges how reliable and relevant the data behind an AI-supported task is.",
       "question": "Which data does your work rely on, and how do you know it is good enough?",
       "levels": [
         "Knows which data the own tasks use and reports obvious errors.",
@@ -835,13 +841,20 @@
           ],
           "minutes": 2
         }
+      ],
+      "interviews": [
+        "I1",
+        "I2",
+        "I10",
+        "I21",
+        "I22"
       ]
     },
     {
       "id": "adapt-learn",
       "group": "general",
-      "name": "Adapting and learning",
-      "description": "Takes up new tools and ways of working and builds the skills they need.",
+      "name": "Adaptability and continuous learning",
+      "description": "Takes up new technologies and ways of working, keeps building skills and shares what was learned.",
       "question": "What was the last tool or way of working you had to learn? How did you go about it?",
       "levels": [
         "Takes up new tools and ways of working when they are introduced.",
@@ -880,13 +893,21 @@
           ],
           "minutes": 2
         }
+      ],
+      "interviews": [
+        "I2",
+        "I7",
+        "I13",
+        "I20",
+        "I21",
+        "I22"
       ]
     },
     {
       "id": "process-solve",
       "group": "general",
-      "name": "Thinking in processes and solving problems",
-      "description": "Understands the process around the own task and solves new problems in a structured way.",
+      "name": "Analytical thinking and problem-solving",
+      "description": "Analyses information, understands the process around the own task and solves new, non-standard problems in a structured way.",
       "question": "Tell me about a problem that was not covered by any instruction. How did you solve it?",
       "levels": [
         "Knows the own step in the process and solves routine problems.",
@@ -925,6 +946,14 @@
           ],
           "minutes": 2
         }
+      ],
+      "interviews": [
+        "I1",
+        "I7",
+        "I10",
+        "I18",
+        "I21",
+        "I22"
       ]
     }
   ],
@@ -967,7 +996,7 @@
       "tasks": [
         {
           "id": "A1",
-          "task": "Writing and reviewing code",
+          "task": "AI-assisted coding",
           "today": "Developers write most code by hand and review each other’s changes.",
           "future": "AI writes a large share of the code. The developer specifies, reviews and tests it and answers for what is merged.",
           "change": "augmented",
@@ -1042,6 +1071,21 @@
             "spot-potential": 3,
             "adapt-learn": 3
           }
+        },
+        {
+          "id": "A6",
+          "task": "IT security and monitoring",
+          "today": "Systems are monitored and secured with established tools and rules.",
+          "future": "AI systems need validation, cybersecurity and oversight of their own; monitoring covers what the AI does.",
+          "change": "augmented",
+          "needsToday": {
+            "safe-use": 2,
+            "check-results": 2
+          },
+          "needs2030": {
+            "safe-use": 3,
+            "check-results": 3
+          }
         }
       ],
       "personas": [
@@ -1091,7 +1135,7 @@
           }
         }
       ],
-      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026; wording and levels are a draft."
+      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026, and the workforce-specific competencies in Elena Hametner’s framework (27.11.2026); wording and levels are a draft."
     },
     {
       "id": "B",
@@ -1146,7 +1190,7 @@
         },
         {
           "id": "B2",
-          "task": "Research, texts and drafts",
+          "task": "AI-assisted knowledge work",
           "today": "Research, minutes, mails and first drafts are written by hand.",
           "future": "An assistant prepares research, texts and analyses. The person briefs it, checks the output and decides what goes out.",
           "change": "augmented",
@@ -1161,7 +1205,7 @@
         },
         {
           "id": "B3",
-          "task": "Invoices, offers and data entry",
+          "task": "Process automation: invoices, offers and data entry",
           "today": "Documents are read, entered and matched by hand.",
           "future": "Entry and matching run automatically. Staff handle the exceptions and improve the process.",
           "change": "automated",
@@ -1203,6 +1247,21 @@
             "spot-potential": 2,
             "build-scale": 1,
             "adapt-learn": 2
+          }
+        },
+        {
+          "id": "B6",
+          "task": "Decisions on the basis of analyses",
+          "today": "Analyses are prepared by hand and decisions rest on them.",
+          "future": "AI delivers the insights; staff interpret and validate them and apply them to business decisions.",
+          "change": "augmented",
+          "needsToday": {
+            "check-results": 1,
+            "data-work": 1
+          },
+          "needs2030": {
+            "check-results": 3,
+            "data-work": 2
           }
         }
       ],
@@ -1253,7 +1312,7 @@
           }
         }
       ],
-      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026; wording and levels are a draft."
+      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026, and the workforce-specific competencies in Elena Hametner’s framework (27.11.2026); wording and levels are a draft."
     },
     {
       "id": "D",
@@ -1418,7 +1477,7 @@
           }
         }
       ],
-      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026; wording and levels are a draft."
+      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026, and the workforce-specific competencies in Elena Hametner’s framework (27.11.2026); wording and levels are a draft."
     },
     {
       "id": "M",
@@ -1595,7 +1654,7 @@
           }
         }
       ],
-      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026; wording and levels are a draft."
+      "basis": "Interviews and desk research of the student team, as summarised for the jour fixe of 24.11.2026, and the workforce-specific competencies in Elena Hametner’s framework (27.11.2026); wording and levels are a draft."
     }
   ],
   "measures": [
@@ -1821,6 +1880,27 @@
           "url": "https://www.coursera.org/learn/learning-how-to-learn"
         }
       ]
+    },
+    {
+      "id": "m13",
+      "type": "upskilling",
+      "title": "Certified basic qualification in AI",
+      "description": "A recognised certificate as proof of the AI basics, for example the WIFI KI-Führerschein with 28 teaching units.",
+      "competencies": [
+        "safe-use"
+      ]
+    },
+    {
+      "id": "m14",
+      "type": "organisation",
+      "title": "Clear responsibilities and new roles for AI",
+      "description": "Who decides on AI use cases, who owns a solution and who is the contact in each unit; new roles where they are needed.",
+      "competencies": [
+        "steer-use"
+      ],
+      "families": [
+        "M"
+      ]
     }
   ],
   "measureTypes": [
@@ -1957,5 +2037,87 @@
       "Entries are replaced by next year's conversation.",
       "Purpose, access and retention are fixed in a works agreement (Betriebsvereinbarung) before any real use."
     ]
-  }
+  },
+  "furtherSkills": [
+    {
+      "name": "Critical thinking and independent judgment",
+      "why": "Question AI results, spot errors and judge independently.",
+      "interviews": [
+        "I1",
+        "I7",
+        "I10",
+        "I13",
+        "I18",
+        "I20",
+        "I22"
+      ],
+      "inTool": "check-results"
+    },
+    {
+      "name": "Analytical thinking and problem-solving",
+      "why": "Analyse information, see connections and solve complex, non-standard problems.",
+      "interviews": [
+        "I1",
+        "I7",
+        "I10",
+        "I18",
+        "I22"
+      ],
+      "inTool": "process-solve"
+    },
+    {
+      "name": "Adaptability and continuous learning",
+      "why": "Adjust to new technologies, tasks and ways of working, and keep learning.",
+      "interviews": [
+        "I2",
+        "I7",
+        "I13",
+        "I20",
+        "I21",
+        "I22"
+      ],
+      "inTool": "adapt-learn"
+    },
+    {
+      "name": "Creativity and innovation",
+      "why": "Develop new ideas and find new ways to apply AI.",
+      "interviews": [
+        "I7",
+        "I20"
+      ],
+      "inTool": "spot-potential"
+    },
+    {
+      "name": "Domain expertise and contextual understanding",
+      "why": "Use subject knowledge and context to place AI results correctly.",
+      "interviews": [
+        "I1",
+        "I13",
+        "I18",
+        "I20"
+      ]
+    },
+    {
+      "name": "Communication and collaboration",
+      "why": "Pass on knowledge, learn together and work across units.",
+      "interviews": [
+        "I7",
+        "I10",
+        "I13",
+        "I20",
+        "I21"
+      ]
+    },
+    {
+      "name": "Interpersonal skills and emotional intelligence",
+      "why": "Understand what people need and keep up the human side of work.",
+      "interviews": [
+        "I1",
+        "I2",
+        "I7",
+        "I13",
+        "I18"
+      ]
+    }
+  ]
 }

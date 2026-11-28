@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import contentJson from "../data/content.json";
 import type { Content } from "../types";
-import { SAMPLE_JOB_DESCRIPTIONS, analyseJobDescription, deriveProfile, profileChanges, tasksBehind, withUploads } from "./jobprofile";
+import { SAMPLE_JOB_DESCRIPTIONS, analyseJobDescription, clusterBySkill, deriveProfile, profileChanges, suggestFamily, tasksBehind, withUploads } from "./jobprofile";
 
 const content = contentJson as unknown as Content;
 const family = (id: string) => content.families.find((f) => f.id === id)!;
@@ -14,7 +14,7 @@ describe("target profiles", () => {
     }
   });
   it("can name the tasks that set a 2030 level", () => {
-    expect(tasksBehind(family("B"), "check-results").map((t) => t.id)).toEqual(["B1", "B2"]);
+    expect(tasksBehind(family("B"), "check-results").map((t) => t.id)).toEqual(["B1", "B2", "B6"]);
     expect(tasksBehind(family("B"), "steer-use")).toEqual([]);
   });
   it("never puts a 2030 level below today's", () => {
@@ -63,5 +63,29 @@ describe("upload of a job description", () => {
   });
   it("has an example for every job family", () => {
     for (const f of content.families) expect(analyseJobDescription(SAMPLE_JOB_DESCRIPTIONS[f.id].text, "x", content, f).tasks.length, f.id).toBeGreaterThan(2);
+  });
+});
+
+describe("clusters of a job description", () => {
+  const d = family("D");
+  const sample = SAMPLE_JOB_DESCRIPTIONS.D;
+  const tasks = analyseJobDescription(sample.text, sample.title, content, d).tasks;
+
+  it("groups the tasks by the competency they need, the largest group first", () => {
+    const clusters = clusterBySkill(tasks);
+    expect(clusters.length).toBeGreaterThanOrEqual(4);
+    expect(clusters.every((c, i) => i === 0 || c.tasks.length <= clusters[i - 1].tasks.length)).toBe(true);
+    const data = clusters.find((c) => c.competencyId === "data-work")!;
+    expect(data.tasks.length).toBeGreaterThanOrEqual(2);
+    expect(data.level).toBe(3);
+    // Every task sits in every cluster it needs.
+    expect(clusters.reduce((sum, c) => sum + c.tasks.length, 0)).toBe(tasks.reduce((sum, t) => sum + Object.keys(t.needs2030).length, 0));
+  });
+  it("names the job family a description reads like", () => {
+    for (const f of content.families) {
+      const example = SAMPLE_JOB_DESCRIPTIONS[f.id];
+      expect(suggestFamily(example.text, example.title, content)[0].family.id, f.id).toBe(f.id);
+    }
+    expect(suggestFamily("Wir bieten eine Kantine.", "", content)).toEqual([]);
   });
 });

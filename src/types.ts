@@ -34,6 +34,21 @@ export interface Competency {
   cases?: CaseTask[];
   /** Written tasks of the self-check: something from the own work, described in the own words and read by the manager. */
   tasks?: WorkTask[];
+  /** Sub-skills the competency covers in the team's framework. */
+  includes?: string;
+  /** Interviews of the team that name the skill, by interview id. */
+  interviews?: string[];
+}
+
+/**
+ * A skill beyond AI that the team's interviews say gains importance (framework by Elena Hametner).
+ * Not every one is assessed in the tool; `inTool` names the competency that covers it.
+ */
+export interface FurtherSkill {
+  name: string;
+  why: string;
+  interviews: string[];
+  inTool?: string;
 }
 
 /**
@@ -172,6 +187,8 @@ export interface Content {
   measures: Measure[];
   roadmap: RoadmapPhase[];
   governance: Governance;
+  /** Second layer of the framework: skills beyond AI, with the interviews behind them. */
+  furtherSkills?: FurtherSkill[];
 }
 
 export interface Employee {

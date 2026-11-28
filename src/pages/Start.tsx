@@ -16,7 +16,7 @@ const PRINCIPLES = [
   },
   {
     title: "Few competencies, described in behaviour",
-    text: "Six AI competencies and three general ones, three described levels, an example per job family. Studies of skills programmes advise a small critical set over long lists. Which rating format is best is not settled; describing levels in behaviour is the common ground.",
+    text: "Three layers: VERBUND’s six AI competencies, a few further skills that our interviews name, and the tasks of each job family. Three described levels, an example per job family. Studies of skills programmes advise a small critical set over long lists. Which rating format is best is not settled; describing levels in behaviour is the common ground.",
     source: "Deloitte 2026 on skills-based organisations; research on behaviour-based rating scales",
   },
   {

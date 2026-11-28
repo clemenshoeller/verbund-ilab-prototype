@@ -124,6 +124,49 @@ export function analyseJobDescription(text: string, title: string, content: Cont
   return { tasks, skipped, outside: [...outside] };
 }
 
+export interface SkillCluster {
+  competencyId: string;
+  /** Tasks of the job description that need the competency. */
+  tasks: TaskChange[];
+  /** Highest level any of them asks for. */
+  level: number;
+}
+
+/** The tasks read from a job description, grouped by the competency they need; the largest group first. */
+export function clusterBySkill(tasks: TaskChange[]): SkillCluster[] {
+  const clusters = new Map<string, SkillCluster>();
+  for (const task of tasks) {
+    for (const [competencyId, level] of Object.entries(task.needs2030)) {
+      const cluster = clusters.get(competencyId) ?? { competencyId, tasks: [], level: 0 };
+      cluster.tasks.push(task);
+      cluster.level = Math.max(cluster.level, level);
+      clusters.set(competencyId, cluster);
+    }
+  }
+  return [...clusters.values()].sort((a, b) => b.tasks.length - a.tasks.length || b.level - a.level);
+}
+
+/* MOCKED like the reading itself: words that point to a job family, in English and German. */
+const FAMILY_WORDS: Record<string, string[]> = {
+  A: ["software", "developer", "data engineer", "data scien", "pipeline", "code", "cloud", "devops", "it system", "application", "entwickler", "informatik", "programm"],
+  B: ["controller", "controlling", "finance", "accounting", "procurement", "contract", "legal", "payroll", "recruit", "invoice", "einkauf", "finanz", "buchhalt", "personal", "recht"],
+  D: ["maintenance", "plant", "turbine", "technician", "inspection", "grid", "hydropower", "electrical", "mechanical", "instandhalt", "anlage", "techniker", "kraftwerk", "netz"],
+  M: ["head of", "team lead", "leadership", "manage the team", "lead the", "budget", "strategy", "leiter", "leitung", "führung"],
+};
+
+/** Job families a job description reads like, best match first; a word in the title counts double. */
+export function suggestFamily(text: string, title: string, content: Content): { family: Family; hits: number }[] {
+  const body = text.toLowerCase();
+  const head = title.toLowerCase();
+  return content.families
+    .map((family) => {
+      const words = FAMILY_WORDS[family.id] ?? [];
+      return { family, hits: words.filter((word) => body.includes(word)).length + words.filter((word) => head.includes(word)).length };
+    })
+    .filter((match) => match.hits > 0)
+    .sort((a, b) => b.hits - a.hits);
+}
+
 /** One invented job description per family, so the upload can be tried without a file. */
 export const SAMPLE_JOB_DESCRIPTIONS: Record<string, { title: string; text: string }> = {
   A: {

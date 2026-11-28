@@ -3,8 +3,7 @@ import { DraftTag } from "../../components/Figures";
 import { LevelBar } from "../../components/Level";
 import { Card, PageHead } from "../../components/Ui";
 import { useData } from "../../data";
-import { SAMPLE_JOB_DESCRIPTIONS, analyseJobDescription, profileChanges, type Analysis } from "../../lib/jobprofile";
-import { switchTo } from "../../lib/router";
+import { SAMPLE_JOB_DESCRIPTIONS, analyseJobDescription, clusterBySkill, profileChanges, suggestFamily, type Analysis } from "../../lib/jobprofile";
 import { useUi } from "../../ui";
 
 /**
@@ -12,9 +11,11 @@ import { useUi } from "../../ui";
  * MOCKED: keyword rules stand in for a language model (see lib/jobprofile.ts). A person reviews
  * every proposal before it is applied.
  */
-export function HrUpload({ familyId }: { familyId?: string }) {
+export function HrUpload({ familyId: startFamily }: { familyId?: string }) {
   const { content, uploads, addUpload, clearUploads } = useData();
   const { toast } = useUi();
+  // The job family is chosen on the page, so the text that was entered stays when it changes.
+  const [familyId, setFamilyId] = useState(startFamily);
   const family = content.families.find((f) => f.id === familyId) ?? content.families[0];
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
@@ -22,6 +23,12 @@ export function HrUpload({ familyId }: { familyId?: string }) {
   const applied = uploads[family.id] ?? [];
   const name = (id: string) => content.competencies.find((c) => c.id === id)?.name ?? id;
   const changes = analysis ? profileChanges(family, analysis.tasks, content.levels.length) : [];
+  const clusters = analysis ? clusterBySkill(analysis.tasks) : [];
+  const group = (id: string) => content.groups.find((g) => g.id === content.competencies.find((c) => c.id === id)?.group)?.name ?? "";
+  const levelName = (value: number) => content.levels.find((l) => l.value === value)?.name ?? "";
+  // The family the text reads like, if it is another one than the family chosen.
+  const better = analysis ? suggestFamily(text, title, content).find((match, i) => i === 0 && match.family.id !== family.id) : undefined;
+  const read = (target = family) => setAnalysis(analyseJobDescription(text, title.trim() || "Job description", content, target));
   // The result appears below the form: bring it into view, so nobody has to look for it.
   const result = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -62,7 +69,7 @@ export function HrUpload({ familyId }: { familyId?: string }) {
             className={"tab" + (f.id === family.id ? " on" : "")}
             onClick={() => {
               setAnalysis(null);
-              switchTo(`/hr/upload/${f.id}`);
+              setFamilyId(f.id);
             }}
           >
             {f.name}
@@ -89,7 +96,7 @@ export function HrUpload({ familyId }: { familyId?: string }) {
           <button type="button" className="btn ghost" onClick={() => edit(SAMPLE_JOB_DESCRIPTIONS[family.id] ?? SAMPLE_JOB_DESCRIPTIONS.B)}>
             Use an example
           </button>
-          <button type="button" className="btn" disabled={text.trim().length < 12} onClick={() => setAnalysis(analyseJobDescription(text, title.trim() || "Job description", content, family))}>
+          <button type="button" className="btn" disabled={text.trim().length < 12} onClick={() => read()}>
             Read the tasks
           </button>
         </div>
@@ -97,6 +104,21 @@ export function HrUpload({ familyId }: { familyId?: string }) {
 
       {analysis && (
         <div className="stack result" ref={result}>
+          {better && (
+            <p className="callout">
+              This reads like a job in <strong>{better.family.name}</strong>, not in {family.name}.{" "}
+              <button
+                type="button"
+                className="btn small"
+                onClick={() => {
+                  setFamilyId(better.family.id);
+                  read(better.family);
+                }}
+              >
+                Use {better.family.name}
+              </button>
+            </p>
+          )}
           <Card title="2. What the text asks for" aside={`${analysis.tasks.length} tasks found`} flush>
             {analysis.tasks.length === 0 ? (
               <p className="empty">No line pointed to a competency of this job family. Try a text with one task per line.</p>
@@ -134,6 +156,28 @@ export function HrUpload({ familyId }: { familyId?: string }) {
               Level 1 = supports the task, 2 = does it, 3 = is responsible for it across the unit.
             </p>
           </Card>
+
+          {clusters.length > 0 && (
+            <Card title="Skills in this job description" aside={`${clusters.length} skill clusters`} flush>
+              <ul className="rows">
+                {clusters.map((cluster) => (
+                  <li key={cluster.competencyId} className="row static">
+                    <span className="row-main">
+                      <strong>{name(cluster.competencyId)}</strong>
+                      <span className="sub">
+                        {group(cluster.competencyId)} · {cluster.tasks.map((task) => task.task).join(" · ")}
+                      </span>
+                    </span>
+                    <span className="row-figure">
+                      {cluster.tasks.length} {cluster.tasks.length === 1 ? "task" : "tasks"}
+                      <span className="sub">up to {levelName(cluster.level)}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p className="muted small card-note">The tasks of the text, grouped by the competency they need. A cluster with many tasks is what this job is about.</p>
+            </Card>
+          )}
 
           {analysis.tasks.length > 0 && (
             <Card title="3. What changes in the target profile" aside={changes.length === 0 ? "No change" : `${changes.length} ${changes.length === 1 ? "target" : "targets"} raised`} flush>

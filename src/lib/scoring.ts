@@ -128,6 +128,8 @@ export interface Recommendation {
  * to 2030, plus two if the person is below today's expectation, plus three if it is a chosen focus area.
  * A measure ranks by the most urgent competency it builds; among equals, trainings come before
  * organisational measures, foundations before later competencies, and then the measure that closes more.
+ * Among measures of the same urgency, a second one for the same competency waits behind measures for
+ * other competencies, so the first suggestions cover different gaps.
  * Measures of the organisation and measures for other job families are left out.
  */
 export function recommendMeasures(content: Content, family: Family, rows: GapRow[], focus: string[] = []): Recommendation[] {
@@ -136,7 +138,7 @@ export function recommendMeasures(content: Content, family: Family, rows: GapRow
   const order = content.competencies.map((competency) => competency.id);
   const open = rows.filter((row) => (row.gap ?? 0) > 0);
   const weight = (row: GapRow) => (row.gap ?? 0) + ((row.agreed ?? 0) < row.baseline ? 2 : 0) + (focus.includes(row.competency.id) ? 3 : 0);
-  return content.measures
+  const ranked = content.measures
     .filter((measure) => perPerson.has(measure.type) && (!measure.families || measure.families.includes(family.id)))
     .map((measure) => {
       const closes = open.filter((row) => measure.competencies.includes(row.competency.id)).sort((a, b) => weight(b) - weight(a));
@@ -149,8 +151,19 @@ export function recommendMeasures(content: Content, family: Family, rows: GapRow
         types.indexOf(a.measure.type) - types.indexOf(b.measure.type) ||
         order.indexOf(a.closes[0].competency.id) - order.indexOf(b.closes[0].competency.id) ||
         b.total - a.total,
-    )
-    .map(({ measure, closes, score }) => ({ measure, closes, score }));
+    );
+  const seen = new Set<string>();
+  const first: typeof ranked = [];
+  const repeats: typeof ranked = [];
+  const result: typeof ranked = [];
+  ranked.forEach((rec, i) => {
+    const top = rec.closes[0].competency.id;
+    (seen.has(top) ? repeats : first).push(rec);
+    seen.add(top);
+    // A group of equal urgency ends here: those that open a new competency first, then the repeats.
+    if (i === ranked.length - 1 || ranked[i + 1].score !== rec.score) result.push(...first.splice(0), ...repeats.splice(0));
+  });
+  return result.map(({ measure, closes, score }) => ({ measure, closes, score }));
 }
 
 /** Gap rows of a profile for given levels (a persona, or a self-check before the conversation). */
